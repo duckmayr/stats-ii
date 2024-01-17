@@ -1,0 +1,103 @@
+---
+title: "Statistical Analysis in Political Science II:\\newline Intro to political methodology and how to succeed in this class"
+author: "JBrandon Duck-Mayr"
+date: "`r quack::american_date_format(Sys.Date())`"
+urlcolor: Blue
+header-includes:
+    - \newcommand{\setsep}{\setlength{\itemsep}{3pt}}
+    - \newcommand{\setskip}{\setlength{\parskip}{3pt}}
+    - \renewcommand{\tightlist}{\setsep\setskip}
+output:
+    quack::presentation:
+        toc: false
+        incremental: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Eyes on the prize
+
+. . .
+
+::: {.block}
+### George E.P. Box
+All models are wrong, but some are useful
+:::
+
+## How to know which tool to grab from the toolbox
+
+- What kind of question do you want to answer?
+- What kind of data will you be using to answer it?
+- What does theory and other domain knowledge tell us?
+
+## What tools are available?
+
+\begin{itemize}
+    \item<2-> $t$-test, etc
+    \item<1-> OLS
+    \item<3-> GLM
+    \item<4-> Time series, etc, methods to handle wrinkles in assumptions
+    \item<5-> Experiments or other causal inference methods
+    \item<6-> Bayesian methods vs. frequentist methods
+    \item<7-> Measurement models
+    \item<8-> "machine learning", etc
+\end{itemize}
+
+## What will we cover?
+
+. . .
+
+- The first half focuses on OLS
+  + It's the work horse of political science, **in depth** understanding is a *must*
+- The second half will push you forward on more advanced methods
+  + OLS is not always appropriate
+  + You need to know
+    * How to tell when to use something else
+    * What something else that might be, or how to find that out
+    * How to use at least some of these methods, and how to learn others
+
+## What are the expectations?
+
+\begin{itemize}[<+->]
+    \tightlist
+    \item Reading
+    \item Participation
+    \item Problem sets (40\%)
+    \begin{itemize}
+        \tightlist
+        \item<3-> One PS about every two weeks (6 P-sets)
+        \item<3-> Can work together but must write up your own solutions
+        \item<3-> Must submit as a legible PDF, sometimes must also submit code
+    \end{itemize}
+    \item Midterm exam (30\%)
+    \begin{itemize}
+        \tightlist
+        \item<4-> Covers material on OLS
+        \item<4-> \textbf{Cannot} work together
+        \item<4-> But otherwise open note/book/etc
+    \end{itemize}
+    \item Research paper (30\%)
+    \begin{itemize}
+        \tightlist
+        \item<5-> Replicate a political science study
+        \item<5-> Create an original extension of it
+        \item<5-> Turn in and present your results
+    \end{itemize}
+\end{itemize}
+
+## How should you study/work?
+
+- When at all possible, together
+- Diligently and early
+- Contacting myself and/or Andres when you need to
+
+. . .
+
+Remember:
+
+. . .
+
+- You **can** do this
+- You **must** do this
