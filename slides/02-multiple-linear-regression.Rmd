@@ -1,0 +1,310 @@
+---
+title: "Statistical Analysis in Political Science II:\\newline Multiple linear regression"
+author: "JBrandon Duck-Mayr"
+date: "`r quack::american_date_format(Sys.Date())`"
+urlcolor: Blue
+header-includes:
+    - \newcommand{\setsep}{\setlength{\itemsep}{3pt}}
+    - \newcommand{\setskip}{\setlength{\parskip}{3pt}}
+    - \renewcommand{\tightlist}{\setsep\setskip}
+    - \newcommand{\expectation}[1]{\ensuremath{\mathbb{E}\left[#1\right]}}
+    - \newcommand{\pd}[2][]{\ensuremath{\frac{\partial{#1}}{\partial{#2}}}}
+    - \DeclareMathOperator{\Var}{Var}
+    - \DeclareMathOperator{\standarderror}{se}
+output:
+    quack::presentation:
+        toc: false
+        incremental: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Simple Linear Regression
+
+- So you want to know how a variable $x$ affects another variable $y$
+
+\onslide<2->{
+$$
+y = f(x) + \varepsilon
+$$
+
+(the $\varepsilon$ stands for everything except $x$ that affects the value of $y$)
+}
+
+. . .
+
+&nbsp;
+
+- Some assumptions can make this problem more tractable
+- First, we could assume a linear relationship between $x$ and $y$:
+
+\onslide<5->{
+$$
+y = \beta_0 + \beta_1 x + \varepsilon
+$$
+}
+
+- Then, (with a few more assumptions), we can produce estimates of the coefficients $\beta_0$ and $\beta_1$ in the regression function above
+
+## TIMEOUT: Gotta get some terminology straight!
+
+. . .
+
+- A **parameter**, like $\beta_0$ or $\beta_1$ on the last slide, is an unknown quantity
+- An **estimator** is an algorithm you can apply to produce **estimates** of parameters, typically denoted with a "hat"
+  + For example, our estimates of $\beta_0$ and $\beta_1$ would be written as $\hat{\beta}_0$ and $\hat{\beta}_1$
+- So OLS is an *estimator* that gives *estimates* $\hat{\beta}_0$ and $\hat{\beta}_1$ of the *parameters* $\beta_0$ and $\beta_1$ in the population regression function
+
+## Some additional assumptions
+
+- Let's assume the error term $\varepsilon$ has a population mean of zero, i.e. $\expectation{\varepsilon} = 0$
+  + This is an innocuous assumption since a population mean not equal to zero would simply offset the intercept $\beta_0$
+- Also assume the average value of $\varepsilon$ does not depend on the value of $x$, i.e. $\expectation{\varepsilon \mid x} = \expectation{\varepsilon}$
+  + If $\varepsilon$ *did* depend on the value of $x$, our estimate $\hat{\beta}_1$ of the linear effect of $x$ on $y$ would be biased
+- These two assumptions together mean $\expectation{y \mid x} = \beta_0 + \beta_1 x$
+  + Since $\expectation{\varepsilon \mid x} = \expectation{\varepsilon} = 0$, so $\expectation{y \mid x} = \expectation{\beta_0 + \beta_1 x + \varepsilon} = \beta_0 + \beta_1 x$
+  + This equation is called the **population regression function**
+  + Note that specifically we are modeling the *mean* of $y$ given $x$
+- (There are more assumptions we will introduce later)
+
+## Deriving the Least Squares estimator
+
+- Why Least **Squares**?? (e.g., why minimize squared error rather than absolute error?)
+  + There are a few reasons, but the most important is it's useful for the math
+- So to derive the estimator, we define the sum of squared errors, $S = \sum \left( y_i - \beta_0 - \beta_1 x_i \right)^2$
+- Then we want to find the values of $\beta_0$ and $\beta_1$ that minimizes $S$:
+
+\onslide<5->{
+\begin{align*}
+\pd[S]{\beta_0} = \pd[\sum \left( y_i - \beta_0 - \beta_1 x_i \right)^2]{\beta_0} & \equiv 0 \\
+\pd[S]{\beta_1} = \pd[\sum \left( y_i - \beta_0 - \beta_1 x_i \right)^2]{\beta_1} & \equiv 0
+\end{align*}
+}
+
+\only<2>{
+\begin{block}{George E.P. Box}
+All models are wrong, but some are useful
+\end{block}
+}
+
+## Deriving the Least Squares estimator (continued)
+
+A little algebra gives us what's called the Least Squares "normal equations":
+
+\begin{align*}
+n \hat{\beta}_0 + \hat{\beta}_1 \sum x_i & = \sum y_i \\
+\hat{\beta}_0 \sum x_i + \hat{\beta}_1 \sum x_i^2 & = \sum x_i y_i
+\end{align*}
+
+. . .
+
+Then we simply rearrange to obtain the estimators:
+
+\begin{align*}
+\hat{\beta}_0 & = \frac{\sum y_i - \hat{\beta}_1 \sum x_i}{n} \\
+              & = \bar{y} - \hat{\beta}_1 \bar{x} \\
+\hat{\beta}_1 & = \sum \left( y_i - \hat{\beta}_0 - \hat{\beta}_1 x_i \right) \left( x_i - \bar{x} \right) \\
+              & = \frac{\sum \left(y_i - \bar{y}\right) \left(x_i - \bar{x}\right)}{\sum \left(x_i - \bar{x}\right)^2}
+\end{align*}
+
+## Hmm... look familiar?
+
+Examine the estimator for $\hat{\beta}_1$:
+
+$$
+\hat{\beta}_1 = \frac{\left(y_i - \bar{y}\right) \left(x_i - \bar{x}\right)}{\sum \left(x_i - \bar{x}\right)^2}
+$$
+
+. . .
+
+Notice that this is simply the correlation between $x$ and $y$ scaled by their sample deviations:
+
+$$
+\hat{\beta}_1 = \rho_{xy} \left( \frac{\sigma_y}{\sigma_x} \right)
+$$
+
+## More terminology
+
+With the slope and intercept estimates, we can give the **OLS regression line**, also called the **sample regression function**:
+
+$$
+\hat{y} = \hat{\beta}_0 + \hat{\beta}_1 x
+$$
+
+. . .
+
+The values $\hat{y}_i$ are called the **fitted values**.
+
+. . .
+
+The **residuals** are the difference between the observed outcomes and the fitted values:
+
+$$
+\hat{\varepsilon}_i = y_i - \hat{y}_i = y_i - \hat{\beta}_0 - \hat{\beta}_1
+$$
+
+. . .
+
+Note that the residuals, $\hat{\varepsilon}$, and the error term, $\varepsilon$, are not the same thing! (despite some sloppy writing you will see in some research...)
+
+## Some properties of OLS and associated statistics
+
+. . .
+
+1. The sum and sample average of the residuals is zero, $\sum \hat{\varepsilon}_i = 0$ (this is literally by design)
+2. The sample covariance between $x$ and $\hat{\varepsilon}$ is zero (notice you can rearrange the first order condition equation for $\beta_1$ as $\sum x_i \hat{\varepsilon}_i = 0$, so again this is by design)
+3. The point $\left( \bar{x}, \bar{y} \right)$ is always on the OLS regression line
+4. From property 1, $\bar{\hat{y}} = \bar{y}$
+5. From properties 1 and 2, the sample covariance between $\hat{y}_i$ and $\hat{\varepsilon}_i$ is zero
+
+## Even more terminology???
+
+. . .
+
+\begin{align*}
+\text{total sum of squares} & = \text{SST} = \sum \left( y_i - \bar{y} \right)^2 \\
+\text{explained sum of squares} & = \text{SSE} = \sum \left( \hat{y}_i - \bar{y} \right)^2 \\
+\text{residual sum of squares} & = \text{SSR} = \sum \hat{\varepsilon}_i^2
+\end{align*}
+
+. . .
+
+$$
+\text{SST} = \text{SSE} + \text{SSR}
+$$
+
+. . .
+
+$$
+\text{coefficient of determination} = R^2 = \text{SSE/SST} = 1 - \text{SSR/SST}
+$$
+
+(this is the ratio of the explained variation to the total variation, the fraction of the sample variation in $y$ explained by $x$, called $R^2$ because it's the square of the sample correlation coefficient between $y_i$ and $\hat{y}_i$)
+
+## Let's talk about linearity
+
+If we're doing linear regression, how do we capture more complex relationships?
+
+. . .
+
+We use a function of our explanatory variable as $x$; that is, OLS is only linear in the parameters $\beta_0$ and $\beta_1$, and you can use as a predictor something more complicated, like $x^2$ instead of $x$, etc
+
+. . .
+
+This can change the interpretation; for example, when we log transform $x$ and/or $y$, we would interpret $\beta_1$ as follows
+
+\begin{tabular}{ccc}
+Outcome & Predictor & Interpretation \\
+\toprule
+$y$ & $x$ & change in $y$ from unit change in $x$ \\
+$\log(y)$ & $x$ & \% change in $y$ from unit change in $x$ \\
+$y$ & $\log(x)$ & change in $y$ from \% change in $x$ \\
+$\log(y)$ & $\log(x)$ & \% change in $y$ from \% change in $x$ \\
+\bottomrule
+\end{tabular}
+
+## Expected value of the OLS estimators
+
+\onslide<1->{
+With the following assumptions:
+
+\begin{enumerate}
+    \tightlist
+    \item linearity in parameters, $y = \beta_0 + \beta_1 x + \varepsilon$
+    \item random sampling
+    \item sample variation in $x$
+    \item zero conditional mean $\expectation{\varepsilon \mid x} = 0$
+\end{enumerate}
+}
+
+\onslide<2->{
+we can say the OLS estimator is \textbf{unbiased}:
+
+\begin{align*}
+\expectation{\hat{\beta}_0} = \expectation{\beta_0} \\
+\expectation{\hat{\beta}_1} = \expectation{\beta_1}
+\end{align*}
+}
+
+\only<3>{
+The proof is on pages 43--44 of Woolridge, but the key insight to get here is that assumptions 2 and 4 mean we don't have to condition on $x$ when deriving the expected value of $\hat{\beta}_1$
+}
+
+\only<4>{
+\textbf{Warning}: Unbiasedness is a feature of the \textbf{sampling distribution} of $\hat{\beta}_0$ and $\hat{\beta}_1$, \textbf{not} your estimate from any given sample!
+}
+
+## Variance of the OLS estimators
+
+If we add another assumption,
+
+5. homoskedasticity, $\Var\left(\varepsilon \mid x\right) = \sigma^2$,
+
+. . .
+
+we can get the sampling variance of the OLS estimators,
+
+\begin{align*}
+\Var\left(\hat{\beta}_0\right) & = \frac{\sigma^2}{\sum \left( x_i - \bar{x} \right)^2} \\
+\Var\left(\hat{\beta}_1\right) & = \frac{\sigma^2 \sum x_i^2}{n \sum \left( x_i - \bar{x} \right)^2}
+\end{align*}
+
+## Estimating OLS estimators' standard errors
+
+To *estimate* this variance, we introduce a slight correction for degrees of freedom:
+
+$$
+\hat{\sigma}^2 = \frac{1}{n-2} \sum \hat{\varepsilon}_i = \text{SSR} / (n - 2),
+$$
+
+. . .
+
+then plug in our estimate of $\sigma^2$, and taking the square root gives us the standard error of the OLS estimator for $\beta_1$ (we usually don't care about $\standarderror\left(\hat{\beta}_0\right)$:
+
+
+\begin{align*}
+\standarderror\left(\hat{\beta}_1\right) & = \sqrt{\frac{\hat{\sigma}^2}{\sum \left( x_i - \bar{x} \right)^2}} \\
+& = \frac{\hat{\sigma}}{\sqrt{\sum \left( x_i - \bar{x} \right)^2}}
+\end{align*}
+
+## What if we have more than one predictor?? (Multiple regression time)
+
+- Often (typically?) we want to account for multiple predictors
+- Then our population model can be written as $$ y = \beta_0 + \beta_1 x_1 + \dots + \beta_k x_k + \varepsilon $$
+- Now we no longer have a regression **line**, but a **hyperplane**
+- Now a coefficient $\beta_j$ gives the effect of $x_j$ on $y$ **independent** of the other predictors, i.e. *all else constant*
+  + But see: marginal effects
+- We update our assumption about the average value of $\varepsilon$ not being related to the predictor(s) to $$ \expectation{\varepsilon \mid x_1, \dots, x_k} = 0 $$
+
+## Multiple regression matrix notation
+
+- You can imagine writing this out can get cumbersome, so we use matrix notation:
+  + $\mathbf{y} = [y_1, \dots, y_n]'$
+  + $\mathbf{X} = [1, x_1, \dots, x_k]$ is a matrix with a column of ones and $k$ columns of independent variables,
+  + $\boldsymbol\beta = [\beta_0, \beta_1, \dots, \beta_k]'$ is a vector of slope and intercept parameters
+  + $\boldsymbol\varepsilon = [\varepsilon_1, \dots, \varepsilon_n]'$ is a vector of random errors.
+- Then
+  + $\mathbf{y} = \mathbf{X}\boldsymbol\beta + \boldsymbol\varepsilon$
+  + $\expectation{\boldsymbol\varepsilon} = \mathbf{0}$
+  + $\Var\left(\boldsymbol\varepsilon\right) = \sigma^2 \mathbf{I}_n$
+
+## Multiple regression matrix notation (continued)
+
+- Denote by $\mathbf{b}$ our estimate of $\boldsymbol\beta$
+- The vector of residuals is $\mathbf{e} = \mathbf{y} - \mathbf{Xb}$
+- Then the sum of squared errors is $\mathbf{e}'\mathbf{e} = \left(\mathbf{y} - \mathbf{Xb}\right)'\left(\mathbf{y} - \mathbf{Xb}\right)$
+- Again we derive our estimate $\mathbf{b}$ by choosing the value that minimizes the sum of squared errors
+
+\onslide<4>{
+\begin{align*}
+\pd{\mathbf{b}}\left(\mathbf{e}'\mathbf{e}\right)
+& = \pd{\mathbf{b}}\left(\mathbf{y} - \mathbf{Xb}\right)'\left(\mathbf{y} - \mathbf{Xb}\right) \\
+& = \pd{\mathbf{b}}\left(\mathbf{y}' \mathbf{y} - 2 \mathbf{b}' \mathbf{X}' \mathbf{y} + \mathbf{b}' \mathbf{X}' \mathbf{Xb}\right) \\
+& = -2\mathbf{X}'\mathbf{y} + 2\mathbf{X}'\mathbf{Xb} \equiv 0 \\
+\mathbf{X}'\mathbf{Xb} & = \mathbf{X}'\mathbf{y} \\
+\left(\mathbf{X}'\mathbf{X}\right)^{-1}\mathbf{X}'\mathbf{Xb} & = \left(\mathbf{X}'\mathbf{X}\right)^{-1}\mathbf{X}'\mathbf{y} \\
+\mathbf{b} & = \left(\mathbf{X}'\mathbf{X}\right)^{-1}\mathbf{X}'\mathbf{y}
+\end{align*}
+}
