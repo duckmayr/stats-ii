@@ -1,0 +1,239 @@
+---
+title: "Statistical Analysis in Political Science II:\\newline Properties and assumtions of OLS"
+author: "JBrandon Duck-Mayr"
+date: "`r quack::american_date_format(Sys.Date())`"
+urlcolor: Blue
+header-includes:
+    - \newcommand{\setsep}{\setlength{\itemsep}{3pt}}
+    - \newcommand{\setskip}{\setlength{\parskip}{3pt}}
+    - \renewcommand{\tightlist}{\setsep\setskip}
+    - \newcommand{\expectation}[1]{\ensuremath{\mathbb{E}\left[#1\right]}}
+    - \newcommand{\pd}[2][]{\ensuremath{\frac{\partial{#1}}{\partial{#2}}}}
+    - \DeclareMathOperator{\Var}{Var}
+    - \newcommand{\variance}[1]{\ensuremath{\Var\left[#1\right]}}
+    - \DeclareMathOperator{\standarderror}{se}
+output:
+    quack::presentation:
+        toc: false
+        incremental: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Refresher: Calculus
+
+. . .
+
+- A **derivative** of a function $f$ with respect to a variable $x$ gives you the rate of change of $f$ with respect to $x$; the derivative of $f$ with respect to $x$ is often written as $$\pd[f]{x}$$
+- A **definite integral** gives you the area under the graph of a function $f$ for an interval $I$, written as $$\int_I f(x) dx$$
+- An **indefinite integral** or **antiderivative** gives you a new function whose derivative is the original function, written as $$\int f(x) dx$$
+
+## Refresher: Probability
+
+\only<2-6>{
+If $A$ and $B$ are two events:
+
+\begin{itemize}
+    \tightlist
+    \item<3-> $0 \leq \Pr\left(A\right) \leq 1$
+    \item<4-> $\Pr\left(A\right) = 1$ iff $A$ occurs with certainty
+    \item<5-> If $A$ and $B$ are mutually exclusive, $\Pr\left(A \cup B\right) = \Pr\left(A\right) + \Pr\left(B\right)$
+    \item<6-> $\Pr\left(A \mid B\right) = \dfrac{\Pr\left(A \cap B\right)}{\Pr\left(B\right)}$
+\end{itemize}
+}
+
+\only<7-10>{
+For continuous random variables, the probability density function $f(x)$ specifies the probability of $X$ taking values on subsets of the sample space; e.g., for subset $(a, b)$:
+
+\begin{itemize}
+    \tightlist
+    \item<8-> $f(x) \geq 0, \,\forall x$
+    \item<9-> $\int_{-\infty}^\infty f(x) \, dx = 1$
+    \item<10-> $\Pr\left(a < x \leq b\right) = \int_a^b f(x) \, dx$
+\end{itemize}
+}
+
+\only<11->{
+\begin{itemize}
+    \tightlist
+    \item<11-> The \textbf{expected value} of a random variable $X$ "is the weighted average of the values [$X$] can take, where the weights are given by the probability distribution of $X$: $$\expectation{X} = \int_{-\infty}^\infty x \, f(x) \, dx$$
+    \item<12-> The \textbf{variance} of a random variable $X$ measures its \textit{dispersion}, and is the expected value of the squared deviation from the mean of $X$: $$\variance{X} = \expectation{\left(X - \mu\right)^2}$$
+\end{itemize}
+}
+
+
+## Recap of last time
+
+. . .
+
+- Terminology like distinguishing between parameters, estimators, & estimates
+- Explaining aspects of OLS through learning simple regression
+- Begin introducing multiple regression
+
+## Recap (derivations)
+
+. . .
+
+- To derive the estimator, we define the sum of squared errors, $S = \mathbf{e}'\mathbf{e} = \left(\mathbf{y} - \mathbf{Xb}\right)'\left(\mathbf{y} - \mathbf{Xb}\right)$
+- Then we want to find the values of $\mathbf{b}$ that minimizes $S$:
+
+\onslide<4>{
+\begin{align*}
+\pd{\mathbf{b}}\left(\mathbf{e}'\mathbf{e}\right)
+& = \pd{\mathbf{b}}\left(\mathbf{y} - \mathbf{Xb}\right)'\left(\mathbf{y} - \mathbf{Xb}\right) \\
+& = \pd{\mathbf{b}}\left(\mathbf{y}' \mathbf{y} - 2 \mathbf{b}' \mathbf{X}' \mathbf{y} + \mathbf{b}' \mathbf{X}' \mathbf{Xb}\right) \\
+& = -2\mathbf{X}'\mathbf{y} + 2\mathbf{X}'\mathbf{Xb} \equiv 0 \\
+\mathbf{X}'\mathbf{Xb} & = \mathbf{X}'\mathbf{y} \\
+\left(\mathbf{X}'\mathbf{X}\right)^{-1}\mathbf{X}'\mathbf{Xb} & = \left(\mathbf{X}'\mathbf{X}\right)^{-1}\mathbf{X}'\mathbf{y} \\
+\mathbf{b} & = \left(\mathbf{X}'\mathbf{X}\right)^{-1}\mathbf{X}'\mathbf{y}
+\end{align*}
+}
+
+## Some notes on interpretation
+
+. . .
+
+- Regression coefficients have a *ceteris paribus* interpretation
+- i.e., if $\Delta\hat{y} = \hat{\beta}_1\Delta x_1 + \hat{\beta}_2\Delta x_2 + \dots + \hat{\beta}_k\Delta x_k$, and we hold all other variables as fixed, i.e. $\Delta x_2 = \dots = \Delta x_k = 0$, then $\Delta\hat{y} = \hat{\beta}_1\Delta x_1$
+- We can also change more than one variable at a time if a statement like $\Delta\hat{y} = \hat{\beta}_1\Delta x_1 + \hat{\beta}_2\Delta x_2$ is useful for your research
+- Let $\mathbf{r}_{j}$ be the residuals of regressing $x_j$ on the remaining predictors (i.e. $y$ plays no role), or the part of $x_j$ that is uncorrelated with the other predictors; then $$\hat{\beta}_j = \frac{\left(\sum_{i=1}^n \hat{r}_{ij}y_i\right)}{\left(\sum_{i=1}^n \hat{r}_{ij}^2\right)}.$$ 
+
+## Gauss-Markov assumptions and being BLUE
+
+- BLUE stands for "best linear unbiased estimator", and thus refers to an estimator that is:
+  + linear
+  + unbiased
+  + "best" in the sense of smallest sampling variance of all possible linear unbiased estimators
+- Under certain assumptions, the **Gauss-Markov theorem** states states OLS is the BLUE
+  + Once we add one additional assumption, OLS becomes *BUE*, or the best unbiased estimator among all possible linear **and** nonlinear models
+- You may see the assumptions of that theorem ("the **Gauss-Markov assumptions**") formulated in various ways such that there are 4, 5, or even 7 assumptions, but all these formulations capture the same information
+
+## The Gauss-Markov assumptions (version with 5)
+
+. . .
+
+1. Linear in parameters
+2. Random sampling
+3. No perfect collinearity: In the sample, no explanatory variable is constant, and there is no **exact** linear relationship between any explanatory variables
+4. Zero conditional mean: The error term has the same expected value at any value of the explanatory variables: $\expectation{\varepsilon \mid x_1, \dots, x_k} = 0$
+5. Homoscedasticity: The error term has the same variance at any value of the explanatory variables; $\variance{\varepsilon \mid x_1, \dots, x_k} = \sigma^2$
+
+## What the assumptions buy you
+
+. . .
+
+- With assumptions 1-4, we can prove OLS is an unbiased estimator
+- Once we add assumption 5, we get the sampling variance of $\hat{\boldsymbol\beta}$, we can also prove OLS is BLUE, plus we can prove  $\hat{\sigma}^2$ is an unbiased estimator of $\sigma^2$
+- If we add a sixth assumption, we can also prove OLS is BUE, and that $\hat{\boldsymbol\beta}$ has a normal sampling distribution:
+
+6. Normality of errors: The **error term** is independent of the predictors and is normally distributed with zero mean and variance $\sigma^2$; $\varepsilon \sim \mathcal{N}\left(0, \sigma^2\right)$
+
+- Note this does **not** say that $y$ is normally distributed or that any of the predictors are normally distributed, etc... **only** the error term
+- (We will revisit assumption 6 & its implications in more detail next week)
+
+## OLS is unbiased
+
+::: {.block}
+### Unbiasedness of OLS (Woolridge Theorem E.1)
+Under assumptions 1--4, $\expectation{\hat{\beta}_j} = \beta_j \text{ for } j = 0, 1, \dots, k,$ for any values of the population parameters $\beta_j$.
+:::
+
+. . .
+
+::: {.block}
+### Proof
+By assumptions 1 and 3,
+
+\vspace*{-\baselineskip}
+\begin{align*}
+\hat{\boldsymbol\beta}
+& = \left(\mathbf{X'X}\right)^{-1} \mathbf{X'y} = \left(\mathbf{X'X}\right)^{-1} \mathbf{X'}\left(\mathbf{X}\boldsymbol\beta + \boldsymbol\varepsilon\right) \\
+& = \left(\mathbf{X'X}\right)^{-1} \mathbf{X'X}\boldsymbol\beta + \left(\mathbf{X'X}\right)^{-1} \mathbf{X'}\boldsymbol\varepsilon \\
+& = \boldsymbol\beta + \left(\mathbf{X'X}\right)^{-1} \mathbf{X'}\boldsymbol\varepsilon.
+\end{align*}
+
+Then by assumption 4,
+
+\vspace*{-\baselineskip}
+\begin{align*}
+\expectation{\hat{\boldsymbol\beta}\mid\mathbf{X}}
+& = \boldsymbol\beta + \left(\mathbf{X'X}\right)^{-1} \mathbf{X'}\expectation{\boldsymbol\varepsilon\mid\mathbf{X}} \\
+& = \boldsymbol\beta + \left(\mathbf{X'X}\right)^{-1} \mathbf{X'}\mathbf{0} = \boldsymbol\beta.
+\end{align*}
+:::
+
+## Variance of OLS parameters
+
+. . .
+
+First note assumptions 4 and 5 imply $\variance{\boldsymbol\varepsilon\mid\mathbf{X}} = \sigma^2\mathbf{I}_n$.
+
+. . .
+
+::: {.block}
+### Variance of the OLS estimators (Woolridge Theorem E.2)
+Under assumptions 1--5, $\variance{\boldsymbol\beta\mid\mathbf{X}} = \sigma^2 \left(\mathbf{X'X}\right)^{-1}$.
+:::
+
+. . .
+
+::: {.block}
+### Proof
+\begin{align*}
+\variance{\hat{\boldsymbol\beta} \mid \mathbf{X}}
+& = \variance{\left(\mathbf{X'X}\right)^{-1} \mathbf{X'} \boldsymbol\varepsilon \mid \mathbf{X}} \\
+& = \left(\mathbf{X'X}\right)^{-1} \mathbf{X'} \variance{\boldsymbol\varepsilon \mid \mathbf{X}} \mathbf{X} \left(\mathbf{X'X}\right)^{-1} \\
+& = \left(\mathbf{X'X}\right)^{-1} \mathbf{X'} \sigma^2 \mathbf{I}_n \mathbf{X} \left(\mathbf{X'X}\right)^{-1} \\
+& = \sigma^2 \left(\mathbf{X'X}\right)^{-1} \mathbf{X'} \mathbf{X} \left(\mathbf{X'X}\right)^{-1} \\
+& = \sigma^2 \left(\mathbf{X'X}\right)^{-1} .
+\end{align*}
+:::
+
+## OLS is BLUE
+
+::: {.block}
+### Gauss-Markov Theorem
+Under assumptions 1--5, $\hat{\boldsymbol\beta}$ is the best linear unbiased estimator.
+:::
+
+::: {.block}
+### Proof
+Any other linear estimator of $\boldsymbol\beta$ can be written as
+
+\vspace*{-\baselineskip}
+\begin{align*}
+\tilde{\boldsymbol\beta}
+& = \mathbf{A'y} \\
+& = \mathbf{A'}\left(\mathbf{X}\boldsymbol\beta + \boldsymbol\varepsilon\right) \\
+& = \left(\mathbf{A'X}\right)\boldsymbol\beta + \mathbf{A'}\boldsymbol\varepsilon.
+\end{align*}
+
+Then
+
+\vspace*{-\baselineskip}
+\begin{align*}
+\expectation{\tilde{\boldsymbol\beta}}
+& = \left(\mathbf{A'X}\right)\boldsymbol\beta + \mathbf{A'}\boldsymbol\varepsilon \\
+& = \left(\mathbf{A'X}\right)\boldsymbol\beta + \expectation{\mathbf{A'}\boldsymbol\varepsilon \mid \mathbf{X}} \\
+& = \left(\mathbf{A'X}\right)\boldsymbol\beta + \mathbf{A'}\expectation{\boldsymbol\varepsilon \mid \mathbf{X}} \\
+& = \left(\mathbf{A'X}\right)\boldsymbol\beta
+\end{align*}
+:::
+
+## OLS is BLUE proof, continued
+
+Now $\variance{\tilde{\boldsymbol\beta} \mid \mathbf{X}} = \sigma^2 \mathbf{A'A}$, so
+
+\vspace*{-\baselineskip}
+\begin{align*}
+\variance{\tilde{\boldsymbol\beta} \mid \mathbf{X}} - \variance{\hat{\boldsymbol\beta} \mid \mathbf{X}}
+& = \sigma^2 \left[\mathbf{A'A} - \left(\mathbf{X'X}\right)^{-1}\right],
+\end{align*}
+
+which, trust me, is a positive difference.
+
+<!-- ## Irrelevant variables -->
+
+<!-- ## Omitted variables -->
