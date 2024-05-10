@@ -1,0 +1,140 @@
+---
+title: "Statistical Analysis in Political Science II:\\newline Generalized linear models (GLM) and maximum likelihood estimation (MLE)"
+author: "JBrandon Duck-Mayr"
+date: "`r quack::american_date_format(Sys.Date())`"
+urlcolor: Blue
+header-includes:
+    - \newcommand{\setsep}{\setlength{\itemsep}{3pt}}
+    - \newcommand{\setskip}{\setlength{\parskip}{3pt}}
+    - \renewcommand{\tightlist}{\setsep\setskip}
+    - \newcommand{\expectation}[1]{\ensuremath{\mathbb{E}\left[#1\right]}}
+    - \newcommand{\pd}[2][]{\ensuremath{\frac{\partial{#1}}{\partial{#2}}}}
+    - \DeclareMathOperator{\Var}{Var}
+    - \DeclareMathOperator{\Cov}{Cov}
+    - \newcommand{\variance}[1]{\ensuremath{\Var\left[#1\right]}}
+    - \newcommand{\covariance}[1]{\ensuremath{\Cov\left[#1\right]}}
+    - \DeclareMathOperator{\standarddeviation}{sd}
+    - \DeclareMathOperator{\standarderror}{se}
+    - \usepackage{siunitx}
+output:
+    quack::presentation:
+        toc: false
+        incremental: true
+---
+
+## What is a linear model?
+
+. . .
+
+- The key characteristic of a linear model is $\mathbb{E}\left(y\mid X\right) = X\beta$
+- But sometimes this won't quite work; think about discrete outcomes, for instance
+- But, we can transform the outcome such that the expected value of its transformation is a linear function of the predictors
+- This is called a "generalized linear model"
+  + Random component: (conditional) probability distribution of the outcome
+  + Systematic component: The linear combination of the explanatory variables
+  + Link function: A function linking the systematic and random components
+
+## Link functions
+
+. . .
+
+- So we are saying something like $y \sim F\left(g\left(X\beta\right)\right)$ for some distribution $F$ and link function $g$ such that $\mathbb{E}\left(y\mid X\right) = g\left(X\beta\right)$
+- In OLS, $F$ is the normal distribution and $g$ is the "identity link"; $y \sim \mathcal{N}\left(X\beta\right)$,  $\mathbb{E}\left(y\mid X\right) = X\beta$
+- But for other types of outcomes, we will need different link functions
+
+## What is maximum likelihood estimation?
+
+. . .
+
+- You may hear MLE is "choosing the most likely values of our parameters given our data"
+- This is a **bad** way to say this
+- MLE chooses the parameter values that maximize the likelihood of the observed data
+- Depending on how you interpret "most likely values... given our data", these may not be the same thing!
+
+## Conditional probability
+
+. . .
+
+- Bayes' theorem: $\Pr\left(A \mid B\right) = \frac{\Pr\left(B \mid A\right) \Pr\left(A\right)}{\Pr\left(B\right)}$
+- So
+
+\onslide<3->{
+\begin{equation}
+\Pr\left(\beta\mid y, X\right) =
+\frac{{\color{BurntOrange}\overbrace{\Pr\left(y \mid \beta, X\right)}^{\text{Likelihood}}} \quad {\color{Blue}\overbrace{\Pr\left(\beta\right)}^{Prior}}}{\color{DarkGreen}\underbrace{\Pr\left(y\right)}_{\text{Marginal likelihood}}}
+\end{equation}
+}
+
+\onslide<4>{
+MLE maximizes the \textcolor{BurntOrange}{\textbf{Likelihood}}, not $\Pr\left(\beta\mid y, X\right)$
+}
+
+## Maximizing the (log?) likelihood
+
+. . .
+
+- As it turns out, it will generally be more convenient to maximize the log of the likelihood rather than the likelihood function itself
+- (Don't worry, this will give us the same result)
+- To maximize a function,
+  + Take its derivative with respect to the parameter of interest
+  + Set that equal to zero and solve for the parameter value
+  + Ensure the second derivative is negative (don't worry about this yet)
+
+## Maximizing the (log?) likelihood
+
+. . .
+
+So,
+
+\onslide<2->{
+\begin{equation}
+\begin{split}
+\ell\left(y\mid X, \beta\right)
+& = \log\left[\mathcal{L}\left(y \mid X, \beta\right)\right] \\
+& = \log\left[\prod_i\Pr\left(y_i \mid x_i, \beta\right)\right] \\
+& = \sum_i \log\left[\Pr\left(y_i \mid x_i, \beta\right)\right]
+\end{split}
+\end{equation}
+}
+
+\onslide<3->{
+And
+
+\begin{equation}
+\hat{\beta} = \text{argmax}_\beta \left\{\ell\left(y\mid X, \beta\right)\right\}
+\end{equation}
+}
+
+## Some properties
+
+. . .
+
+- There is no general closed form solution for the MLE estimator
+  + Often have to use numerical optimization routines
+  + Don't worry too much, `R` handles this for you
+- The **Hessian** matrix is the matrix of second and cross-partial derivatives,
+  $$ H\left(\beta \mid y, X\right) = \begin{bmatrix} \frac{\partial^2{\ell}}{\partial{\beta_0^2}} & \ldots & \frac{\partial^2{\ell}}{\partial{\beta_0}\partial{\beta_k}} \\ \vdots & \ddots & \vdots \\ \frac{\partial^2{\ell}}{\partial{\beta_0}\partial{\beta_k}} & \ldots & \frac{\partial^2{\ell}}{\partial{\beta_k^2}} \end{bmatrix} $$
+- The **Fisher information matrix** is $I\left(\hat{\beta}\right) = -H$
+
+## Some properties
+
+. . .
+
+- $$ \text{Var}\left(\hat{\beta} \mid y, X\right) = I\left(\hat{\beta}\right)^{-1} $$
+- $\hat{\beta}$ is consistent and asymptotically normally distributed
+- For hypothesis testing, the square root of the Wald statistic has an asymptotic standard normal distribution, $\sqrt{W} = \frac{\hat{\beta} - c}{\text{se}\left(\hat{\beta}\right)}$
+- Cramér–Rao bound: The inverse of the Fisher information is the lower bound on variance
+
+## Normal example
+
+. . .
+
+\begin{align}
+\ell\left(\beta, \sigma^2 \mid y, X\right)
+& = \log\left[\frac{1}{(2\pi\sigma^2)^{n/2}}\exp\left(-\frac{1}{2\sigma^2}\left(y - X\beta\right)'\left(y - X\beta\right)\right)\right] \\
+& = -\frac{n}{2}\log\left[\right]
+\end{align}
+
+## Logistic regression
+
+## Poisson regression

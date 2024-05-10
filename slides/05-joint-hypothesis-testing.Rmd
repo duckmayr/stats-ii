@@ -1,0 +1,109 @@
+---
+title: "Statistical Analysis in Political Science II:\\newline Joint hypothesis testing and multicollinearity"
+author: "JBrandon Duck-Mayr"
+date: "`r quack::american_date_format(Sys.Date())`"
+urlcolor: Blue
+header-includes:
+    - \newcommand{\setsep}{\setlength{\itemsep}{3pt}}
+    - \newcommand{\setskip}{\setlength{\parskip}{3pt}}
+    - \renewcommand{\tightlist}{\setsep\setskip}
+    - \newcommand{\expectation}[1]{\ensuremath{\mathbb{E}\left[#1\right]}}
+    - \newcommand{\pd}[2][]{\ensuremath{\frac{\partial{#1}}{\partial{#2}}}}
+    - \DeclareMathOperator{\Var}{Var}
+    - \DeclareMathOperator{\Cov}{Cov}
+    - \newcommand{\variance}[1]{\ensuremath{\Var\left[#1\right]}}
+    - \DeclareMathOperator{\standarddeviation}{sd}
+    - \DeclareMathOperator{\standarderror}{se}
+    - \usepackage{siunitx}
+output:
+    quack::presentation:
+        toc: false
+        incremental: true
+        keep_tex: true
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(knitr)
+library(kableExtra)
+library(modelsummary)
+opts_chunk$set(echo = FALSE)
+table_overlay = function(x, slide_number = "1", type = "only") {
+    beginning = paste0("\\", type, "<", slide_number, ">{\n")
+    cat(beginning, x, "\n}", sep = "")
+}
+hook_plot = knit_hooks$get("plot")
+knit_hooks$set(
+  plot = function(x, options) {
+    if ( is.null(options$overlay.plot) ) {
+        return(hook_plot(x, options))
+    } else {
+        i = options$fig.cur
+        if ( !is.null(plot.overlay.start) ) {
+            i = i + plot.overlay.start
+        }
+        prefix = paste0("\\only<", i, ">{")
+        paste(c(prefix, hook_plot_tex(x, options), "}"), collapse = "\n")
+    }
+  }
+)
+```
+
+## Single Hypothesis, Multiple Parameters
+
+. . .
+
+- Consider the model $y = \beta_0 + \beta_1 x_1 + \beta_2 x_2$
+- Suppose instead of testing hypotheses about $\beta_1$ or $\beta_2$,
+  we wanted to test a hypothesis about **both** $\beta_1$ and $\beta_2$,
+  such as $\beta_1 < \beta_2$
+- Then rewrite the hypothesis as $\beta_1 - \beta_2 < 0$, and your $t$ statistic is $$ t = \frac{\hat{\beta}_1 - \hat{\beta}_2}{\standarderror{\left(\hat{\beta}_1 - \hat{\beta}_2\right)}} $$
+- **Careful**: $\standarderror{\left(\hat{\beta}_1 - \hat{\beta}_2\right)} \neq \standarderror{\left(\hat{\beta}_1\right)} - \standarderror{\left(\hat{\beta}_2\right)}$ !!
+- $\standarderror{\left(\hat{\beta}_1 - \hat{\beta}_2\right)} = \sqrt{\Var\left(\hat{\beta}_1\right) + \Var\left(\hat{\beta}_2\right) - 2 \Cov\left(\hat{\beta}_1, \hat{\beta}_2\right)}$
+
+## Example
+
+Consider data simulated from the population equation
+$$ y = x_1 + 2 x_2 + \varepsilon $$
+
+```{r sim-data, results='asis'}
+set.seed(138)
+x1 = rnorm(10)
+x2 = rnorm(10)
+e  = rnorm(10)
+y  = x1 + 2 * x2 + e
+d  = data.frame(y, x1, x2)
+kable(d, booktabs = TRUE, digits = 2, row.names = TRUE, linesep = "") %>%
+    kable_styling(position = "center") %>% 
+    table_overlay(slide_number = 2, type = "only")
+```
+
+```{r ols-results, results='asis'}
+ols = lm(y ~ x1 + x2, data = d)
+modelsummary(ols, fmt = fmt_significant(2), gof_omit = "IC|Adj|Log|RMSE") %>%
+    table_overlay(slide_number = 3, type = "only")
+```
+
+\only<4-5>{
+\begin{align*}
+t & = \frac{\beta_2-\beta_1}{\standarderror{\left(\beta_2-\beta_1\right)}} \\
+& = \frac{1.59 - 0.44}{\sqrt{0.26^2 + 0.18^2 - \textcolor<5>{BurntOrange}{2 \Cov\left(\beta_1, \beta_2\right)}}} \\
+& = \frac{1.59 - 0.44}{\sqrt{0.26^2 + 0.18^2 - \textcolor<5>{BurntOrange}{2 \left(0.005\right)}}} \\
+& = 3.83 \\
+p & < 0.01
+\end{align*}
+}
+
+\only<6>{
+$$
+\Var\left(\boldsymbol\beta\right) = \sigma^2 \left(\mathbf{X'X}\right)^{-1}
+$$
+}
+
+## Testing multiple restrictions
+
+. . .
+
+- In a model $y = \beta_0 + \beta_1 x_1 + \dots + \beta_k x_k + \varepsilon$, we may want to test whether $\beta_{k - q - 1}, \dots, \beta_k$ (for some $q$) are all zero 
+- We use an $F$ statistic, $$ F \equiv \frac{\left(SSR_r - SSR_u\right)/q}{SSR_u/(n-k-1)}, $$ which is distributed $$ F \sim F_{q,n-k-1} $$
+- If $H_0: \beta_{k - q - 1} = 0, \dots, \beta_k = 0$ is rejected, we say $x_{k - q - 1}, \dots, x_k$ are **jointly significant**

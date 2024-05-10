@@ -1,0 +1,38 @@
+---
+title: "Problem Set 3\\thanks{Most problems lightly adapted from the source cited}"
+author: "JBrandon Duck-Mayr"
+date: "(Due by midnight on April 8, 2024)"
+fontsize: 12pt
+# titlepage: true
+# abstract: "Abstract (typically should be 150 words or less)"
+header-includes:
+    - \newcommand{\pd}[2][]{\ensuremath{\frac{\partial{#1}}{\partial{#2}}}}
+    - \DeclareMathOperator{\Var}{Var}
+    - \DeclareMathOperator{\Cov}{Cov}
+    - \DeclareMathOperator{\se}{se}
+    - \newcommand{\expectation}[1]{\ensuremath{\mathbb{E}\left[#1\right]}}
+    - \newcommand{\variance}[1]{\ensuremath{\Var\left(#1\right)}}
+    - \newcommand{\covariance}[1]{\ensuremath{\Cov\left(#1\right)}}
+output: quack::article
+---
+
+# Wooldridge 12.2
+
+Explain what is wrong with the following statement:
+"The Cochrane-Orcutt and Prais-Winsten methods are both used to obtain valid standard errors for the OLS estimates when there is a serial correlation."
+
+# Wooldridge 12.C8 (lightly modified)
+
+Use the data in `wooldridge::traffic2` for this exercise.
+
+a. Run an OLS regression of `prcfat` on a linear time trend, monthly dummy variables, and the variables `wkends`, `unem`, `spdlaw`, and `beltlaw.`
+   Test the errors for AR(1) serial correlation using the regression in equation (12.20).
+   Does it make sense to use the test that assumes strict exogeneity of the regressors?
+b. Obtain serial correlation– and heteroskedasticity-robust standard errors for the coefficients on `spdlaw` and `beltlaw`, using four lags in the Newey-West estimator.
+   (You can use the function `sandwich::NeweyWest`).
+   How does this affect the statistical significance of the two policy variables?
+c. Now, estimate the model using Prais-Winsten and compare the estimates with the OLS estimates.
+   (You can use the function `prais::prais_winsten()`).
+   Are there important changes in the policy variable coefficients or their statistical significance?
+
+# 

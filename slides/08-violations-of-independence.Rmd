@@ -1,0 +1,193 @@
+---
+title: "Statistical Analysis in Political Science II:\\newline Violations of independence"
+author: "JBrandon Duck-Mayr"
+date: "`r quack::american_date_format(Sys.Date())`"
+urlcolor: Blue
+header-includes:
+    - \newcommand{\setsep}{\setlength{\itemsep}{3pt}}
+    - \newcommand{\setskip}{\setlength{\parskip}{3pt}}
+    - \renewcommand{\tightlist}{\setsep\setskip}
+    - \newcommand{\expectation}[1]{\ensuremath{\mathbb{E}\left[#1\right]}}
+    - \newcommand{\pd}[2][]{\ensuremath{\frac{\partial{#1}}{\partial{#2}}}}
+    - \DeclareMathOperator{\Var}{Var}
+    - \DeclareMathOperator{\Cov}{Cov}
+    - \newcommand{\variance}[1]{\ensuremath{\Var\left[#1\right]}}
+    - \newcommand{\covariance}[1]{\ensuremath{\Cov\left[#1\right]}}
+    - \DeclareMathOperator{\standarddeviation}{sd}
+    - \DeclareMathOperator{\standarderror}{se}
+    - \usepackage{siunitx}
+output:
+    quack::presentation:
+        toc: false
+        incremental: true
+        keep_tex: true
+---
+
+## Assumptions, assumptions
+
+Recall the assumptions of the classical linear model:
+
+. . .
+
+::: nonincremental
+1. Linear in parameters
+2. Random sampling
+3. No perfect collinearity
+4. Zero conditional mean: The error term has the same expected value at any value of the explanatory variables: $\expectation{\varepsilon \mid x_1, \dots, x_k} = 0$
+5. Homoscedasticity: The error term has the same variance at any value of the explanatory variables; $\variance{\varepsilon \mid x_1, \dots, x_k} = \sigma^2$
+6.  $\varepsilon \sim \mathcal{N}\left( 0, \sigma^2 \right)$
+:::
+
+. . .
+
+What happens when we don't have random sampling?
+
+## Time series data
+
+. . .
+
+- Each observation *temporally follows* the previous observation
+- So *necessarily*, random sampling is violated
+
+## Finite distributed lag models
+
+. . .
+
+- Our predictors may have a lagged effect
+- So just include lagged values of the predictor;
+  this is called a finite distributed lag (FDL) model
+- For a *one* period increase in the predictor
+  + Coefficient on contemporaneous value is the contemporaneous effect, or the *impact propensity*
+  + The coefficient on the first lag is the effect on the outcome in the next period after a one-period increase, etc
+- For a *permanent* increase
+  + Coefficient on contemporaneous value is still the contemporaneous effect
+  + But now the effect in the next period is the contemporaneous coefficient *plus* the coefficient on the first lag, etc
+    * Sum of coefficients for $h$ periods is the *cumulative effect*
+    + Sum of all lag coefficients is called the *long-run propensity* or *long-run multiplier*
+
+## More assumptions
+
+\begin{itemize}
+    \tightlist
+    \item[TS1]<2-> Linearity in parameters (essentially the same as MLR1)
+    \item[TS2]<3-> No perfect collinearity (essentially the same as MLR2)
+    \item[TS3]<4-> Zero conditional mean: $\mathbb{E}\left(\varepsilon_t\mid\mathbf{X}\right) = 0, t = 1, 2, \dots n$
+    \begin{itemize}
+        \tightlist
+        \item<5-> Analog of MLR4, obviates the need for random sampling
+        \item<6-> Error term at time $t$ is uncorrelated with predictors in \textbf{every} time period
+        \item<7-> \textit{contemporaneous exogeneity} only requires $\mathbb{E}\left(\varepsilon_t\mid\mathbf{x}_t\right) = 0$
+        \item<8-> Assumption TS3 goes farther and is called \textit{strict exogeneity}
+        \item<9-> Note this does not require lack of correlation of errors
+        \item<10-> This can fail under omitted variable bias or when there's feedback between the error and a predictor
+    \end{itemize}
+    \item[TS4]<11-> Homoscedasticity: $\text{Var}\left(\varepsilon_t\mid\mathbf{X}\right) = \text{Var}\left(\varepsilon_t\right) = \sigma^2, t = 1, 2, \dots, n$
+    \item[TS5]<12-> No serial correlation: Conditional on $\mathbf{X}$, the errors in two time periods are uncorrelated: $\text{Cor}\left(\varepsilon_t,\varepsilon_s\mid\mathbf{X}\right) = 0,\,\forall\,\, t \neq s$
+\end{itemize}
+
+## What do they buy us?
+
+. . .
+
+- Under assumptions TS1--TS3, OLS is unbiased
+- If we have contemporaneous exogeneity instead of TS3, OLS is still consistent, but not unbiased
+- Under assumptions TS1--TS5, we get the sampling variance of $\hat{\beta}$: $\text{Var}\left(\hat{\boldsymbol\beta}\mid\mathbf{X}\right) = \sigma^2\left(\mathbf{X'X}\right)^{-1}$ (same as in cross-sectional)
+- Under assumptions TS1--TS5, $\hat{\sigma}^2 = \text{SSR}/df$ is an unbiased estimator of $\sigma^2$
+- Under assumptions TS1--TS5, OLS is BLUE
+
+\begin{itemize}
+    \tightlist
+    \item[TS6]<7-> Normally distributed errors
+\end{itemize}
+
+\begin{itemize}
+    \tightlist
+    \item<8-> Under assumptions TS1--TS6, OLS estimators are normally distributed, and $t$ and $F$ statistics and usual confidence intervals are all valid
+\end{itemize}
+
+## Time trends
+
+. . .
+
+- Trending variables don't necessarily violate TS1--TS6
+- But you could end up with a spurious correlation when the trend affects both the outcome and one or more predictors
+- But simply adding a time trend fixes this
+- We can also account for seasonality using dummies
+
+<!-- R^2 difference?? -->
+
+## Stationarity and weak dependence
+
+. . .
+
+- A process $\{x_t; t = 1, 2, \dots\}$ is **stationary** if the joint distribution of  $\left(x_t, x_{t+1}, \dots x_{t + m}\right)$ is the same as the joint distribution of $\left(x_{t+h}, x_{t+h+1}, \dots x_{t+h + m}\right)$ for all $t$, $m$, and $h$
+- A stationary time series is a **weakly dependent** process "if $x_t$ and $x_{t+h}$ are 'almost independent' as $h$ increases without bound" (Wooldridge, 368)
+- Weak dependence replaces random sampling for proving the LLN and CLT hold
+
+## **MORE** assumptions???
+
+\begin{itemize}
+    \tightlist
+    \item[TS1']<2-> Linearity, stationarity, and weak dependence
+    \item[TS2']<3-> No perfect collinearity
+    \item[TS3']<4-> Zero conditional mean: Explanatory variables are \textit{contemporaneously exogenous}; $\mathbb{E}\left(\varepsilon_t\mid\mathbf{x}_t\right) = 0$
+    \item[TS4']<5-> \textit{Contemporaneous} homoscedasticity: $\text{Var}\left(\varepsilon_t\mid\mathbf{x}_t\right) = \sigma^2$
+    \item[TS5']<6-> No serial correlation
+\end{itemize}
+
+## What do **THOSE** buy us?? (asymptotics)
+
+. . .
+
+- Under TS1'--TS3', OLS is consistent
+- Under TS1'--TS5', OLS estimator is asymptotically normally distributed and $t$ and $F$ statistics are asymptotically valid
+
+## Autoregressive processes
+
+. . .
+
+- Now think about if $$ y_t = \rho_1 y_{t-1} + e_t, t = 1, 2, \dots, n $$
+- If $|\rho| < 1$, this **AR(1)** process is weakly dependent
+- **But** if not, it is not
+
+## Persistence
+
+- Difference between trend and persistence/dependence
+- "Unit root"
+  + First differencing
+    * "difference stationary process"
+    * Also removes any trends
+  + Estimate of correlation of the outcome with its lag as an estimate of unit-root-ness
+    * BUT, de-trend first or you will overestimate the correlation
+
+## Dynamically complete models
+
+- A **dynamically complete model** means all lags of $y$ and $x$ that are needed are included
+- If your model is dynamically complete, TS5' is automatically satisfied
+- Sequential exogeneity: $\mathbb{E}\left(\varepsilon_t\mid\mathbf{x}_t, \mathbf{x}_{t-1}, \dots\right) = \mathbb{E}\left(\varepsilon_t\right) = 0, t = 1, 2, \dots$
+  + Strict exogeneity $\Rightarrow$ sequential exogeneity
+  + Sequential exogeneity $\Rightarrow$ contemporaneous exogeneity
+  + Also dynamic completeness $\Rightarrow$ sequential exogeneity
+  + But, we can get sequential exogeneity without dynamic completeness, and sometimes we'll feel like that's good enough
+
+## Serially correlated errors
+
+- Does not affect unbiasedness (which relied on strict exogeneity) or consistency (which needed TS1'--TS3')
+- OLS is no longer BLUE though
+- Moreover, test statistics and standard errors are no longer valid, even asymptotically
+
+## Testing for serial correlation
+
+- Under strict exogeneity
+  + Note this means no lagged DV!
+  + Regress residuals on lagged residuals; t-stat on rho is the test
+  + Durbin-Watson
+    * But requires all CLM assumptions for inference
+    * Can also be inconclusive
+- Without strict exogeneity
+  + Same thing, but include more residual lags
+  + Then do an $F$ test for joint significance of residual lag coefficients
+- What do we do about it???
+  + Newey-West (1987) standard errors
+  + Also called "HAC" standard errors
+  

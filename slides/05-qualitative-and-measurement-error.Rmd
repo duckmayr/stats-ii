@@ -1,0 +1,135 @@
+---
+title: "Statistical Analysis in Political Science II:\\newline Qualitative variables and measurement error"
+author: "JBrandon Duck-Mayr"
+date: "`r quack::american_date_format(Sys.Date())`"
+urlcolor: Blue
+header-includes:
+    - \newcommand{\setsep}{\setlength{\itemsep}{3pt}}
+    - \newcommand{\setskip}{\setlength{\parskip}{3pt}}
+    - \renewcommand{\tightlist}{\setsep\setskip}
+    - \newcommand{\expectation}[1]{\ensuremath{\mathbb{E}\left[#1\right]}}
+    - \newcommand{\pd}[2][]{\ensuremath{\frac{\partial{#1}}{\partial{#2}}}}
+    - \DeclareMathOperator{\Var}{Var}
+    - \DeclareMathOperator{\Cov}{Cov}
+    - \newcommand{\variance}[1]{\ensuremath{\Var\left[#1\right]}}
+    - \DeclareMathOperator{\standarddeviation}{sd}
+    - \DeclareMathOperator{\standarderror}{se}
+    - \usepackage{siunitx}
+output:
+    quack::presentation:
+        toc: false
+        incremental: true
+        keep_tex: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Binary variables
+
+. . .
+
+- Also called dummy variables or dichotomous variables
+- Encode a specific type of qualitative variable, one characteristic that can take only one of two values
+- Examples (some better than others): treatment indicator, whether it's an election year, gender
+
+. . .
+
+With dummy variable $D$ and other predictors $x_2, \dots, x_k$,
+in the model
+$$
+y = \beta_0 + \beta_1 D + \beta_2 x_2 + \dots + \beta_k x_k + \varepsilon,
+$$
+the coefficient $\beta_1$ on $D$ represents an **intercept shift** when $D = 1$
+
+## Categorical variables
+
+. . .
+
+- What about characteristics with more than one value, like party identification?
+- Omit one category and create dummy variables for each other category
+- Then we interpret the dummy coefficients as an intercept difference between that group and the omitted group
+- Does it matter if the information is ordinal, like education?
+
+## Dummy:continuous interactions
+
+. . .
+
+- (note we will cover this in more detail next time)
+- In the model $$ y = \beta_0 + \beta_1 D + \beta_2 x + \beta_3 D x + \varepsilon, $$ $\beta_1$ represents an intercept shift when $D = 1$, but we also allow for **different slopes**
+- Then $\beta_2$ is the slope on $x$ when $D = 0$ and $\beta_2 + \beta_3$ is the slope on $x$ when $D = 1$
+
+## Testing differences across groups
+
+. . .
+
+- Suppose we want to let all the slopes differ across groups,
+$$ y = \beta_0 + \beta_{g,1} x_1 + \beta_{g, 2} x_2 + \dots + \beta_{g, k} x_k + \varepsilon $$
+- We can do an $F$-test with $k + 1$ restrictions
+- We can also run separate regressions
+  + Let $\text{SSR}_1$ be the SSR for a regression for the first group
+  + Let $\text{SSR}_2$ be the SSR for a regression for the second
+  + Let $\text{SSR}_p$ be the SSR for a pooled regression
+  + Then we compute the $F$-statistic $$ F = \frac{\text{SSR}_p - (\text{SSR}_1 + \text{SSR}_2)}{\text{SSR}_1 + \text{SSR}_2} \frac{n - 2(k+1)}{k + 1}, $$ with $k$ and $n_1 + n_2 - 2k$ d.o.f.
+  + This is called a Chow test
+
+## Measurement error in the outcome
+
+. . .
+
+- Say we want to estimate the equation $y^\ast = \beta_0 + \beta_1 x_1 + \dots + \beta_k x_k + \varepsilon,$ but only observe $y = y^\ast + e_0$
+- Then we estimate $y = \beta_0 + \beta_1 x_1 + \dots + \beta_k x_k + \varepsilon^\ast$, where $\varepsilon^\ast = \varepsilon + e_0$
+- This is valid when $e_0$ is unrelated to the predictors
+  + Notice the effect on estimator variance: $\variance{\varepsilon^\ast} = \variance{\varepsilon + e_0} = \sigma_\varepsilon^2 + \sigma_0^2 > \sigma_\varepsilon^2$
+- This is **not** valid if $e_0$ is related to the predictors
+
+## Measurement error in the predictors
+
+. . .
+
+- Say we want to estimate the equation $y = \beta_0 + \beta_1 x_1^\ast + \dots + \beta_k x_k + \varepsilon,$ but only observe $x_1 = x_1^\ast + e_1$
+- Two cases: 
+- $\Cov\left(x_1, e_1\right) = 0$
+  + Estimate $y = \beta_0 + \beta_1 x_1 + \dots + \beta_k x_k + \left(\varepsilon - \beta_1 e_1\right)$
+  + Still unbiased
+  + Variance increases: $\variance{\varepsilon - \beta_1 e_1} = \sigma_\varepsilon^2 + \beta_1 \sigma_{e_1}^2$
+- $\Cov\left(x_1^\ast, e_1\right) = 0$
+  + classical errors-in-variables (CEV) assumption
+  + then $e_1$ and $x_1$ are correlated 
+  + covariance between $x_1$ and $\left(\varepsilon - \beta_1 e_1\right)$ is
+    $$ \Cov\left(x_1, \varepsilon - \beta_1 e_1\right) = -\beta_1 \Cov\left(x_1, e_1\right) = \beta_1\sigma_{e_1}^2$$
+
+## Measurement error in the predictors
+
+Then in the two variable case,
+
+\begin{align*}
+\text{plim}\left(\hat{\beta}_1\right)
+& = \beta_1 + \frac{\Cov\left(x_1, \varepsilon - \beta_1 e_1\right)}{\variance{x_1}} \\
+& = \beta_1 - \frac{\beta_1\sigma_{e_1}^2}{\sigma_{x_1^\ast}^2 + \sigma_{e_1}^2} \\
+& = \beta_1 \left( \frac{\sigma_{x_1^\ast}^2}{\sigma_{x_1^\ast}^2 + \sigma_{e_1}^2} \right)
+\end{align*}
+
+. . .
+
+For $k$ variables,
+
+$$
+\text{plim}\left(\hat{\beta}_1\right)
+=
+\beta_1 \left( \frac{\sigma_{r_1^\ast}^2}{\sigma_{r_1^\ast}^2 + \sigma_{e_1}^2} \right)
+$$
+
+## Missing data
+
+. . .
+
+- Different types of missingness:
+  + \textcolor<7-8>{BurntOrange}{MCAR (missing completely at random): missingness unrelated to observed \textit{and} unobserved data}
+  + \textcolor<8>{BurntOrange}{MAR (missing at random): missingness only unrelated to unobserved data}
+  + MNAR (missing not at random): missingess systematically related even to unobserved data
+- Strategies to deal with missingness:
+  + listwise deletion
+  + multiple imputation
+- Missingness in predictors vs outcomes?

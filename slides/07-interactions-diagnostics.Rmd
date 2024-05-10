@@ -1,0 +1,440 @@
+---
+title: "Statistical Analysis in Political Science II:\\newline Interaction Terms and Diagnostics"
+author: "JBrandon Duck-Mayr"
+date: "`r quack::american_date_format(Sys.Date())`"
+urlcolor: Blue
+header-includes:
+    - \newcommand{\setsep}{\setlength{\itemsep}{3pt}}
+    - \newcommand{\setskip}{\setlength{\parskip}{3pt}}
+    - \renewcommand{\tightlist}{\setsep\setskip}
+    - \newcommand{\expectation}[1]{\ensuremath{\mathbb{E}\left[#1\right]}}
+    - \newcommand{\pd}[2][]{\ensuremath{\frac{\partial{#1}}{\partial{#2}}}}
+    - \DeclareMathOperator{\Var}{Var}
+    - \DeclareMathOperator{\Cov}{Cov}
+    - \newcommand{\variance}[1]{\ensuremath{\Var\left[#1\right]}}
+    - \newcommand{\covariance}[1]{\ensuremath{\Cov\left[#1\right]}}
+    - \DeclareMathOperator{\standarddeviation}{sd}
+    - \DeclareMathOperator{\standarderror}{se}
+    - \usepackage{siunitx}
+output:
+    quack::presentation:
+        toc: false
+        incremental: true
+        keep_tex: true
+---
+
+## Motivating interaction terms: Conditional effects
+
+. . .
+
+- Social scientists often have conditional hypotheses
+- Example: Hypothesizing that the effect of a Supreme Court justice's ideology on their interruptions in oral argument is positive when the Chief Justice is conservative and negative when the Chief is liberal
+- Example: Hypothesizing that the effect of campaign ad buys on vote choice decreases with name recognition
+- In a normal linear model, the marginal effect of one variable cannot depend on the value of another
+  + If $y = \beta_0 + \beta_1 x_1 + \dots + \beta_k x_k$, then $\pd[y]{x_j} = \beta_j$... there are no $X$'s there!
+- So we include interaction terms
+
+## What do they *mean*?
+
+. . .
+
+- In a model $y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_1 x_2$,
+  + If $x_2$ is dichotomous, we are saying the effect of $x_1$ depends on whether condition $x_2$ is present or not
+  + If $x_2$ is continuous, we are saying the effect of $x_1$ can be different (magnitude and/or sign) as $x_2$ increases or decreases
+- Then $\pd[y]{x_1} = \beta_1 + \beta_3 x_2$---success! $x_2$ is in the formula for the marginal effect of $x_1$
+  + So how much does an increase in $x_1$ affect $y$? It depends! (on $x_2$)
+- **Careful**: Not only is $\pd[y]{x_1}$ not equal to $\beta_1$, or even $\beta_1 + \beta_3$, but:
+  + $\standarddeviation \left( \pd[y]{x_1} \right) \neq \standarddeviation \left( \beta_1 \right)$
+  + $\standarddeviation \left( \pd[y]{x_1} \right) \neq \standarddeviation \left( \beta_3 \right)$
+  + $\standarddeviation \left( \pd[y]{x_1} \right) \neq \standarddeviation \left( \beta_1 \right) + \standarddeviation \left( \beta_3 \right)$
+
+## Interaction terms and hypothesis tests
+
+. . .
+
+- Recall:
+  + $\variance{X + Y} = \variance{X} + \variance{Y} + 2\covariance{X, Y}$
+  + $\variance{c X} = c^2 \variance{X}$
+- So! $\standarderror\left(\hat{\beta}_1 + \hat{\beta}_3 x_2\right) = \sqrt{\variance{\hat{\beta}_1} + x_2^2 \variance{\hat{\beta}_3} + 2 x_2 \covariance{\hat{\beta}_1, \hat{\beta}_3}}$
+  + Whether or not $x_1$ has a statistically significant effect on $y$ depends on the value of $x_2$; for some values of $x_2$ the effect is significant, for others it isn't
+  
+## Dichotomous example: Simulation
+
+. . .
+
+First simulate some data
+
+```{r}
+set.seed(42)
+n  = 100
+x1 = rnorm(n)
+x2 = sample(0:1, size = n, replace = TRUE)
+X  = cbind(1, x1, x2, x1*x2)
+b  = c(1, 1, 1, -2)
+e  = rnorm(n)
+y  = c(X %*% b + e)
+```
+  
+## Dichotomous example: Calculation
+
+Now fit the model
+
+```{r}
+m = lm(y ~ x1*x2)
+```
+
+. . .
+
+And calculate the marginal effect of `x1` when `x2` is 0 or 1
+
+```{r}
+V = vcov(m, complete = TRUE) # \Var(\hat{\beta})
+ME1 = coef(m)[2] + coef(m)[4]
+SE1 = sqrt(V[2, 2] + V[4, 4] + 2*V[2, 4])
+sprintf("ME of x1 when x2=1 is %0.3f (s.e. %0.3f)", ME1, SE1)
+ME0 = coef(m)[2]
+SE0 = sqrt(V[2, 2])
+sprintf("ME of x1 when x2=0 is %0.3f (s.e. %0.3f)", ME0, SE0)
+```
+  
+## Dichotomous example: comparison to `{margins}`
+
+```{r}
+library(margins)
+MEs = margins(m, variables = "x1", at = list(x2 = 0:1))
+print(summary(MEs), digits = 3)
+## Manual calculation:
+E = c(ME0,ME1); SE = c(SE0,SE1); z=E/SE; k=qnorm(0.975)*SE
+print(data.frame(
+    factor = "x1", x2 = c(0, 1), AME = E, SE = SE,
+    z = z, p = 1-pnorm(abs(z)), lower = E-k, upper = E+k
+), digits = 3)
+```
+  
+## Dichotomous example
+
+```{r, echo = FALSE, fig.height = 4, fig.width = 6, out.width = "90%"}
+library(ggplot2)
+d = data.frame(
+    x2  = rep(c("0", "1"), 2), ME  = c(E, 1, -1),
+    lwr = c(E-k, NA, NA), upr = c(E+k, NA, NA),
+    grp = rep(c("Est", "Truth"), each = 2)
+)
+pal = c(Est = "#0072b2", Truth = "#d55e00d0")
+ggplot(data = d, mapping = aes(x = x2, y = ME, shape = grp, color = grp)) +
+    geom_segment(
+        aes(xend = x2, y = lwr, yend = upr),
+        na.rm = TRUE, linewidth = 1, color = "#0072b2"
+    ) +
+    geom_point(size = 3) +
+    scale_color_manual(values = pal) +
+    theme_bw() +
+    theme(legend.title = element_blank())
+```
+
+## Continuous example: Simulation
+
+. . .
+
+First simulate some data
+
+```{r}
+set.seed(42)
+n  = 100
+x1 = rnorm(n)
+x2 = rnorm(n)
+X  = cbind(1, x1, x2, x1*x2)
+b  = c(1, 1, 1, -2)
+e  = rnorm(n)
+y  = c(X %*% b + e)
+```
+  
+## Continuous example: Calculation
+
+Now fit the model
+
+```{r}
+m = lm(y ~ x1*x2); V = vcov(m, complete = TRUE)
+```
+
+. . .
+
+And calculate the marginal effect of `x1`
+
+```{r}
+mx = mean(x2)
+ME = coef(m)[2] + coef(m)[4] * mx
+SE = sqrt(V[2, 2] + mx^2 * V[4, 4] + 2*mx*V[2, 4])
+msg = "when x2=mean(x2) ME of x1 = %0.3f (s.e. %0.3f)"
+sprintf(msg, ME, SE)
+MEs = margins(m, variables = "x1", at = list(x2 = mx))
+print(summary(MEs), digits = 3)
+```
+
+## Continuous example
+
+```{r, fig.height = 4, fig.width = 6, out.width = "90%"}
+margins::cplot(m, x = "x2", dx = "x1", what = "effect")
+abline(h = 0, lty = 2)
+```
+
+## Continuous example: lower n & effect size
+
+
+```{r}
+set.seed(42)
+n  = 30
+x1 = rnorm(n)
+x2 = rnorm(n)
+X  = cbind(1, x1, x2, x1*x2)
+b  = c(1, 0.1, 1, -0.2)
+e  = rnorm(n)
+y  = c(X %*% b + e)
+m  = lm(y ~ x1*x2)
+```
+
+## Continuous example: lower n & effect size
+
+```{r}
+beta_hat = coef(m); CIs = confint(m)
+round(cbind(beta_hat, CIs), 2)
+```
+
+. . .
+
+```{r}
+MEs = margins(m, variables = "x1", at = list(x2 = mean(x2)))
+print(summary(MEs), digits = 3)
+```
+
+## "The Checklist"
+
+. . .
+
+[(Brambor, Clark, and Golder 2006)](https://www.jstor.org/stable/25791835):
+
+. . .
+
+1. Include interaction terms
+2. Include all constitutive terms
+3. Constitutive terms are **not** unconditional marginal effects!
+4. Calculate substantively meaningful marginal effects and standard errors
+
+## Continuous example: lower n & effect size
+
+Consider the effect at one standard deviation above and below the mean of `x2`
+(i.e. when `x2` is `r sprintf("%0.2f", mean(x2) - sd(x2))` & `r sprintf("%0.2f", mean(x2) + sd(x2))`)
+
+. . .
+
+```{r}
+mx   = mean(x2)
+sdx  = sd(x2)
+vals = c(mx + sdx, mx - sdx)
+MEs  = margins(m, variables = "x1", at = list(x2 = vals))
+print(summary(MEs), digits = 3)
+```
+
+(True effect at those `x2` values is `r sprintf("%0.2f", b[2] + b[4] * (mx - sdx))` and `r sprintf("%0.2f", b[2] + b[4] * (mx + sdx))`)
+
+## Continuous example: lower n & effect size        
+
+```{r, fig.height = 4, fig.width = 6, out.width = "90%"}
+pts = coef(m)[2] + coef(m)[4] * x2
+margins::cplot(m, x = "x2", dx = "x1", what = "effect")
+abline(h = 0, lty = 2)
+points(x = x2, y = pts, pch = 19, col = "#d55e0080")
+```
+
+## Diagnostics
+
+. . .
+
+Recall the assumptions we've made to enable inference for OLS:
+
+::: nonincremental
+1. Linear in parameters
+2. Random sampling
+3. No perfect collinearity: In the sample, no explanatory variable is constant, and there is no **exact** linear relationship between any explanatory variables
+4. Zero conditional mean: The error term has the same expected value at any value of the explanatory variables: $\expectation{\varepsilon \mid x_1, \dots, x_k} = 0$
+5. Homoscedasticity: The error term has the same variance at any value of the explanatory variables; $\variance{\varepsilon \mid x_1, \dots, x_k} = \sigma^2$
+6.  $\varepsilon \sim \mathcal{N}\left( 0, \sigma^2 \right)$
+:::
+
+## Diagnostics: The Simulated Data
+
+```{r}
+set.seed(42)
+n  = 100
+x1 = rnorm(n)
+x2 = rnorm(n)
+X  = cbind(1, x1, x2, x2^2)
+b  = c(1, 1, 1, -2)
+e  = rnorm(n)
+y  = c(X %*% b + e)
+m  = lm(y ~ x1 + x2 + I(x2^2))
+```
+
+## Diagnostics: Linearity
+
+. . .
+
+```r
+library(ggplot2)
+d = data.frame(
+    x = c(x1, x2),
+    Variable = rep(c("x1", "x2"), each = n),
+    r = rep(residuals(m), 2)
+)
+ggplot(data = d, mapping = aes(x = x, y = r)) +
+    facet_wrap(~Variable) +
+    geom_point() +
+    geom_smooth(color = "#0072b2", fill = "#0072b280") +
+    geom_hline(yintercept = 0, linetype = "dashed") +
+    ylab("Residual") +
+    theme_bw() +
+    theme(axis.title.x = element_blank())
+```
+
+## Diagnostics: Linearity
+
+```{r, fig.height = 4, fig.width = 6, out.width = "90%", echo = FALSE, warning = FALSE, message = FALSE}
+library(ggplot2)
+d = data.frame(
+    x = c(x1, x2),
+    Variable = rep(c("x1", "x2"), each = n),
+    r = rep(residuals(m), 2)
+)
+ggplot(data = d, mapping = aes(x = x, y = r)) +
+    facet_wrap(~Variable) +
+    geom_point() +
+    geom_smooth(color = "#0072b2", fill = "#0072b280") +
+    geom_hline(yintercept = 0, linetype = "dashed") +
+    ylab("Residual") +
+    theme_bw() +
+    theme(axis.title.x = element_blank())
+```
+
+## Diagnostics: Linearity
+
+```{r, fig.height = 4, fig.width = 6, out.width = "90%"}
+plot(x = fitted(m), y = residuals(m))
+abline(h = 0, lty = 2)
+```
+
+## Diagnostics: Multicollinearity
+
+. . .
+
+- Under perfect multicollinearity, the OLS estimator is undefined
+- But even imperfect multicollinearity increases variance
+- We can assess multicollinearity using variance inflation factors (VIF)
+  + Ratio of coefficient variance in the full model vs just using that predictor
+  + Square root gives standard error increase relative to 0 correlation to other predictors
+- *By convention*, VIF > 10 or even VIF > 5 indicates a problem
+
+. . .
+
+```{r}
+car::vif(m)
+```
+
+## Diagnostics: Independence of errors
+
+. . .
+
+- No statistical test for independence from the predictors
+- Durbin-Watson test statistic tests for autocorrelation
+
+. . .
+
+&nbsp;
+
+\small
+```{r}
+lmtest::dwtest(m)
+```
+\normalsize
+
+## Diagnostics: Homoscedasticity
+
+```{r, fig.height = 4, fig.width = 6, out.width = "90%"}
+r = residuals(m); f = fitted(m); l = loess(r ~ f)
+plot(x = f, y = r); abline(h = 0, lty = 2)
+lines(x = f[order(f)], y = predict(l)[order(f)], col = "red")
+```
+
+## Diagnostics: Homoscedasticity
+
+```{r, fig.height = 4, fig.width = 6, out.width = "90%"}
+plot(residuals(m))
+abline(h = 0, lty = 2)
+```
+
+## Diagnostics: Homoscedasticity
+
+```{r, fig.height = 4, fig.width = 6, out.width = "90%"}
+m2 = lm(y ~ x1 + x2)
+r = residuals(m2); f = fitted(m2); l = loess(r ~ f)
+plot(x = f, y = r); abline(h = 0, lty = 2)
+lines(x = f[order(f)], y = predict(l)[order(f)], col = "red")
+```
+
+## Diagnostics: Homoscedasticity
+
+```{r, fig.height = 4, fig.width = 6, out.width = "90%"}
+plot(residuals(m2))
+abline(h = 0, lty = 2)
+```
+
+## Diagnostics: Homoscedasticity
+
+- One option is the Breusch–Pagan test (Breusch and Pagan 1979)
+  + Regress $g = \hat{\varepsilon}^2 / \hat{\sigma}^2$ on the predictors
+  + Then the test statistic $(SST - SSR) / 2$ is distributed $\chi_k^2$
+  + Tests for **linear** heteroscedasticity
+- Another is the White test (White 1980)
+  + Regress $\hat{\varepsilon}^2$ on the predictors, their squares, and interactions
+  + Then the test statistic $nR^2$ is distributed $\chi_{p-1}^2$
+  + More general but loses power with many regressors
+- Unfortunately cannot distinguish between heteroscedasticity & misspecification
+
+## Diagnostics: Homoscedasticity
+
+```{r}
+lmtest::bptest(m)
+skedastic::white(m, interactions = TRUE)
+```
+
+## Diagnostics: Normality of errors
+
+. . .
+
+- Shapiro-Wilk test
+
+```{r}
+shapiro.test(residuals(m))
+```
+
+- (See also the Kolmogorov-Smirnov, Jarque-Bera, and Anderson-Darling tests)
+
+## Diagnostics: Normality of errors
+
+- Q-Q plot
+
+```{r, fig.height = 4, fig.width = 6, out.width = "90%"}
+qqnorm(residuals(m))
+```
+
+## Solutions
+
+. . .
+
+1. Change the OLS model specification
+   a. Transform the predictor(s) and/or the outcomes?
+   b. Add interaction terms?
+   c. Are there omitted variables?
+2. Models for correlated errors (more on this after the midterm)
+3. Look for "influential" observations
+   a. DFBETAS, Cook's D
+   b. *Should* we delete outliers??

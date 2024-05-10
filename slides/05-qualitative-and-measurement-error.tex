@@ -1,0 +1,329 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{part title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{part title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\newif\ifbibliography
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+\usepackage{/home/jb/R/x86_64-pc-linux-gnu-library/4.3/quack/rmarkdown/templates/presentation/resources/beamerthemeAustin}
+\usepackage{/home/jb/R/x86_64-pc-linux-gnu-library/4.3/quack/rmarkdown/templates/presentation/resources/beamercolorthemelonghorn}
+\newcommand{\setsep}{\setlength{\itemsep}{3pt}}
+\newcommand{\setskip}{\setlength{\parskip}{3pt}}
+\renewcommand{\tightlist}{\setsep\setskip}
+\newcommand{\expectation}[1]{\ensuremath{\mathbb{E}\left[#1\right]}}
+\newcommand{\pd}[2][]{\ensuremath{\frac{\partial{#1}}{\partial{#2}}}}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\newcommand{\variance}[1]{\ensuremath{\Var\left[#1\right]}}
+\DeclareMathOperator{\standarddeviation}{sd}
+\DeclareMathOperator{\standarderror}{se}
+\usepackage{siunitx}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Statistical Analysis in Political Science II:Qualitative variables and measurement error},
+  pdfauthor={JBrandon Duck-Mayr},
+  colorlinks=true,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={Blue},
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Statistical Analysis in Political Science II:\newline Qualitative variables and measurement error}
+\author{JBrandon Duck-Mayr}
+\date{February 28, 2024}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Binary variables}
+\protect\hypertarget{binary-variables}{}
+\pause
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Also called dummy variables or dichotomous variables
+\item
+  Encode a specific type of qualitative variable, one characteristic that can take only one of two values
+\item
+  Examples (some better than others): treatment indicator, whether it's an election year, gender
+\end{itemize}
+
+\pause
+
+With dummy variable \(D\) and other predictors \(x_2, \dots, x_k\),
+in the model
+\[
+y = \beta_0 + \beta_1 D + \beta_2 x_2 + \dots + \beta_k x_k + \varepsilon,
+\]
+the coefficient \(\beta_1\) on \(D\) represents an \textbf{intercept shift} when \(D = 1\)
+\end{frame}
+
+\begin{frame}{Categorical variables}
+\protect\hypertarget{categorical-variables}{}
+\pause
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  What about characteristics with more than one value, like party identification?
+\item
+  Omit one category and create dummy variables for each other category
+\item
+  Then we interpret the dummy coefficients as an intercept difference between that group and the omitted group
+\item
+  Does it matter if the information is ordinal, like education?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Dummy:continuous interactions}
+\protect\hypertarget{dummycontinuous-interactions}{}
+\pause
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  (note we will cover this in more detail next time)
+\item
+  In the model \[ y = \beta_0 + \beta_1 D + \beta_2 x + \beta_3 D x + \varepsilon, \] \(\beta_1\) represents an intercept shift when \(D = 1\), but we also allow for \textbf{different slopes}
+\item
+  Then \(\beta_2\) is the slope on \(x\) when \(D = 0\) and \(\beta_2 + \beta_3\) is the slope on \(x\) when \(D = 1\)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Testing differences across groups}
+\protect\hypertarget{testing-differences-across-groups}{}
+\pause
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Suppose we want to let all the slopes differ across groups,
+  \[ y = \beta_0 + \beta_{g,1} x_1 + \beta_{g, 2} x_2 + \dots + \beta_{g, k} x_k + \varepsilon \]
+\item
+  We can do an \(F\)-test with \(k + 1\) restrictions
+\item
+  We can also run separate regressions
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Let \(\text{SSR}_1\) be the SSR for a regression for the first group
+  \item
+    Let \(\text{SSR}_2\) be the SSR for a regression for the second
+  \item
+    Let \(\text{SSR}_p\) be the SSR for a pooled regression
+  \item
+    Then we compute the \(F\)-statistic \[ F = \frac{\text{SSR}_p - (\text{SSR}_1 + \text{SSR}_2)}{\text{SSR}_1 + \text{SSR}_2} \frac{n - 2(k+1)}{k + 1}, \] with \(k\) and \(n_1 + n_2 - 2k\) d.o.f.
+  \item
+    This is called a Chow test
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Measurement error in the outcome}
+\protect\hypertarget{measurement-error-in-the-outcome}{}
+\pause
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Say we want to estimate the equation \(y^\ast = \beta_0 + \beta_1 x_1 + \dots + \beta_k x_k + \varepsilon,\) but only observe \(y = y^\ast + e_0\)
+\item
+  Then we estimate \(y = \beta_0 + \beta_1 x_1 + \dots + \beta_k x_k + \varepsilon^\ast\), where \(\varepsilon^\ast = \varepsilon + e_0\)
+\item
+  This is valid when \(e_0\) is unrelated to the predictors
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Notice the effect on estimator variance: \(\ensuremath{\mathop{\mathrm{Var}}\left[\varepsilon^\ast\right]} = \ensuremath{\mathop{\mathrm{Var}}\left[\varepsilon + e_0\right]} = \sigma_\varepsilon^2 + \sigma_0^2 > \sigma_\varepsilon^2\)
+  \end{itemize}
+\item
+  This is \textbf{not} valid if \(e_0\) is related to the predictors
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Measurement error in the predictors}
+\protect\hypertarget{measurement-error-in-the-predictors}{}
+\pause
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Say we want to estimate the equation \(y = \beta_0 + \beta_1 x_1^\ast + \dots + \beta_k x_k + \varepsilon,\) but only observe \(x_1 = x_1^\ast + e_1\)
+\item
+  Two cases:
+\item
+  \(\mathop{\mathrm{Cov}}\left(x_1, e_1\right) = 0\)
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Estimate \(y = \beta_0 + \beta_1 x_1 + \dots + \beta_k x_k + \left(\varepsilon - \beta_1 e_1\right)\)
+  \item
+    Still unbiased
+  \item
+    Variance increases: \(\ensuremath{\mathop{\mathrm{Var}}\left[\varepsilon - \beta_1 e_1\right]} = \sigma_\varepsilon^2 + \beta_1 \sigma_{e_1}^2\)
+  \end{itemize}
+\item
+  \(\mathop{\mathrm{Cov}}\left(x_1^\ast, e_1\right) = 0\)
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    classical errors-in-variables (CEV) assumption
+  \item
+    then \(e_1\) and \(x_1\) are correlated
+  \item
+    covariance between \(x_1\) and \(\left(\varepsilon - \beta_1 e_1\right)\) is
+    \[ \mathop{\mathrm{Cov}}\left(x_1, \varepsilon - \beta_1 e_1\right) = -\beta_1 \mathop{\mathrm{Cov}}\left(x_1, e_1\right) = \beta_1\sigma_{e_1}^2\]
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Measurement error in the predictors}
+\protect\hypertarget{measurement-error-in-the-predictors-1}{}
+Then in the two variable case,
+
+\begin{align*}
+\text{plim}\left(\hat{\beta}_1\right)
+& = \beta_1 + \frac{\mathop{\mathrm{Cov}}\left(x_1, \varepsilon - \beta_1 e_1\right)}{\ensuremath{\mathop{\mathrm{Var}}\left[x_1\right]}} \\
+& = \beta_1 - \frac{\beta_1\sigma_{e_1}^2}{\sigma_{x_1^\ast}^2 + \sigma_{e_1}^2} \\
+& = \beta_1 \left( \frac{\sigma_{x_1^\ast}^2}{\sigma_{x_1^\ast}^2 + \sigma_{e_1}^2} \right)
+\end{align*}
+
+\pause
+
+For \(k\) variables,
+
+\[
+\text{plim}\left(\hat{\beta}_1\right)
+=
+\beta_1 \left( \frac{\sigma_{r_1^\ast}^2}{\sigma_{r_1^\ast}^2 + \sigma_{e_1}^2} \right)
+\]
+\end{frame}
+
+\begin{frame}{Missing data}
+\protect\hypertarget{missing-data}{}
+\pause
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Different types of missingness:
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    \textcolor<7-8>{BurntOrange}{MCAR (missing completely at random): missingness unrelated to observed \textit{and} unobserved data}
+  \item
+    \textcolor<8>{BurntOrange}{MAR (missing at random): missingness only unrelated to unobserved data}
+  \item
+    MNAR (missing not at random): missingess systematically related even to unobserved data
+  \end{itemize}
+\item
+  Strategies to deal with missingness:
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    listwise deletion
+  \item
+    multiple imputation
+  \end{itemize}
+\item
+  Missingness in predictors vs outcomes?
+\end{itemize}
+\end{frame}
+
+\end{document}

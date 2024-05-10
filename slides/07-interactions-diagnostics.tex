@@ -1,0 +1,893 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{part title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{part title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\newif\ifbibliography
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+\usepackage{/home/jb/R/x86_64-pc-linux-gnu-library/4.3/quack/rmarkdown/templates/presentation/resources/beamerthemeAustin}
+\usepackage{/home/jb/R/x86_64-pc-linux-gnu-library/4.3/quack/rmarkdown/templates/presentation/resources/beamercolorthemelonghorn}
+\newcommand{\setsep}{\setlength{\itemsep}{3pt}}
+\newcommand{\setskip}{\setlength{\parskip}{3pt}}
+\renewcommand{\tightlist}{\setsep\setskip}
+\newcommand{\expectation}[1]{\ensuremath{\mathbb{E}\left[#1\right]}}
+\newcommand{\pd}[2][]{\ensuremath{\frac{\partial{#1}}{\partial{#2}}}}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\newcommand{\variance}[1]{\ensuremath{\Var\left[#1\right]}}
+\newcommand{\covariance}[1]{\ensuremath{\Cov\left[#1\right]}}
+\DeclareMathOperator{\standarddeviation}{sd}
+\DeclareMathOperator{\standarderror}{se}
+\usepackage{siunitx}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Statistical Analysis in Political Science II:Interaction Terms and Diagnostics},
+  pdfauthor={JBrandon Duck-Mayr},
+  colorlinks=true,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={Blue},
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Statistical Analysis in Political Science II:\newline Interaction Terms and Diagnostics}
+\author{JBrandon Duck-Mayr}
+\date{March 6, 2024}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Motivating interaction terms: Conditional effects}
+\protect\hypertarget{motivating-interaction-terms-conditional-effects}{}
+\pause
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Social scientists often have conditional hypotheses
+\item
+  Example: Hypothesizing that the effect of a Supreme Court justice's ideology on their interruptions in oral argument is positive when the Chief Justice is conservative and negative when the Chief is liberal
+\item
+  Example: Hypothesizing that the effect of campaign ad buys on vote choice decreases with name recognition
+\item
+  In a normal linear model, the marginal effect of one variable cannot depend on the value of another
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    If \(y = \beta_0 + \beta_1 x_1 + \dots + \beta_k x_k\), then \(\ensuremath{\frac{\partial{y}}{\partial{x_j}}} = \beta_j\)\ldots{} there are no \(X\)'s there!
+  \end{itemize}
+\item
+  So we include interaction terms
+\end{itemize}
+\end{frame}
+
+\begin{frame}{What do they \emph{mean}?}
+\protect\hypertarget{what-do-they-mean}{}
+\pause
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  In a model \(y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_1 x_2\),
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    If \(x_2\) is dichotomous, we are saying the effect of \(x_1\) depends on whether condition \(x_2\) is present or not
+  \item
+    If \(x_2\) is continuous, we are saying the effect of \(x_1\) can be different (magnitude and/or sign) as \(x_2\) increases or decreases
+  \end{itemize}
+\item
+  Then \(\ensuremath{\frac{\partial{y}}{\partial{x_1}}} = \beta_1 + \beta_3 x_2\)---success! \(x_2\) is in the formula for the marginal effect of \(x_1\)
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    So how much does an increase in \(x_1\) affect \(y\)? It depends! (on \(x_2\))
+  \end{itemize}
+\item
+  \textbf{Careful}: Not only is \(\ensuremath{\frac{\partial{y}}{\partial{x_1}}}\) not equal to \(\beta_1\), or even \(\beta_1 + \beta_3\), but:
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    \(\mathop{\mathrm{sd}}\left( \ensuremath{\frac{\partial{y}}{\partial{x_1}}} \right) \neq \mathop{\mathrm{sd}}\left( \beta_1 \right)\)
+  \item
+    \(\mathop{\mathrm{sd}}\left( \ensuremath{\frac{\partial{y}}{\partial{x_1}}} \right) \neq \mathop{\mathrm{sd}}\left( \beta_3 \right)\)
+  \item
+    \(\mathop{\mathrm{sd}}\left( \ensuremath{\frac{\partial{y}}{\partial{x_1}}} \right) \neq \mathop{\mathrm{sd}}\left( \beta_1 \right) + \mathop{\mathrm{sd}}\left( \beta_3 \right)\)
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Interaction terms and hypothesis tests}
+\protect\hypertarget{interaction-terms-and-hypothesis-tests}{}
+\pause
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Recall:
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    \(\ensuremath{\mathop{\mathrm{Var}}\left[X + Y\right]} = \ensuremath{\mathop{\mathrm{Var}}\left[X\right]} + \ensuremath{\mathop{\mathrm{Var}}\left[Y\right]} + 2\ensuremath{\mathop{\mathrm{Cov}}\left[X, Y\right]}\)
+  \item
+    \(\ensuremath{\mathop{\mathrm{Var}}\left[c X\right]} = c^2 \ensuremath{\mathop{\mathrm{Var}}\left[X\right]}\)
+  \end{itemize}
+\item
+  So! \(\mathop{\mathrm{se}}\left(\hat{\beta}_1 + \hat{\beta}_3 x_2\right) = \sqrt{\ensuremath{\mathop{\mathrm{Var}}\left[\hat{\beta}_1\right]} + x_2^2 \ensuremath{\mathop{\mathrm{Var}}\left[\hat{\beta}_3\right]} + 2 x_2 \ensuremath{\mathop{\mathrm{Cov}}\left[\hat{\beta}_1, \hat{\beta}_3\right]}}\)
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Whether or not \(x_1\) has a statistically significant effect on \(y\) depends on the value of \(x_2\); for some values of \(x_2\) the effect is significant, for others it isn't
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Dichotomous example: Simulation}
+\protect\hypertarget{dichotomous-example-simulation}{}
+\pause
+
+First simulate some data
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{42}\NormalTok{)}
+\NormalTok{n  }\OtherTok{=} \DecValTok{100}
+\NormalTok{x1 }\OtherTok{=} \FunctionTok{rnorm}\NormalTok{(n)}
+\NormalTok{x2 }\OtherTok{=} \FunctionTok{sample}\NormalTok{(}\DecValTok{0}\SpecialCharTok{:}\DecValTok{1}\NormalTok{, }\AttributeTok{size =}\NormalTok{ n, }\AttributeTok{replace =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{X  }\OtherTok{=} \FunctionTok{cbind}\NormalTok{(}\DecValTok{1}\NormalTok{, x1, x2, x1}\SpecialCharTok{*}\NormalTok{x2)}
+\NormalTok{b  }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{2}\NormalTok{)}
+\NormalTok{e  }\OtherTok{=} \FunctionTok{rnorm}\NormalTok{(n)}
+\NormalTok{y  }\OtherTok{=} \FunctionTok{c}\NormalTok{(X }\SpecialCharTok{\%*\%}\NormalTok{ b }\SpecialCharTok{+}\NormalTok{ e)}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}[fragile]{Dichotomous example: Calculation}
+\protect\hypertarget{dichotomous-example-calculation}{}
+Now fit the model
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m }\OtherTok{=} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1}\SpecialCharTok{*}\NormalTok{x2)}
+\end{Highlighting}
+\end{Shaded}
+
+\pause
+
+And calculate the marginal effect of \texttt{x1} when \texttt{x2} is 0 or 1
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{V }\OtherTok{=} \FunctionTok{vcov}\NormalTok{(m, }\AttributeTok{complete =} \ConstantTok{TRUE}\NormalTok{) }\CommentTok{\# \textbackslash{}Var(\textbackslash{}hat\{\textbackslash{}beta\})}
+\NormalTok{ME1 }\OtherTok{=} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{2}\NormalTok{] }\SpecialCharTok{+} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{4}\NormalTok{]}
+\NormalTok{SE1 }\OtherTok{=} \FunctionTok{sqrt}\NormalTok{(V[}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{] }\SpecialCharTok{+}\NormalTok{ V[}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{] }\SpecialCharTok{+} \DecValTok{2}\SpecialCharTok{*}\NormalTok{V[}\DecValTok{2}\NormalTok{, }\DecValTok{4}\NormalTok{])}
+\FunctionTok{sprintf}\NormalTok{(}\StringTok{"ME of x1 when x2=1 is \%0.3f (s.e. \%0.3f)"}\NormalTok{, ME1, SE1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "ME of x1 when x2=1 is -0.975 (s.e. 0.131)"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ME0 }\OtherTok{=} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{2}\NormalTok{]}
+\NormalTok{SE0 }\OtherTok{=} \FunctionTok{sqrt}\NormalTok{(V[}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{])}
+\FunctionTok{sprintf}\NormalTok{(}\StringTok{"ME of x1 when x2=0 is \%0.3f (s.e. \%0.3f)"}\NormalTok{, ME0, SE0)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "ME of x1 when x2=0 is 1.108 (s.e. 0.126)"
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Dichotomous example: comparison to \texttt{\{margins\}}}
+\protect\hypertarget{dichotomous-example-comparison-to-margins}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(margins)}
+\NormalTok{MEs }\OtherTok{=} \FunctionTok{margins}\NormalTok{(m, }\AttributeTok{variables =} \StringTok{"x1"}\NormalTok{, }\AttributeTok{at =} \FunctionTok{list}\NormalTok{(}\AttributeTok{x2 =} \DecValTok{0}\SpecialCharTok{:}\DecValTok{1}\NormalTok{))}
+\FunctionTok{print}\NormalTok{(}\FunctionTok{summary}\NormalTok{(MEs), }\AttributeTok{digits =} \DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  factor    x2    AME    SE      z     p  lower  upper
+##      x1 0.000  1.108 0.126  8.788 0.000  0.861  1.355
+##      x1 1.000 -0.975 0.131 -7.472 0.000 -1.231 -0.720
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\# Manual calculation:}
+\NormalTok{E }\OtherTok{=} \FunctionTok{c}\NormalTok{(ME0,ME1); SE }\OtherTok{=} \FunctionTok{c}\NormalTok{(SE0,SE1); z}\OtherTok{=}\NormalTok{E}\SpecialCharTok{/}\NormalTok{SE; k}\OtherTok{=}\FunctionTok{qnorm}\NormalTok{(}\FloatTok{0.975}\NormalTok{)}\SpecialCharTok{*}\NormalTok{SE}
+\FunctionTok{print}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}
+    \AttributeTok{factor =} \StringTok{"x1"}\NormalTok{, }\AttributeTok{x2 =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{), }\AttributeTok{AME =}\NormalTok{ E, }\AttributeTok{SE =}\NormalTok{ SE,}
+    \AttributeTok{z =}\NormalTok{ z, }\AttributeTok{p =} \DecValTok{1}\SpecialCharTok{{-}}\FunctionTok{pnorm}\NormalTok{(}\FunctionTok{abs}\NormalTok{(z)), }\AttributeTok{lower =}\NormalTok{ E}\SpecialCharTok{{-}}\NormalTok{k, }\AttributeTok{upper =}\NormalTok{ E}\SpecialCharTok{+}\NormalTok{k}
+\NormalTok{), }\AttributeTok{digits =} \DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   factor x2    AME    SE     z        p  lower upper
+## 1     x1  0  1.108 0.126  8.79 0.00e+00  0.861  1.35
+## 2     x1  1 -0.975 0.131 -7.47 3.94e-14 -1.231 -0.72
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Dichotomous example}
+\protect\hypertarget{dichotomous-example}{}
+\includegraphics[width=0.9\linewidth]{07-interactions-diagnostics_files/figure-beamer/unnamed-chunk-5-1}
+\end{frame}
+
+\begin{frame}[fragile]{Continuous example: Simulation}
+\protect\hypertarget{continuous-example-simulation}{}
+\pause
+
+First simulate some data
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{42}\NormalTok{)}
+\NormalTok{n  }\OtherTok{=} \DecValTok{100}
+\NormalTok{x1 }\OtherTok{=} \FunctionTok{rnorm}\NormalTok{(n)}
+\NormalTok{x2 }\OtherTok{=} \FunctionTok{rnorm}\NormalTok{(n)}
+\NormalTok{X  }\OtherTok{=} \FunctionTok{cbind}\NormalTok{(}\DecValTok{1}\NormalTok{, x1, x2, x1}\SpecialCharTok{*}\NormalTok{x2)}
+\NormalTok{b  }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{2}\NormalTok{)}
+\NormalTok{e  }\OtherTok{=} \FunctionTok{rnorm}\NormalTok{(n)}
+\NormalTok{y  }\OtherTok{=} \FunctionTok{c}\NormalTok{(X }\SpecialCharTok{\%*\%}\NormalTok{ b }\SpecialCharTok{+}\NormalTok{ e)}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}[fragile]{Continuous example: Calculation}
+\protect\hypertarget{continuous-example-calculation}{}
+Now fit the model
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m }\OtherTok{=} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1}\SpecialCharTok{*}\NormalTok{x2); V }\OtherTok{=} \FunctionTok{vcov}\NormalTok{(m, }\AttributeTok{complete =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pause
+
+And calculate the marginal effect of \texttt{x1}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mx }\OtherTok{=} \FunctionTok{mean}\NormalTok{(x2)}
+\NormalTok{ME }\OtherTok{=} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{2}\NormalTok{] }\SpecialCharTok{+} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{4}\NormalTok{] }\SpecialCharTok{*}\NormalTok{ mx}
+\NormalTok{SE }\OtherTok{=} \FunctionTok{sqrt}\NormalTok{(V[}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{] }\SpecialCharTok{+}\NormalTok{ mx}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{*}\NormalTok{ V[}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{] }\SpecialCharTok{+} \DecValTok{2}\SpecialCharTok{*}\NormalTok{mx}\SpecialCharTok{*}\NormalTok{V[}\DecValTok{2}\NormalTok{, }\DecValTok{4}\NormalTok{])}
+\NormalTok{msg }\OtherTok{=} \StringTok{"when x2=mean(x2) ME of x1 = \%0.3f (s.e. \%0.3f)"}
+\FunctionTok{sprintf}\NormalTok{(msg, ME, SE)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "when x2=mean(x2) ME of x1 = 1.033 (s.e. 0.097)"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{MEs }\OtherTok{=} \FunctionTok{margins}\NormalTok{(m, }\AttributeTok{variables =} \StringTok{"x1"}\NormalTok{, }\AttributeTok{at =} \FunctionTok{list}\NormalTok{(}\AttributeTok{x2 =}\NormalTok{ mx))}
+\FunctionTok{print}\NormalTok{(}\FunctionTok{summary}\NormalTok{(MEs), }\AttributeTok{digits =} \DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  factor     x2   AME    SE      z     p lower upper
+##      x1 -0.087 1.033 0.097 10.638 0.000 0.843 1.223
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Continuous example}
+\protect\hypertarget{continuous-example}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{margins}\SpecialCharTok{::}\FunctionTok{cplot}\NormalTok{(m, }\AttributeTok{x =} \StringTok{"x2"}\NormalTok{, }\AttributeTok{dx =} \StringTok{"x1"}\NormalTok{, }\AttributeTok{what =} \StringTok{"effect"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \DecValTok{0}\NormalTok{, }\AttributeTok{lty =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=0.9\linewidth]{07-interactions-diagnostics_files/figure-beamer/unnamed-chunk-9-1}
+\end{frame}
+
+\begin{frame}[fragile]{Continuous example: lower n \& effect size}
+\protect\hypertarget{continuous-example-lower-n-effect-size}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{42}\NormalTok{)}
+\NormalTok{n  }\OtherTok{=} \DecValTok{30}
+\NormalTok{x1 }\OtherTok{=} \FunctionTok{rnorm}\NormalTok{(n)}
+\NormalTok{x2 }\OtherTok{=} \FunctionTok{rnorm}\NormalTok{(n)}
+\NormalTok{X  }\OtherTok{=} \FunctionTok{cbind}\NormalTok{(}\DecValTok{1}\NormalTok{, x1, x2, x1}\SpecialCharTok{*}\NormalTok{x2)}
+\NormalTok{b  }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\FloatTok{0.1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\FloatTok{0.2}\NormalTok{)}
+\NormalTok{e  }\OtherTok{=} \FunctionTok{rnorm}\NormalTok{(n)}
+\NormalTok{y  }\OtherTok{=} \FunctionTok{c}\NormalTok{(X }\SpecialCharTok{\%*\%}\NormalTok{ b }\SpecialCharTok{+}\NormalTok{ e)}
+\NormalTok{m  }\OtherTok{=} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1}\SpecialCharTok{*}\NormalTok{x2)}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}[fragile]{Continuous example: lower n \& effect size}
+\protect\hypertarget{continuous-example-lower-n-effect-size-1}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{beta\_hat }\OtherTok{=} \FunctionTok{coef}\NormalTok{(m); CIs }\OtherTok{=} \FunctionTok{confint}\NormalTok{(m)}
+\FunctionTok{round}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(beta\_hat, CIs), }\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##             beta_hat 2.5 % 97.5 %
+## (Intercept)     1.13  0.84   1.42
+## x1             -0.03 -0.26   0.21
+## x2              0.83  0.54   1.11
+## x1:x2          -0.38 -0.61  -0.16
+\end{verbatim}
+
+\pause
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{MEs }\OtherTok{=} \FunctionTok{margins}\NormalTok{(m, }\AttributeTok{variables =} \StringTok{"x1"}\NormalTok{, }\AttributeTok{at =} \FunctionTok{list}\NormalTok{(}\AttributeTok{x2 =} \FunctionTok{mean}\NormalTok{(x2)))}
+\FunctionTok{print}\NormalTok{(}\FunctionTok{summary}\NormalTok{(MEs), }\AttributeTok{digits =} \DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  factor     x2   AME    SE     z     p  lower upper
+##      x1 -0.122 0.021 0.113 0.185 0.853 -0.201 0.243
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{``The Checklist''}
+\protect\hypertarget{the-checklist}{}
+\pause
+
+\href{https://www.jstor.org/stable/25791835}{(Brambor, Clark, and Golder 2006)}:
+
+\pause
+
+\begin{enumerate}[<+->]
+\tightlist
+\item
+  Include interaction terms
+\item
+  Include all constitutive terms
+\item
+  Constitutive terms are \textbf{not} unconditional marginal effects!
+\item
+  Calculate substantively meaningful marginal effects and standard errors
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Continuous example: lower n \& effect size}
+\protect\hypertarget{continuous-example-lower-n-effect-size-2}{}
+Consider the effect at one standard deviation above and below the mean of \texttt{x2}
+(i.e.~when \texttt{x2} is -1.17 \& 0.93)
+
+\pause
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mx   }\OtherTok{=} \FunctionTok{mean}\NormalTok{(x2)}
+\NormalTok{sdx  }\OtherTok{=} \FunctionTok{sd}\NormalTok{(x2)}
+\NormalTok{vals }\OtherTok{=} \FunctionTok{c}\NormalTok{(mx }\SpecialCharTok{+}\NormalTok{ sdx, mx }\SpecialCharTok{{-}}\NormalTok{ sdx)}
+\NormalTok{MEs  }\OtherTok{=} \FunctionTok{margins}\NormalTok{(m, }\AttributeTok{variables =} \StringTok{"x1"}\NormalTok{, }\AttributeTok{at =} \FunctionTok{list}\NormalTok{(}\AttributeTok{x2 =}\NormalTok{ vals))}
+\FunctionTok{print}\NormalTok{(}\FunctionTok{summary}\NormalTok{(MEs), }\AttributeTok{digits =} \DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  factor     x2    AME    SE      z     p  lower  upper
+##      x1 -1.172  0.424 0.171  2.475 0.013  0.088  0.759
+##      x1  0.928 -0.382 0.154 -2.486 0.013 -0.683 -0.081
+\end{verbatim}
+
+(True effect at those \texttt{x2} values is 0.33 and -0.09)
+\end{frame}
+
+\begin{frame}[fragile]{Continuous example: lower n \& effect size}
+\protect\hypertarget{continuous-example-lower-n-effect-size-3}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pts }\OtherTok{=} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{2}\NormalTok{] }\SpecialCharTok{+} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{4}\NormalTok{] }\SpecialCharTok{*}\NormalTok{ x2}
+\NormalTok{margins}\SpecialCharTok{::}\FunctionTok{cplot}\NormalTok{(m, }\AttributeTok{x =} \StringTok{"x2"}\NormalTok{, }\AttributeTok{dx =} \StringTok{"x1"}\NormalTok{, }\AttributeTok{what =} \StringTok{"effect"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \DecValTok{0}\NormalTok{, }\AttributeTok{lty =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{points}\NormalTok{(}\AttributeTok{x =}\NormalTok{ x2, }\AttributeTok{y =}\NormalTok{ pts, }\AttributeTok{pch =} \DecValTok{19}\NormalTok{, }\AttributeTok{col =} \StringTok{"\#d55e0080"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=0.9\linewidth]{07-interactions-diagnostics_files/figure-beamer/unnamed-chunk-14-1}
+\end{frame}
+
+\begin{frame}{Diagnostics}
+\protect\hypertarget{diagnostics}{}
+\pause
+
+Recall the assumptions we've made to enable inference for OLS:
+
+\begin{enumerate}
+\tightlist
+\item
+  Linear in parameters
+\item
+  Random sampling
+\item
+  No perfect collinearity: In the sample, no explanatory variable is constant, and there is no \textbf{exact} linear relationship between any explanatory variables
+\item
+  Zero conditional mean: The error term has the same expected value at any value of the explanatory variables: \(\ensuremath{\mathbb{E}\left[\varepsilon \mid x_1, \dots, x_k\right]} = 0\)
+\item
+  Homoscedasticity: The error term has the same variance at any value of the explanatory variables; \(\ensuremath{\mathop{\mathrm{Var}}\left[\varepsilon \mid x_1, \dots, x_k\right]} = \sigma^2\)
+\item
+  \(\varepsilon \sim \mathcal{N}\left( 0, \sigma^2 \right)\)
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Diagnostics: The Simulated Data}
+\protect\hypertarget{diagnostics-the-simulated-data}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{42}\NormalTok{)}
+\NormalTok{n  }\OtherTok{=} \DecValTok{100}
+\NormalTok{x1 }\OtherTok{=} \FunctionTok{rnorm}\NormalTok{(n)}
+\NormalTok{x2 }\OtherTok{=} \FunctionTok{rnorm}\NormalTok{(n)}
+\NormalTok{X  }\OtherTok{=} \FunctionTok{cbind}\NormalTok{(}\DecValTok{1}\NormalTok{, x1, x2, x2}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{b  }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{2}\NormalTok{)}
+\NormalTok{e  }\OtherTok{=} \FunctionTok{rnorm}\NormalTok{(n)}
+\NormalTok{y  }\OtherTok{=} \FunctionTok{c}\NormalTok{(X }\SpecialCharTok{\%*\%}\NormalTok{ b }\SpecialCharTok{+}\NormalTok{ e)}
+\NormalTok{m  }\OtherTok{=} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2 }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(x2}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}[fragile]{Diagnostics: Linearity}
+\protect\hypertarget{diagnostics-linearity}{}
+\pause
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(ggplot2)}
+\NormalTok{d }\OtherTok{=} \FunctionTok{data.frame}\NormalTok{(}
+    \AttributeTok{x =} \FunctionTok{c}\NormalTok{(x1, x2),}
+    \AttributeTok{Variable =} \FunctionTok{rep}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"x1"}\NormalTok{, }\StringTok{"x2"}\NormalTok{), }\AttributeTok{each =}\NormalTok{ n),}
+    \AttributeTok{r =} \FunctionTok{rep}\NormalTok{(}\FunctionTok{residuals}\NormalTok{(m), }\DecValTok{2}\NormalTok{)}
+\NormalTok{)}
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ d, }\AttributeTok{mapping =} \FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ x, }\AttributeTok{y =}\NormalTok{ r)) }\SpecialCharTok{+}
+    \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{Variable) }\SpecialCharTok{+}
+    \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+    \FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{color =} \StringTok{"\#0072b2"}\NormalTok{, }\AttributeTok{fill =} \StringTok{"\#0072b280"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \DecValTok{0}\NormalTok{, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{ylab}\NormalTok{(}\StringTok{"Residual"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{theme\_bw}\NormalTok{() }\SpecialCharTok{+}
+    \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.title.x =} \FunctionTok{element\_blank}\NormalTok{())}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}{Diagnostics: Linearity}
+\protect\hypertarget{diagnostics-linearity-1}{}
+\includegraphics[width=0.9\linewidth]{07-interactions-diagnostics_files/figure-beamer/unnamed-chunk-16-1}
+\end{frame}
+
+\begin{frame}[fragile]{Diagnostics: Linearity}
+\protect\hypertarget{diagnostics-linearity-2}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(}\AttributeTok{x =} \FunctionTok{fitted}\NormalTok{(m), }\AttributeTok{y =} \FunctionTok{residuals}\NormalTok{(m))}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \DecValTok{0}\NormalTok{, }\AttributeTok{lty =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=0.9\linewidth]{07-interactions-diagnostics_files/figure-beamer/unnamed-chunk-17-1}
+\end{frame}
+
+\begin{frame}[fragile]{Diagnostics: Multicollinearity}
+\protect\hypertarget{diagnostics-multicollinearity}{}
+\pause
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Under perfect multicollinearity, the OLS estimator is undefined
+\item
+  But even imperfect multicollinearity increases variance
+\item
+  We can assess multicollinearity using variance inflation factors (VIF)
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Ratio of coefficient variance in the full model vs just using that predictor
+  \item
+    Square root gives standard error increase relative to 0 correlation to other predictors
+  \end{itemize}
+\item
+  \emph{By convention}, VIF \textgreater{} 10 or even VIF \textgreater{} 5 indicates a problem
+\end{itemize}
+
+\pause
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{car}\SpecialCharTok{::}\FunctionTok{vif}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       x1       x2  I(x2^2) 
+## 1.059565 1.009498 1.065707
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Diagnostics: Independence of errors}
+\protect\hypertarget{diagnostics-independence-of-errors}{}
+\pause
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  No statistical test for independence from the predictors
+\item
+  Durbin-Watson test statistic tests for autocorrelation
+\end{itemize}
+
+\pause
+
+~
+
+\small
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lmtest}\SpecialCharTok{::}\FunctionTok{dwtest}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Durbin-Watson test
+## 
+## data:  m
+## DW = 1.9814, p-value = 0.4637
+## alternative hypothesis: true autocorrelation is greater than 0
+\end{verbatim}
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Diagnostics: Homoscedasticity}
+\protect\hypertarget{diagnostics-homoscedasticity}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{r }\OtherTok{=} \FunctionTok{residuals}\NormalTok{(m); f }\OtherTok{=} \FunctionTok{fitted}\NormalTok{(m); l }\OtherTok{=} \FunctionTok{loess}\NormalTok{(r }\SpecialCharTok{\textasciitilde{}}\NormalTok{ f)}
+\FunctionTok{plot}\NormalTok{(}\AttributeTok{x =}\NormalTok{ f, }\AttributeTok{y =}\NormalTok{ r); }\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \DecValTok{0}\NormalTok{, }\AttributeTok{lty =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{(}\AttributeTok{x =}\NormalTok{ f[}\FunctionTok{order}\NormalTok{(f)], }\AttributeTok{y =} \FunctionTok{predict}\NormalTok{(l)[}\FunctionTok{order}\NormalTok{(f)], }\AttributeTok{col =} \StringTok{"red"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=0.9\linewidth]{07-interactions-diagnostics_files/figure-beamer/unnamed-chunk-20-1}
+\end{frame}
+
+\begin{frame}[fragile]{Diagnostics: Homoscedasticity}
+\protect\hypertarget{diagnostics-homoscedasticity-1}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{residuals}\NormalTok{(m))}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \DecValTok{0}\NormalTok{, }\AttributeTok{lty =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=0.9\linewidth]{07-interactions-diagnostics_files/figure-beamer/unnamed-chunk-21-1}
+\end{frame}
+
+\begin{frame}[fragile]{Diagnostics: Homoscedasticity}
+\protect\hypertarget{diagnostics-homoscedasticity-2}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m2 }\OtherTok{=} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2)}
+\NormalTok{r }\OtherTok{=} \FunctionTok{residuals}\NormalTok{(m2); f }\OtherTok{=} \FunctionTok{fitted}\NormalTok{(m2); l }\OtherTok{=} \FunctionTok{loess}\NormalTok{(r }\SpecialCharTok{\textasciitilde{}}\NormalTok{ f)}
+\FunctionTok{plot}\NormalTok{(}\AttributeTok{x =}\NormalTok{ f, }\AttributeTok{y =}\NormalTok{ r); }\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \DecValTok{0}\NormalTok{, }\AttributeTok{lty =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{(}\AttributeTok{x =}\NormalTok{ f[}\FunctionTok{order}\NormalTok{(f)], }\AttributeTok{y =} \FunctionTok{predict}\NormalTok{(l)[}\FunctionTok{order}\NormalTok{(f)], }\AttributeTok{col =} \StringTok{"red"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=0.9\linewidth]{07-interactions-diagnostics_files/figure-beamer/unnamed-chunk-22-1}
+\end{frame}
+
+\begin{frame}[fragile]{Diagnostics: Homoscedasticity}
+\protect\hypertarget{diagnostics-homoscedasticity-3}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{residuals}\NormalTok{(m2))}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \DecValTok{0}\NormalTok{, }\AttributeTok{lty =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=0.9\linewidth]{07-interactions-diagnostics_files/figure-beamer/unnamed-chunk-23-1}
+\end{frame}
+
+\begin{frame}{Diagnostics: Homoscedasticity}
+\protect\hypertarget{diagnostics-homoscedasticity-4}{}
+\begin{itemize}[<+->]
+\tightlist
+\item
+  One option is the Breusch--Pagan test (Breusch and Pagan 1979)
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Regress \(g = \hat{\varepsilon}^2 / \hat{\sigma}^2\) on the predictors
+  \item
+    Then the test statistic \((SST - SSR) / 2\) is distributed \(\chi_k^2\)
+  \item
+    Tests for \textbf{linear} heteroscedasticity
+  \end{itemize}
+\item
+  Another is the White test (White 1980)
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Regress \(\hat{\varepsilon}^2\) on the predictors, their squares, and interactions
+  \item
+    Then the test statistic \(nR^2\) is distributed \(\chi_{p-1}^2\)
+  \item
+    More general but loses power with many regressors
+  \end{itemize}
+\item
+  Unfortunately cannot distinguish between heteroscedasticity \& misspecification
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Diagnostics: Homoscedasticity}
+\protect\hypertarget{diagnostics-homoscedasticity-5}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lmtest}\SpecialCharTok{::}\FunctionTok{bptest}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  studentized Breusch-Pagan test
+## 
+## data:  m
+## BP = 8.5267, df = 3, p-value = 0.03629
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{skedastic}\SpecialCharTok{::}\FunctionTok{white}\NormalTok{(m, }\AttributeTok{interactions =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 5
+##   statistic p.value parameter method       alternative
+##       <dbl>   <dbl>     <dbl> <chr>        <chr>      
+## 1      12.1   0.205         9 White's Test greater
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Diagnostics: Normality of errors}
+\protect\hypertarget{diagnostics-normality-of-errors}{}
+\pause
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Shapiro-Wilk test
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(}\FunctionTok{residuals}\NormalTok{(m))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  residuals(m)
+## W = 0.98908, p-value = 0.5906
+\end{verbatim}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  (See also the Kolmogorov-Smirnov, Jarque-Bera, and Anderson-Darling tests)
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Diagnostics: Normality of errors}
+\protect\hypertarget{diagnostics-normality-of-errors-1}{}
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Q-Q plot
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{qqnorm}\NormalTok{(}\FunctionTok{residuals}\NormalTok{(m))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=0.9\linewidth]{07-interactions-diagnostics_files/figure-beamer/unnamed-chunk-26-1}
+\end{frame}
+
+\begin{frame}{Solutions}
+\protect\hypertarget{solutions}{}
+\pause
+
+\begin{enumerate}[<+->]
+\tightlist
+\item
+  Change the OLS model specification
+
+  \begin{enumerate}[<+->]
+  [a.]
+  \tightlist
+  \item
+    Transform the predictor(s) and/or the outcomes?
+  \item
+    Add interaction terms?
+  \item
+    Are there omitted variables?
+  \end{enumerate}
+\item
+  Models for correlated errors (more on this after the midterm)
+\item
+  Look for ``influential'' observations
+
+  \begin{enumerate}[<+->]
+  [a.]
+  \tightlist
+  \item
+    DFBETAS, Cook's D
+  \item
+    \emph{Should} we delete outliers??
+  \end{enumerate}
+\end{enumerate}
+\end{frame}
+
+\end{document}

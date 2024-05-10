@@ -1,0 +1,164 @@
+---
+title: "Statistical Analysis in Political Science II:\\newline Intro to causal inference"
+author: "JBrandon Duck-Mayr"
+date: "`r quack::american_date_format(Sys.Date())`"
+urlcolor: Blue
+header-includes:
+    - \newcommand{\setsep}{\setlength{\itemsep}{3pt}}
+    - \newcommand{\setskip}{\setlength{\parskip}{3pt}}
+    - \renewcommand{\tightlist}{\setsep\setskip}
+    - \newcommand{\pd}[2][]{\ensuremath{\frac{\partial{#1}}{\partial{#2}}}}
+    - \newcommand{\E}{\ensuremath{\mathbb{E}}}
+    - \newcommand{\expectation}[1]{\ensuremath{\E\left[#1\right]}}
+    - \DeclareMathOperator{\Var}{Var}
+    - \DeclareMathOperator{\Cov}{Cov}
+    - \newcommand{\variance}[1]{\ensuremath{\Var\left(#1\right)}}
+    - \newcommand{\covariance}[1]{\ensuremath{\Cov\left(#1\right)}}
+    - \DeclareMathOperator{\sd}{sd}
+    - \DeclareMathOperator{\se}{se}
+    - \newcommand{\stddev}[1]{\ensuremath{\sd\left(#1\right)}}
+    - \newcommand{\stderr}[1]{\ensuremath{\se\left(#1\right)}}
+    - \usepackage{siunitx}
+output:
+    quack::presentation:
+        toc: false
+        incremental: true
+---
+
+<!--
+Topics:
+- What is causal inference
+- Fundamental problem of causal inference
+- DAGs
+- Different types of biases
+- Causal estimands
+- Further resources
+  + Causal Inference: The Mixtape
+  + Gerber and Green
+  + Pearl's Book of Why
+-->
+
+## What is causal inference?
+
+. . .
+
+- Description: Summary statistics, correlations, associations, etc
+- Prediction
+- Causal inference: Associations that are "causal"\pause\dots\ what does that mean??
+
+## The fundamental problem of causal inference
+
+. . .
+
+- We want to be able to estimate the effect an treatment $X$ has on an outcome $Y$
+- Say $X$ takes two values; $X = 1$ or $X = 0$
+- Let $Y(1)$ be the outcome we would observe if $X = 1$ and similarly for $Y(0)$
+- We'd want to directly observe and calculate $Y(1) - Y(0)$... but we can't
+
+## Assumptions, assumptions
+
+. . .
+
+"Under certain assumptions, we can leverage data from individuals exposed to different inputs to compare the average differences in their observed outcomes..."
+
+. . .
+
+1. Consistency (SUTVA): "the outcome you observe is exactly equal to the potential outcome under the exposure you received", or $Y_{\text{obs}} = (X)Y(1) + (1 - X)Y$
+   i. Well defined exposure: "multiple versions of the treatment do not exist"
+   ii. No interference: "the outcome... for any subject does not depend on another subject's exposure"
+2. Exchangeability (No unmeasured confounding): "within levels of relevant variables (confounders), exposed and unexposed subjects have an equal likelihood of experiencing any outcome prior to exposure"
+3. Positivity (probabilistic assumption): "each individual has some chance of experiencing every available exposure level"
+
+## Directed acyclic graphs
+
+. . .
+
+- Types of paths
+  + Fork (two common causes of one variable)
+  + Chain (mediator)
+  + Collider (two variables causing one)
+- Open paths like forks and chains transmit association
+- Closed paths like colliders do not
+- Adjusting for confounding with forks closes biasing pathways
+- The effect of controlling in chains is dependent
+- Adjusting for colliders opens biasing pathways
+
+## Types of biases
+
+. . .
+
+- confounding bias: not controlling for a shared common cause
+- collider/selection bias: controlling for a collider
+- post-treatment bias: controlling for a mediator
+- M-bias and butterfly/bowtie bias
+  + "It turns out that, when in doubt, controlling for [the confounder-collider] is the better of the two options: confounding bias tends to be worse than collider bias... ([Ding and Miratrix 2015](https://doi.org/doi:10.1515/jci-2013-0021))"
+
+## Causal estimands
+
+. . .
+
+- Average treatment effect (ATE): $\E\left[Y(1) - Y(0)\right]$
+- Average treatment effect on the treated (ATT): $\E\left[Y(1) - Y(0) \mid X = 1\right]$
+- Average treatment effect among the unexposed (ATU/ATC): $\E\left[Y(1) - Y(0) \mid X = 0\right]$
+- Average treatment effect among the evenly matchable (ATM): $\E\left[Y(1) - Y(0) \mid M_d = 1\right]$
+
+## Causal inference techniques
+
+. . .
+
+- Randomized experiment
+- Instrumental variables
+- Difference-in-differences
+- Matching
+- Regression discontinuity
+- Etc
+- Etc
+
+. . .
+
+**These methods all have assumptions to consider!**
+
+## Propensity scores
+
+. . .
+
+- Think about if some variables affect both exposure and outcome
+- Probability-scale prediction of logistic regression of exposure on confounders
+- Probability of being exposed given confounders
+- "Rosenbaum and Rubin (1983) showed in observational studies conditioning on propensity scores can lead to unbiased estimates of the exposure effect as long as certain assumptions hold:
+  1. There are no unmeasured confounders
+  2. Every subject has a nonzero probability of receiving either exposure"
+- Used for matching and weighting (e.g. inverse-probability weights for ATE)
+
+## Random assignment
+
+. . .
+
+Under randomization,
+\begin{align*}
+\E\left[Y(1) \mid X = 1\right] & = \E\left[Y(1) \mid X = 0\right], \\
+\E\left[Y(0) \mid X = 1\right] & = \E\left[Y(0) \mid X = 0\right].
+\end{align*}
+
+. . .
+
+Then
+\begin{align*}
+\E\left[Y_i \mid X_i = 1\right] - \E\left[Y_i \mid X_i = 0\right]
+& = \E\left[Y(1)_i \mid X_i = 1\right] - \E\left[Y(0)_i \mid X_i = 0\right] \\
+& = \E\left[Y(1)_i \mid X_i = 1\right] - \E\left[Y(0)_i \mid X_i = 1\right] \\
+& = \E\left[Y(1)_i - Y(0)_i \mid X_i = 1\right] \\
+& = \E\left[Y(1)_i - Y(0)_i\right]
+\end{align*}
+
+. . .
+
+The effect of randomly-assigned treatment on the treated is the same as the effect of treatment on a randomly-assigned unit
+
+## Some further resources
+
+. . .
+
+- Gerber and Green (2012), *Field Experiments*, <https://a.co/d/623f73V>
+- Cunningham (2021), *Causal Inference: The Mixtape*, <https://mixtape.scunning.com/>
+- Pearl (2018), *The Book of Why*, <https://a.co/d/48erLSz>

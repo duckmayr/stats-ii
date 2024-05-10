@@ -1,0 +1,395 @@
+---
+title: "Statistical Analysis in Political Science II:\\newline Intro to Bayesian stats"
+author: "JBrandon Duck-Mayr"
+date: "`r quack::american_date_format(Sys.Date())`"
+urlcolor: Blue
+header-includes:
+    - \newcommand{\setsep}{\setlength{\itemsep}{3pt}}
+    - \newcommand{\setskip}{\setlength{\parskip}{3pt}}
+    - \renewcommand{\tightlist}{\setsep\setskip}
+    - \newcommand{\pd}[2][]{\ensuremath{\frac{\partial{#1}}{\partial{#2}}}}
+    - \newcommand{\E}{\ensuremath{\mathbb{E}}}
+    - \newcommand{\expectation}[1]{\ensuremath{\E\left[#1\right]}}
+    - \DeclareMathOperator{\Var}{Var}
+    - \DeclareMathOperator{\Cov}{Cov}
+    - \newcommand{\variance}[1]{\ensuremath{\Var\left(#1\right)}}
+    - \newcommand{\covariance}[1]{\ensuremath{\Cov\left(#1\right)}}
+    - \DeclareMathOperator{\sd}{sd}
+    - \DeclareMathOperator{\se}{se}
+    - \newcommand{\stddev}[1]{\ensuremath{\sd\left(#1\right)}}
+    - \newcommand{\stderr}[1]{\ensuremath{\se\left(#1\right)}}
+    - \usepackage{siunitx}
+output:
+    quack::presentation:
+        toc: false
+        incremental: true
+---
+
+<!--
+Topics:
+- What is Bayesian stats?
+- Why "go Bayesian"?
+- Some things you can do with it
+- Example: Beta-binomial
+- Example: BaP-VAR? GP-IRT? MC3-GGUM??
+-->
+
+```{r setup, echo = FALSE}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(HDInterval)
+library(ggridges)
+```
+
+## What exactly is Bayesian stats?
+
+. . .
+
+- Usually want to know distribution of parameter given observed data
+- Recall Bayes' rule:
+\begin{equation*}
+\Pr\left(A\mid B\right) =
+\frac{{\color{BurntOrange}\overbrace{\Pr\left(B \mid A\right)}^{\text{Likelihood}}} \quad {\color{Blue}\overbrace{\Pr\left(A\right)}^{\text{Prior}}}}{\color{DarkGreen}\underbrace{\Pr\left(B\right)}_{\text{Marginal likelihood}}}
+\end{equation*}
+- So Bayesian analysis tells us exactly what we want to know
+
+\onslide<5>{
+\begin{equation*}
+\Pr\left(\text{parameter}\mid \text{data}\right) =
+\frac{{\color{BurntOrange}\overbrace{\Pr\left(\text{data} \mid \text{parameter}\right)}^{\text{Likelihood}}} \quad {\color{Blue}\overbrace{\Pr\left(\text{parameter}\right)}^{\text{Prior}}}}{\color{DarkGreen}\underbrace{\Pr\left(\text{data}\right)}_{\text{Marginal likelihood}}}
+\end{equation*}
+}
+
+## Why "go Bayesian"?
+
+. . .
+
+Some advantages of the Bayesian approach:
+
+- Intuitiveness and means-ends fit
+- No need to rely on asymptotic approximations
+- Modularity / "easier" model building
+
+. . .
+
+Some disadvantages:
+
+- How do you set the prior?
+- Influence of the prior
+- Computational cost
+
+## How to go about Bayesian analysis
+
+. . .
+
+0. Identify (a) research question(s)
+1. Identify the relevant data
+2. Define a descriptive model
+3. Specify priors
+4. Derive and interpret the posterior
+5. Conduct (e.g.) posterior predictive checks
+
+## Example: Beta prior, binomial likelihood
+
+. . .
+
+- Example research question: What is the probability the Democratic candidate will win an election?
+- Relevant data: (among other things) election polling
+- Define a descriptive model
+  + The distribution of "successes" is the binomial distribution
+  + So this will be our likelihood
+  + $\Pr\left(k\text{ successes} \mid p\right) = \binom{n}{k} p^k (1-p)^{n-k}$
+- Specify priors
+  + We need a prior defined on $[0, 1]$ since it's a probability
+  + A common choice is a Beta prior with parameters $\alpha_0$ and $\beta_0$
+  + PDF: $f(x; \alpha, \beta) = \left(1/\text{B}\left(\alpha, \beta\right)\right) x^{\alpha-1} (1-x)^{\beta-1}$
+
+## Beta prior, binomial likelihood: The posterior
+
+. . .
+
+- Background concept: conjugate prior
+  + If (given the likelihood) the prior & posterior have the same form,
+  + the prior & posterior are conjugate distributions
+- *Conveniently*, the Beta distribution is a conjugate prior for the binomial likelihood
+
+\onslide<6->{
+\begin{align*}
+f\left(\pi \mid \text{polls}\right)
+& \propto f\left(\pi\right) \mathcal{L}\left(\text{polls} \mid \pi\right) \nonumber \\
+& = \frac{1}{\text{B}\left(\alpha, \beta\right)} \pi^{\alpha_0-1} (1-\pi)^{\beta_0-1} \binom{n}{y} \pi^{y} \left(1 - \pi\right)^{n-y} \nonumber \\
+& \propto \pi^{\left(\alpha_0 + y\right) - 1} (1 - \pi)^{\left(\beta_0 + n - y\right) - 1}\onslide<7->{;} \\
+\onslide<7->{\E\left[\pi\mid\text{polls}\right] & = \frac{\alpha_{\text{post}}}{\alpha_{\text{post}} + \beta_{\text{post}}}, \\
+\Var\left[\pi\mid\text{polls}\right] & = \frac{\alpha_{\text{post}}\beta_{\text{post}}}{\left(\alpha_{\text{post}} + \beta_{\text{post}}\right)^2 \left(\alpha_{\text{post}} + \beta_{\text{post}} + 1\right)}}
+\end{align*}
+}
+
+## Beta/binomal example: Data
+
+. . .
+
+\footnotesize
+
+```{r, message = FALSE, warning = FALSE, cache = TRUE}
+url_base = "https://projects.fivethirtyeight.com/polls-page/data/"
+polls = read.csv(paste0(url_base, "president_polls.csv")) %>% 
+    group_by(question_id) %>%
+        filter(state == "Texas") %>% 
+        filter(all(c("Trump", "Biden") %in% answer) & !is.na(sample_size)) %>%
+        ungroup() %>%
+        filter(answer %in% c("Trump", "Biden")) %>%
+        mutate(answer = ifelse(answer == "Biden", "Dem", "GOP")) %>%
+        pivot_wider(
+            id_cols = c("race_id", "poll_id", "question_id"),
+            names_from = answer,
+            values_from = pct,
+            unused_fn = list(state = first, sample_size = first)
+        ) %>%
+        mutate(
+            Dem = round(0.01 * Dem * sample_size),
+            GOP = round(0.01 * GOP * sample_size)
+        )
+```
+
+## Beta/binomal example: Posterior
+
+. . .
+
+\footnotesize
+
+```{r, eval = FALSE}
+alpha0 = 1; beta0 = 1
+alpha_post = alpha0 + sum(polls$Dem)
+beta_post  = beta0  + sum(polls$GOP)
+post_mean  = alpha_post / (alpha_post + beta_post)
+lower  = qbeta(0.025, alpha_post, beta_post)
+upper  = qbeta(0.975, alpha_post, beta_post)
+yfloor = floor(10 * lower) / 10
+yceil  = ceiling(10 * upper) / 10
+pi = seq(from = yfloor, to = yceil, length.out = 1000)
+post = data.frame(pi = pi, pr = dbeta(pi, alpha_post, beta_post))
+ggplot(data = post, mapping = aes(x = pi, y = pr)) +
+    geom_line(linewidth = 1) +
+    geom_vline(xintercept = post_mean, linetype = "dashed") +
+    geom_vline(xintercept = lower, linetype = "dotted") +
+    geom_vline(xintercept = upper, linetype = "dotted") +
+    xlab(expression(pi)) +
+    ylab(expression("Pr("~pi~")")) +
+    theme_bw()
+```
+
+## Beta/binomal example: Posterior
+
+```{r, echo = FALSE, cache = TRUE}
+alpha0 = 1; beta0 = 1
+alpha_post = alpha0 + sum(polls$Dem)
+beta_post  = beta0  + sum(polls$GOP)
+post_mean  = alpha_post / (alpha_post + beta_post)
+lower  = qbeta(0.025, alpha_post, beta_post)
+upper  = qbeta(0.975, alpha_post, beta_post)
+yfloor = floor(10 * lower) / 10
+yceil  = ceiling(10 * upper) / 10
+pi = seq(from = yfloor, to = yceil, length.out = 1000)
+post = data.frame(pi = pi, pr = dbeta(pi, alpha_post, beta_post))
+ggplot(data = post, mapping = aes(x = pi, y = pr)) +
+    geom_line(linewidth = 1) +
+    geom_vline(xintercept = post_mean, linetype = "dashed") +
+    geom_vline(xintercept = lower, linetype = "dotted") +
+    geom_vline(xintercept = upper, linetype = "dotted") +
+    xlab(expression(pi)) +
+    ylab(expression("Pr("~pi~")")) +
+    theme_bw()
+```
+
+## MCMC: A gift... and a curse (mostly a gift)
+
+. . .
+
+- Fortunately or unfortunately, most Bayesian models are not quite so simple
+- Fortunately, we still have tools for inference, like MCMC
+  + Gibbs sampling when you can derive "full conditionals"
+  + Metropolis-Hastings if not
+  + Newer or more complex algorithms like Hamiltonian MCMC
+    * Stan via `{rstan}`
+
+## Example: Linear regression
+
+. . .
+
+- We have outcomes $y$ and predictors $X$
+- We want to know probable values of the coefficients $\beta$
+- Descriptive model:
+  + $y = X\beta + \varepsilon$
+  + $\varepsilon \sim \mathcal{N}\left(0, \sigma^2\right)$
+  + $\beta \sim \mathcal{N}\left(b, B\right)$
+  + $1/\sigma^2 \sim \text{Gamma}\left(k, \theta\right)$
+- Metropolis MCMC:
+  + Specify starting values $\beta_0$ and $\sigma_0^2$
+  + For $t$ in $1, \dots, T$
+    * Propose a new value $\beta^\ast$ from $\mathcal{N}\left(\beta_{t-1}, \Sigma\right)$
+    * Draw $u$ from $\text{Uniform}\left(0, 1\right)$
+    * Set $\beta_t = \beta^\ast$ if $u < r$, $\beta_t = \beta_{t-1}$ otherwise
+    * Do similar exercise for $\sigma^2$
+
+## Example: Linear regression
+
+```{r, echo = FALSE, cache = TRUE}
+## Create sampler function
+sampler <- function(y, X, N = 1000, b = NULL, s = NULL) {
+    k <- ncol(X)
+    n <- nrow(X)
+    b <- "if"(is.null(b), rnorm(k), b)
+    s <- rgamma(1, shape = 1)
+    B <- matrix(nrow = k, ncol = N)
+    S <- numeric(N)
+    for ( i in 1:N ) {
+        ## Draw beta
+        z <- rnorm(k, mean = b)
+        r <- sum(dnorm(z, log = TRUE)) - sum(dnorm(b, log = TRUE))
+        r <- r + sum(dnorm(y, mean = c(X %*% z), sd = 1 / s, log = TRUE))
+        r <- r - sum(dnorm(y, mean = c(X %*% b), sd = 1 / s, log = TRUE))
+        if ( log(runif(1)) < r ) {
+            b <- z
+        }
+        B[ , i] <- b
+        ## Draw sigma
+        z <- rnorm(1, mean = s, sd = 0.1)
+        if ( z > 0 ) {
+            r <- dgamma(z, shape = 1, log = TRUE)
+            r <- r - dgamma(s, shape = 1, log = TRUE)
+            r <- r + sum(dnorm(y, mean = c(X %*% b),  sd = 1 / z, log = TRUE))
+            r <- r - sum(dnorm(y, mean = c(X %*% b),  sd = 1 / s, log = TRUE))
+            if ( log(runif(1)) < r ) {
+                s <- z
+            }
+            S[i] <- s
+        }
+    }
+    return(list(b_draws = B, s_draws = S))
+}
+
+## Simulate data
+set.seed(123)
+n <- 30
+x <- rnorm(n)
+X <- cbind(1, x)
+b <- c(-2, 2)
+e <- rnorm(n)
+y <- X %*% b + e
+
+## Sample posterior
+set.seed(456)
+N <- 100000
+p <- sampler(y, X, N, b = -b)
+
+## Look at the posterior surface (contour plot)
+d <- expand.grid(
+    b1 = seq(-2.5, 2.5, length.out = 51),
+    b2 = seq(-2.5, 2.5, length.out = 51)
+)
+d$p <- apply(d[ , c("b1", "b2")], 1, function(r) {
+    sum(dnorm(y, mean = X %*% r, log = TRUE)) + sum(dnorm(r, log = TRUE))
+})
+ind = c(1:50, floor(seq(from = 51, to = N, length.out = 950)))
+trc = data.frame(
+    b1 = p$b_draws[1, ind],
+    b2 = p$b_draws[2, ind]
+)
+ggplot(data = d, mapping = aes(x = b1, y = b2)) +
+    geom_contour_filled(aes(z = p), alpha = 0.5) +
+    geom_point(data = trc, col = "#ff000080") +
+    geom_path(data = trc, col = "#ff000080") +
+    geom_point(aes(x = -2, y = 2), size = 2) +
+    xlab(expression(beta[0])) +
+    ylab(expression(beta[1])) +
+    theme_bw()
+```
+
+## Example: Linear regression
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+lng_trc = pivot_longer(
+    data = trc,
+    cols = everything(),
+    names_to = "Variable",
+    values_to = "Posterior"
+)
+lng_trc$Sample = rep(ind, 2)
+ggplot(data = lng_trc, mapping = aes(x = Sample, y = Posterior)) +
+    facet_wrap(~Variable) +
+    geom_line(color = "#0072b2d7") +
+    theme_bw()
+```
+
+## Example: Linear regression
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+ggplot(data = lng_trc, mapping = aes(x = Posterior, fill = stat(quantile))) +
+    facet_wrap(~Variable) +
+    # geom_density() +
+    geom_density_ridges_gradient(
+        aes(y = 0),
+        quantile_lines = TRUE,
+        quantile_fun = hdi,
+        vline_linetype = 2
+    ) +
+    geom_vline(data = filter(lng_trc, Variable == "b1"), aes(xintercept = -2)) +
+    geom_vline(data = filter(lng_trc, Variable == "b2"), aes(xintercept =  2)) +
+    scale_fill_manual(
+        values = c("transparent", "#0072b280", "transparent"), guide = "none"
+    ) +
+    theme_bw()
+```
+
+## Example: Non-parametric measurement model
+
+. . .
+
+- Common ideology measurement model has $\Pr\left(y = 1\right) = \sigma\left(\alpha + \beta\theta\right)$, where sigma is a squashing function mapping the reals to $[0, 1]$
+- But what if we weren't so sure about that functional form?
+
+. . .
+
+```{r, echo = FALSE, out.height = "67%"}
+a = 0; b = 1; th = seq(from = -3, to = 3, length.out = 1000)
+plot(
+    x = th, y = a + b * th, lwd = 2,
+    xlab = expression(theta), ylab = expression(alpha + beta * theta)
+)
+```
+
+## Example: Non-parametric measurement model
+
+::: nonincremental
+- Common ideology measurement model has $\Pr\left(y = 1\right) = \sigma\left(\alpha + \beta\theta\right)$, where sigma is a squashing function mapping the reals to $[0, 1]$
+- But what if we weren't so sure about that functional form?
+:::
+
+```{r, echo = FALSE, out.height = "67%"}
+a = 0; b = 1; th = seq(from = -3, to = 3, length.out = 1000)
+plot(
+    x = th, y = plogis(a + b * th), lwd = 2,
+    xlab = expression(theta), ylab = "Pr(yea)"
+)
+```
+
+## Example: Non-parametric measurement model
+
+- Common ideology measurement model has $\Pr\left(y = 1\right) = \sigma\left(\alpha + \beta\theta\right)$, where sigma is a squashing function mapping the reals to $[0, 1]$
+- But what if we weren't so sure about that functional form?
+- We could use the Bayesian non-parametric measurement model GPIRT [(Duck-Mayr, Montgomery, and Garnett 2020)](https://proceedings.mlr.press/v124/duck-mayr20a.html)
+  + $\Pr\left(y = 1\right) = \sigma\left(f\left(\theta\right)\right)$
+  + Put GP prior distribution on $f$:
+    * $f \sim \mathcal{GP}\left(\mu\left(\theta\right), K\left(\theta\right)\right)$
+  + MCMC algorithm to draw $\theta$ given $f$, then draw $f$ given theta, many times
+
+## Example: Non-parametric measurement model
+
+\only<1>{
+\includegraphics[height = 0.9\textheight]{plate-diagram.png}
+}
+
+\only<2>{
+\includegraphics[height = 0.9\textheight]{ideo-plot.png}
+}

@@ -73,6 +73,8 @@ You will need to provide your discussant with an outline or draft of your paper 
 Discussants will need to read the paper and prepare 2-3 minutes of comments.
 Other students are also expected to contribute to discussion.
 
+**The final paper is due on May 8, 2024**
+
 # Course Policies
 
 This syllabus is subject to change as necessary, but if a change is necessary, you will be notified both in class and via email about the change and access to an up-to-date copy will be provided.
@@ -108,6 +110,8 @@ This syllabus is subject to change as necessary, but if a change is necessary, y
 11. Intro to Bayesian statistics
 
 **Research presentations**
+
+**Final paper is due on May 8, 2024**
 
 \newpage
 
