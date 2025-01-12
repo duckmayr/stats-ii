@@ -1,18 +1,18 @@
 ---
 title: "Statistical Analysis in Political Science II, GOV 391L"
-date: "Spring 2024"
+date: "Spring 2025"
 classroom: "BAT 5.102"
-classhours: "Thursday 9 a.m. to noon"
+classhours: "Wednesday 9 a.m. to noon"
 
 author: "JBrandon Duck-Mayr"
 instructorpronouns: "They/Them"
 email: "Use Canvas to email"
 office: "MEZ 3.128"
-officehours: "Tuesday 9 a.m. to noon, or by appointment"
+officehours: "Wednesday 1--4 p.m."
 
-TA: "Andres Cruz"
+# TA: "Andres Cruz"
 # TApronouns: "They/Them"
-TAemail: "Use Canvas to email"
+# TAemail: "Use Canvas to email"
 # TAoffice: "MEZ 3.128"
 # TAofficehours: "R 10--11 AM or appointment"
 
@@ -31,13 +31,12 @@ knitr::opts_chunk$set(echo = FALSE)
 # Course Description
 
 This course will introduce students to the estimation of linear regression models, diagnostics, and the presentation and interpretation of results.
-The course will require a significant time commitment from most students and will move at a rapid pace, covering a good deal of material beginning with an introduction to Ordinary Least Squares (OLS) for multiple regression and ending with an overview of some more advanced statistical tools used in political science research.
-In addition to the class meetings, students are expected to keep up with the readings, complete roughly biweekly problem sets, and attend weekly discussion sections that will focus on reviewing material and introducing students to the computing tools used in the course, particularly the R statistical computing environment.
+It will require a significant time commitment from most students and move at a rapid pace, covering a good deal of material beginning with an introduction to Ordinary Least Squares (OLS) for multiple regression and ending with an overview of more advanced tools used in political science research.
+In addition to class meetings, students are expected to keep up with the readings, complete roughly weekly problem sets, and attend weekly discussion sections focused on reviewing material and introducing students to the computing tools used in the course, particularly the R statistical computing environment.
 
 # Required Readings
 
-We will work from the text *Introductory Econometrics: A Modern Approach* (7th edition, 2020) by Jeffrey Woolridge.
-(An earlier edition should be just fine).
+We will use *Introductory Econometrics: A Modern Approach* (7th edition, 2020) by Jeffrey Woolridge (an earlier edition should be fine).
 Any other readings will be available electronically.
 
 # Course Requirements and Evaluation
@@ -50,34 +49,45 @@ Course grades are comprised of the following components:
 
 ## Problem sets
 
-There will be six problem sets assigned over the course of the semester.
-You will have roughly a week and a half to complete each one, though you are *strongly* encouraged to begin work early as the problem sets will take several hours of work to complete.
-Students are allowed, and honestly encouraged, to work together on the problem sets, but each student must write up and turn in solutions in their own words.
-I recommend using R Markdown or LaTeX to typeset your problem set solutions, but I do not care what software you use as long as it produces a PDF where any math that's included is legible.
+There will be ten problem sets.
+You will have one week to complete each.
+You should early as they take several hours.
+Students may collaborate on problem sets---I encourage it---but each must write up and turn in solutions in their own words.
+I recommend Quarto, R Markdown, or LaTeX for typesetting,
+but I only require that your solution PDF, including any math, is legible.
 
 ## Midterm Exam
 
-The exam, covering regression and diagnostics, will be made available on Canvas at 12:01 a.m. the day of the exam and must be turned in by 11:59 p.m. the day of the exam.
-So, you can take more or less as much time as you need within that day, you can take breaks if you need to, you can start/complete it as early or as late as you like, as long as it's turned in by 11:59 p.m.
-As with problem sets, I do not care what software you use to produce your PDF of answers as long as I can read it.
+The exam will cover regression & diagnostics.
+It will be available on Canvas at 12:01 a.m. the day of the exam.
+You must submit it by 11:59 p.m. the same day.
+This is the only time constraint.
+So you may take the entire day if you like, you can take breaks, start/complete it as early/late as you like... as long as it's submitted by 11:59 p.m.
+As long as the solution PDF is legible, I do not care what typesetting software you use.
 **Unlike problem sets, collaboration with other students is forbidden**, though you are free to use your notes and your textbook.
 
 ## Final Project
 
-Instead of a final exam, students will complete a final project consisting of a presentation and a paper utilizing the tools you will learn this semester.
-The final paper will include two components: (1) the replication of a published paper in political science in which you obtain the data from the author or journal and attempt to reproduce their results; and (2) the extension of the existing work into an original research paper that includes a well-defined research question, theory, hypotheses, results, and robustness checks.
-Possible avenues for extension include revamping the analysis, testing an alternative hypothesis, or adding new data.
+Instead of a final exam, students will complete a final project consisting of a presentation and a paper using the tools you'll learn this semester.
+The final paper has two components: (1) replicating a published paper in political science (i.e. get the data from the author or journal and try to reproduce the results); and (2) extending the existing work into an original research paper including a well-defined research question, theory, hypotheses, results, and robustness checks.
+An extension could include improved methods, alternative hypotheses, or new data.
 
-The final presentations will be in the style of conference presentations in that you will have about 10 minutes to present your work and one of your classmates will be assigned as your discussant to provide feedback on your research.
-You will need to provide your discussant with an outline or draft of your paper at least a week before the presentation (including all results).
-Discussants will need to read the paper and prepare 2-3 minutes of comments.
+The final presentation will be like an MPSA presentation:
+You will have 8 minutes to present your work.
+Another student will be your discussant & give feedback.
+You must give them a draft of your paper at least one week before presentations.
+Discussants must read the paper and prepare 2 minutes of comments.
 Other students are also expected to contribute to discussion.
 
-**The final paper is due on May 8, 2024**
+I strongly encourage you discuss your project with me within about one week of returning from spring break.
+You will get comments at your presentation and have about a week to revise your paper afterward before it is due, but discussing the project beforehand will help you succeed.
+
+**The final paper is due on May 1, 2025**
 
 # Course Policies
 
-This syllabus is subject to change as necessary, but if a change is necessary, you will be notified both in class and via email about the change and access to an up-to-date copy will be provided.
+This syllabus is subject to change as necessary.
+You will receive written notice of any changes.
 
 \newpage
 
@@ -99,23 +109,35 @@ This syllabus is subject to change as necessary, but if a change is necessary, y
    - Woolridge Sections 2c--2d of Chapter 6 and Section 4 of Chapter 7
    - Reading packet on Canvas on diagnostics
 
-**Midterm exam**
+**Midterm exam on March 5, 2025**
+
+7. Violations of independence
 
 **Spring Break**
 
-7. Violations of independence
 8. Intro to MLE and logistic regression
 9. Time series
 10. Causal inference
 11. Intro to Bayesian statistics
 
-**Research presentations**
+**Research presentations are on April 23, 2025**
 
-**Final paper is due on May 8, 2024**
+**Final paper is due on May 1, 2025**
 
 \newpage
 
-# University Policies and Resources
+# University Policies
+
+For a list of important university policies and helpful resources that you may need as you engage with and navigate your courses and the university, see the [University Policies and Resources Students Canvas](https://utexas.instructure.com/enroll/TP964H) page.
+The page includes the information on, among other things,
+
+- the University Honor Code
+- how to receive support through the office of Disability & Access,
+- resources for your physical and mental health,
+- academic aid resources, and
+- Title IX legal requirements for Texas employees.
+
+Some of these are reproduced below for your convenience.
 
 ## Academic Integrity Expectations
 
@@ -126,45 +148,10 @@ For further information, please visit the Student Conduct and Academic Integrity
 Plagiarism is taken very seriously at UT and is subject to academic disciplinary action, including failure of the course.
 To learn more about what plagiarism is and how to avoid it, see the [Avoiding Plagiarism tutorial](https://guides.lib.utexas.edu/c.php?g=539686&p=8083280) developed by the UT Libraries in partnership with the Writing Flag program and Student Judicial Services. 
 
-<!-- ## Confidentiality of Class Recordings -->
-
-<!-- Class recordings are reserved only for students in this class for educational purposes and are protected under FERPA. -->
-<!-- The recordings should not be shared outside the class in any form. -->
-<!-- Violation of this restriction by a student could lead to Student Misconduct proceedings. -->
-
-## Getting Help with Technology
-
-Students needing help with technology in this course should contact the [ITS Service Desk](https://its.utexas.edu/contact).
-
-<!-- ## Content Warning -->
-
-<!-- Our classroom provides an open space for the critical and civil exchange of ideas. -->
-<!-- Some readings and other content in this course will include topics that some students may find offensive and/or traumatizing. -->
-<!-- I'll aim to forewarn students about potentially disturbing content, and I ask all students to help to create an atmosphere of mutual respect and sensitivity. -->
-
-## Basic Needs Security
-
-Any student who faces challenges securing their food or housing and believes this may affect their performance in the course is urged to contact the Dean of Students for support.
-UT maintains the [UT Outpost](https://deanofstudents.utexas.edu/emergency/utoutpost.php), which is a free on-campus food pantry and career closet.
-Furthermore, if you are comfortable notifying me, please do so, as I may have additional resources I can share.
-
-## Sharing of Course Materials is Prohibited
-
-No materials used in this class, including, but not limited to, lecture hand-outs, videos, assessments (quizzes, exams, papers, projects, homework assignments), in-class materials, review sheets, and additional problem sets, may be shared online or with anyone outside of the class without explicit, written permission of the instructor. Unauthorized sharing of materials promotes cheating. The University is well aware of the sites used for sharing materials, and any materials found online that are associated with you, or any suspected unauthorized sharing of materials, will be reported to Student Conduct and Academic Integrity in the Office of the Dean of Students. These reports can result in sanctions, including failure of the course.
-
 ## Religious Holy Days
 
 By [UT Austin policy](https://catalog.utexas.edu/general-information/academic-policies-and-procedures/attendance/), you must notify me of your pending absence as far in advance as possible of the date of observance of a religious holy day.
 If you must miss a class, an examination, a work assignment, or a project in order to observe a religious holy day, you will be given an opportunity to complete the missed work within a reasonable time after the absence.
-
-## Names and Pronouns
-
-Professional courtesy and sensitivity are especially important with respect to individuals and topics dealing with differences of race, culture, religion, politics, sexual orientation, gender identity & expression, and nationalities.
-Class rosters are provided to the instructor with the student's legal name, unless they have added a "chosen name" with the registrar's office, which you can do so [here](https://utdirect.utexas.edu/apps/ais/chosen_name/).
-I will gladly honor your request to address you by a name that is different from what appears on the official roster, and by the pronouns you use (she/he/they/ze, etc).
-Please advise me of any changes early in the semester so that I may make appropriate updates to my records.
-For instructions on how to add your pronouns to Canvas, visit [this site](https://utexas.instructure.com/courses/633028/pages/profile-pronouns).
-More resources available on the Gender and Sexuality Center’s website, <http://www.utgsc.org>.
 
 ## Disability & Access
 
@@ -174,95 +161,10 @@ If you are a student with a disability, or think you may have a disability, and 
 Please refer to the D&A website for more information: <http://diversity.utexas.edu/disability/>.
 If you are already registered with D&A, please deliver your Accommodation Letter to me as early as possible in the semester so we can discuss your approved accommodations and needs in this course.
 
-## Counseling and Mental Health Center (CMHC)
+## Sharing of Course Materials is Prohibited
 
-All of us benefit from support during times of struggle.
-Know you are not alone.
-If you or anyone you know is experiencing symptoms of stress, anxiety, depression, academic concerns, loneliness, difficulty sleeping, or any other concern impacting your wellbeing, you are strongly encouraged to connect with CMHC.
-The Counseling and Mental Health Center provides a wide variety of mental health services to all UT students including crisis services, counseling services with immediate support and well-being resources.
-Additionally, CARE Counselors are located within the academic schools and colleges.
-These counselors get to know the concerns that are unique to their college’s students.
-For more information on CMHC, visit <https://cmhc.utexas.edu> or call 512-471-3515.
+No materials used in this class, including, but not limited to, lecture hand-outs, videos, assessments (quizzes, exams, papers, projects, homework assignments), in-class materials, review sheets, and additional problem sets, may be shared online or with anyone outside of the class without explicit, written permission of the instructor. Unauthorized sharing of materials promotes cheating. The University is well aware of the sites used for sharing materials, and any materials found online that are associated with you, or any suspected unauthorized sharing of materials, will be reported to Student Conduct and Academic Integrity in the Office of the Dean of Students. These reports can result in sanctions, including failure of the course.
 
-## University Health Services (UHS)
+## Getting Help with Technology
 
-Your physical health and wellness are a priority.
-University Health Services is an on-campus high-quality medical facility providing care to all UT students.
-Services offered by UHS include general medicine, urgent care, a 24/7 nurse advice line, gynecology, sports medicine, physical therapy, lab and radiology services, COVID-19 testing and vaccinations and much more.
-For additional information, visit <https://healthyhorns.utexas.edu> or call 512-471-4955.
-
-## Sanger Learning Center
-
-Did you know that more than one-third of UT undergraduate students use the Sanger Learning Center each year to improve their academic performance?
-All students are welcome to take advantage of Sanger Center's classes and workshops, private learning specialist appointments, peer academic coaching, and tutoring for more than 70 courses in 15 different subject areas.
-For more information, please visit <https://ugs.utexas.edu/slc> or call 512-471-3614 (JES A332).
-
-## Student Emergency Services (SES)
-
-Student Emergency Services in the Office of the Dean of Students helps students and their families during difficult or emergency situations.
-Assistance includes outreach, advocacy, intervention, support, and referrals to relevant campus and community resources.
-If you need to be absent from class due to a family emergency, medical or mental health concern, or academic difficulty due to crisis or an emergency situation, you can work with Student Emergency Services.
-SES will document your situation and notify your professors.
-Additional information is available at <https://deanofstudents.utexas.edu/emergency/> or by calling 512-471-5017.  
-
-## BeVocal
-
-BeVocal is a university-wide initiative to promote the idea that individual Longhorns have the power to prevent high-risk behavior and harm.
-At UT Austin all Longhorns have the power to intervene and reduce harm.
-To learn more about BeVocal and how you can help to build a culture of care on campus, go to: <https://wellnessnetwork.utexas.edu/BeVocal>.
-
-## Wellbeing Resources
-
-You can find resources for self-care at [Longhorn Wellness Center](https://www.healthyhorns.utexas.edu/healthpromotion.html).
-See also [Virtual Mindfulness and Stress Reduction Activities](https://cmhc.utexas.edu/stress-reduction.html).
-
-## Other resources
-
-- Undergraduate Writing Center: <http://uwc.utexas.edu/>
-- UT Libraries: <http://www.lib.utexas.edu/>
-
-## Important Safety Information
-
-If you have concerns about the safety or behavior of fellow students, TAs or professors, contact BCCAL (the Behavior Concerns and COVID-19 Advice Line) at <https://safety.utexas.edu/behavior-concerns-advice-line> or by calling 512-232-5050.
-Confidentiality will be maintained as much as possible, however the university may be required to release some information to appropriate parties.
-
-### Classroom safety and COVID-19
-
-- For any illness, students should stay home if they are sick or contagious, not only to stop the spread, but also to promote their personal wellness.
-- The university will continue to provide rapid antigen self-test kits at distribution sites throughout campus. Students can receive up to four tests at a time.
-- The university will provide symptomatic COVID-19 testing on campus for all students, faculty and staff.
-- UHS maintains up-to-date resources on COVID, which can be found here:
-  + COVID-19 Information and Resources
-  + COVID-19 Exposure Action Chart
-
-### Carrying of Handguns on Campus
-
-Texas' Open Carry law expressly prohibits a licensed to carry (LTC) holder from carrying a handgun openly on the campus of an institution of higher education such as UT Austin.
-Students in this class should be aware of the following university policies:
-
-- Students in this class who hold a license to carry are asked to review the university policy regarding campus carry.
-- Individuals who hold a license to carry are eligible to carry a concealed handgun on campus, including in most outdoor areas, buildings and spaces that are accessible to the public, and in classrooms.
-- It is the responsibility of concealed-carry license holders to carry their handguns on or about their person at all times while on campus. Open carry is NOT permitted, meaning that a license holder may not carry a partially or wholly visible handgun on campus premises or on any university driveway, street, sidewalk or walkway, parking lot, parking garage, or other parking area.
-- Per my right, I prohibit carrying of handguns in my personal office. Note that this information will also be conveyed to all students verbally during the first week of class. This written notice is intended to reinforce the verbal notification, and is not a "legally effective" means of notification in its own right.  
-
-### Title IX Disclosure
-
-Beginning January 1, 2020, Texas Education Code, Section 51.252 (formerly known as Senate Bill 212) requires all employees of Texas universities, including faculty, to report any information to theTitle IX Office regarding sexual harassment, sexual assault, dating violence and stalking that is disclosed to them.
-Texas law requires that all employees who witness or receive any information of this type (including, but not limited to, writing assignments, class discussions, or one-on-one conversations, or third party reports) must be report it.
-Before talking with me, or with any faculty or staff member about a Title IX related incident, please remember that I will be required to report this information to the Title IX Coordinator.
-If you would like to speak with someone who can provide support or remedies without making an official report to the university, please email <supportandresources@austin.utexas.edu>.
-For more information about reporting options and resources, visit <http://www.titleix.utexas.edu/>, contact the Title IX Office via email at <titleix@austin.utexas.edu>, or call 512-471-0419.
-
-Although graduate teaching and research assistants are not subject to Texas Education Code, Section 51.252, they are still mandatory reporters under Federal Title IX laws and are required to report a wide range of behaviors we refer to as sexual misconduct, including the types of sexual misconduct covered under Texas Education Code, Section 51.252.
-The Title IX office has developed supportive ways to respond to a survivor and compiled campus resources to support all impacted by a Title IX incident.
-
-### Campus Safety
-
-The following are recommendations regarding emergency evacuation from [the Office of Campus Safety and Security](https://safety.utexas.edu/), 512-471-5767, 
-
-- Students should sign up for Campus Emergency Text Alerts at the page linked above.
-- Occupants of buildings on The University of Texas at Austin campus must evacuate buildings when a fire alarm is activated. Alarm activation or announcement requires exiting and assembling outside.
-- Familiarize yourself with all exit doors of each classroom and building you may occupy. Remember that the nearest exit door may not be the one you used when entering the building.
-- Students requiring assistance in evacuation shall inform their instructor in writing during the first week of class.
-- In the event of an evacuation, follow the instruction of faculty or class instructors. Do not re-enter a building unless given instructions by the following: Austin Fire Department, The University of Texas at Austin Police Department, or Fire Prevention Services office.
-- For more information, please visit [emergency preparedness](https://preparedness.utexas.edu/).
+Students needing help with technology in this course should contact the [ITS Service Desk](https://its.utexas.edu/contact).
