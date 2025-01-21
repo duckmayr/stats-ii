@@ -1,6 +1,7 @@
 ---
-title: "Statistical Analysis in Political Science II:\\newline Intro to political methodology and how to succeed in this class"
-author: "JBrandon Duck-Mayr"
+title: "Statistical Analysis in Political Science II"
+subtitle: "Intro to political methodology and how to succeed in this class"
+author: "JB Duck-Mayr"
 date: "`r quack::american_date_format(Sys.Date())`"
 urlcolor: Blue
 header-includes:
@@ -50,13 +51,15 @@ All models are wrong, but some are useful
 . . .
 
 - The first half focuses on OLS
-  + It's the work horse of political science, **in depth** understanding is a *must*
-- The second half will push you forward on more advanced methods
+  + It's the work horse of political science
+  + **In-depth** understanding is a *must*
+- Then we'll push you forward on more advanced methods
   + OLS is not always appropriate
   + You need to know
     * How to tell when to use something else
     * What something else that might be, or how to find that out
-    * How to use at least some of these methods, and how to learn others
+    * How to use at least some of these methods
+    * How to learn others
 
 ## What are the expectations?
 
@@ -67,7 +70,7 @@ All models are wrong, but some are useful
     \item Problem sets (40\%)
     \begin{itemize}
         \tightlist
-        \item<3-> One PS about every two weeks (6 P-sets)
+        \item<3-> One PS about every week (ten total)
         \item<3-> Can work together but must write up your own solutions
         \item<3-> Must submit as a legible PDF, sometimes must also submit code
     \end{itemize}
@@ -91,7 +94,9 @@ All models are wrong, but some are useful
 
 - When at all possible, together
 - Diligently and early
-- Contacting myself and/or Andres when you need to
+- Contacting myself and/or the TA when you need to
+  + For some logistical reasons, TA is up in the air a bit
+  + So for the first week or two, just reach out directly to me
 
 . . .
 
