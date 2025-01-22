@@ -1,0 +1,73 @@
+---
+title: "Problem Set 2"
+author: "JBrandon Duck-Mayr"
+date: "(Due by midnight on February 5, 2024)"
+fontsize: 12pt
+output: quack::article
+---
+
+# Wooldridge 3.7, lightly adapted
+
+Explain whether and why or why not each of the following can cause OLS estimators to be biased:
+
+a. Heteroskedasticity
+b. Omitting an important variable
+c. A sample correlation coefficient of .95 between two independent variables both included in the model
+
+# Wooldridge 3.5
+
+In a study relating college grade point average to time spent in various activities, you distribute a survey to several students.
+The students are asked how many hours they spend each week in four activities: studying, sleeping, working, and leisure.
+Any activity is put into one of the four categories, so that for each student, the sum of hours in the four activities must be 168.
+
+a. In the model $$ GPA = \beta_0 + \beta_1 \text{study} + \beta_2 \text{sleep} + \beta_3 \text{work} + \beta_4 \text{leisure} + \varepsilon, $$ does it make sense to hold sleep, work, & leisure fixed but change study?
+b. Explain why this model violates [the no perfect collinearity assumption].
+c. How could you reformulate the model so that its parameters have a useful interpretation and it
+satisfies [the no perfect collinearity assumption]?
+
+# Variable Selection
+
+Professor Smith asks if you'd like to coauthor with them on a subject you both study.
+The project has largely been planned already but data collection is not yet underway.
+Smith has collected a list of control variables the literature indicates are important.
+However, you suspect some of these variables are irrelevant to your specific context,
+and that some may have only become staples due to spurious correlation in some datasets.
+Moreover, you see an additional explanatory factor that may influence your main predictor of interest.
+
+a. What are potential effects of including unnecessary control variables?
+b. What are potential effects of not including your additional factor?
+c. What would you advise about variable selection before data collection?
+
+# Wooldridge 3.4, lightly adapted
+
+The median starting salary for new law school graduates is determined by
+$$ \log\left(\text{salary}\right) = \beta_0 + \beta_1 \text{ LSAT} + \beta_2 \text{ GPA} + \beta_3 \log\left(\text{libvol}\right) + \beta_4 \log\left(\text{cost}\right) + \beta_5 \text{ rank} + \varepsilon $$
+where LSAT is the median LSAT score for the graduating class,
+GPA is the median college GPA for the class,
+libvol is the number of volumes in the law school library,
+cost is the annual cost of attending law school,
+and rank is a law school ranking (with rank 1 being the best).
+
+a. Explain why we expect $\beta_5 \leq 0$
+b. What signs do you expect for the other slope parameters? Justify your answers.
+c. Table 1 is a summary table from a regression using the `lawsch85` dataset from the `wooldridge` R package.
+   What is the predicted *ceteris paribus* difference in salary for schools with a median GPA different by one point?
+   (Report your answer as a percentage).
+d. Interpret the coefficient on the variable $\log\left(\text{libvol}\right)$
+e. Would you say it is better to attend a higher ranked law school?
+   How much is a difference in ranking of 20 worth in terms of predicted starting salary?
+
+\vspace*{\baselineskip}
+\scriptsize
+
+```{r, message = FALSE}
+library(modelsummary)
+dat = wooldridge::lawsch85
+mod = lm(log(salary) ~ LSAT + GPA + log(libvol) + log(cost) + rank, data = dat)
+modelsummary(
+    models = list("Estimate (std. err.)" = mod),
+    estimate = "{estimate} ({std.error})",
+    title = "Explaining Lawyers' Starting Salary",
+    gof_map = NA, statistic = NULL
+)
+```
