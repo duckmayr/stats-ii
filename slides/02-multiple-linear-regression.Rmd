@@ -71,19 +71,21 @@ $$
 
 ## Deriving the Least Squares estimator
 
-- Why Least **Squares**?? (e.g., why minimize squared error rather than absolute error?)
-  + There are a few reasons, but the most important is it's useful for the math
-- So to derive the estimator, we define the sum of squared errors, $S = \sum \left( y_i - \beta_0 - \beta_1 x_i \right)^2$
+- Why Least **Squares**??
+  + That is, why minimize squared error rather than absolute error?
+  + A few reasons, but most importantly it's useful for the math
+- So first define the sum of squared errors, $S = \sum \left( y_i - \beta_0 - \beta_1 x_i \right)^2$
 - Then we want to find the values of $\beta_0$ and $\beta_1$ that minimizes $S$:
 
 \onslide<5->{
+\vspace*{-\baselineskip}
 \begin{align*}
 \pd[S]{\beta_0} = \pd[\sum \left( y_i - \beta_0 - \beta_1 x_i \right)^2]{\beta_0} & \equiv 0 \\
 \pd[S]{\beta_1} = \pd[\sum \left( y_i - \beta_0 - \beta_1 x_i \right)^2]{\beta_1} & \equiv 0
 \end{align*}
 }
 
-\only<2>{
+\invisible<1-2,4->{
 \begin{block}{George E.P. Box}
 All models are wrong, but some are useful
 \end{block}
