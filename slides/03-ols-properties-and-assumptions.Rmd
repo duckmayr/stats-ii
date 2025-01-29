@@ -202,17 +202,18 @@ Under assumptions 1--5, $\hat{\boldsymbol\beta}$ is the best linear unbiased est
 ### Proof
 Any other linear estimator of $\boldsymbol\beta$ can be written as
 
-\vspace*{-\baselineskip}
+\vspace*{-1.2\baselineskip}
 \begin{align*}
 \tilde{\boldsymbol\beta}
 & = \mathbf{A'y} \\
 & = \mathbf{A'}\left(\mathbf{X}\boldsymbol\beta + \boldsymbol\varepsilon\right) \\
 & = \left(\mathbf{A'X}\right)\boldsymbol\beta + \mathbf{A'}\boldsymbol\varepsilon.
 \end{align*}
+\vspace*{-1.12\baselineskip}
 
 Then
 
-\vspace*{-\baselineskip}
+\vspace*{-1.2\baselineskip}
 \begin{align*}
 \expectation{\tilde{\boldsymbol\beta}}
 & = \left(\mathbf{A'X}\right)\boldsymbol\beta + \mathbf{A'}\boldsymbol\varepsilon \\
@@ -234,6 +235,63 @@ Now $\variance{\tilde{\boldsymbol\beta} \mid \mathbf{X}} = \sigma^2 \mathbf{A'A}
 
 which, trust me, is a positive difference.
 
-<!-- ## Irrelevant variables -->
+## Model Specification
 
-<!-- ## Omitted variables -->
+\begin{itemize}
+\tightlist
+\item<2-> \textit{What do you mean it's unbiased??} Well\dots
+\item<3-> Consider Assumption 1 (Linearity): ``The model in the population can be written as\dots" (Wooldridge 80)
+\item<4-> We will talk about misspecification bias much more later in the course,
+  but we'll talk about omitted variable bias \onslide<5>{NOW!}
+\end{itemize}
+
+## The "Phantom Menance"
+
+\only<2>{
+\begin{figure}
+\centering
+\includegraphics[width=0.95\textwidth]{phantom-menace-maul}
+\end{figure}
+}
+
+\only<3>{
+\begin{figure}
+\centering
+\includegraphics[width=0.85\textwidth]{phantom-menace-article}
+\end{figure}
+}
+
+## Omitted Variable Bias
+
+- A quick rundown:
+  + **If** a variable
+    * affects a predictor, and
+    * affects the outcome
+  + **Then** omitting it causes
+    * biased estimates,
+    * with no way to know the magnitude of the bias,
+    * or even the direction
+- Can you think of any areas where it may be an issue?
+
+## Omitted Variable Bias: Details
+
+. . .
+
+- Consider predicting income using SAT score; what about parental income?
+- Parental income clearly affects both SAT score and future income
+- So the true model should be $\text{income} = \beta_0 + \beta_1 \text{ SAT} + \beta_2 \text{ parental income} + \varepsilon$
+- Call $\text{parental income} = \delta_0 + \delta_1 \text{ SAT} + \xi$ *auxiliary regression*
+- If you estimate $\text{income} = \alpha_0 + \alpha_1 \text{ SAT} + \eta$,
+- The bias is $\hat{\alpha}_1 - \beta_1 = \delta_1\beta_1$,
+- A quantity we cannot say much about *a priori*
+
+## Including irrelevant variables
+
+. . .
+
+- Thankfully, the opposite problem is not as severe
+- However, that does not mean it is not a problem
+- Including irrelevant variables does not introduce bias
+  + $\mathbb{E}\left[\hat{\beta_j}\right] = \beta_j$ even when $\beta_j = 0$
+- However, it inflates variance
+  + Why?
