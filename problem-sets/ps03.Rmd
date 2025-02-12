@@ -1,0 +1,62 @@
+---
+title: "Problem Set 3"
+author: "JBrandon Duck-Mayr"
+date: "(Due by midnight on February 12, 2024)"
+fontsize: 12pt
+output: quack::article
+header-includes:
+    - \newcommand{\expectation}[1]{\ensuremath{\mathbb{E}\left[#1\right]}}
+    - \newcommand{\pd}[2][]{\ensuremath{\frac{\partial{#1}}{\partial{#2}}}}
+    - \DeclareMathOperator{\Var}{Var}
+    - \DeclareMathOperator{\Cov}{Cov}
+    - \DeclareMathOperator{\standarderror}{se}
+---
+
+# Testing linear restrictions[^1]
+
+Consider the following multiple regression model (under the classical linear model assumptions):
+$$ y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \varepsilon. $$
+
+Suppose you would like to test the null hypothesis $$ \text{H}_0: \beta_1 - \beta_2 = 0. $$
+
+a. Find $\Var\left(\hat{\beta}_1 - \hat{\beta}_2\right)$ in terms of the variances of $\beta_1$ and $\beta_2$ and the covariance between them.
+b. What is the standard error of $\hat{\beta}_1 - \hat{\beta}_2$?
+c. Write the $t$ statistic for testing $\text{H}_0: \beta_1 - \beta_2 = 0$
+d. Suppose that using a dataset with 30 observations we estimate $\beta_1 = 1.5, \beta_2 = 2$ and $\Var\left(\hat{\beta}_1\right) = \Var\left(\hat{\beta}_2\right) = 1$ and $\Cov\left(\hat{\beta}_1, \hat{\beta}_2\right) = 0.75$. What would you conclude about your hypothesis?
+
+[^1]: Adapted from Woolridge Exercise 4.8
+
+# Wooldridge 4.C1
+
+The following model can be used to study whether campaign expenditures affect election outcomes:
+
+$$ voteA = \beta_0 + \beta_1 \log\left(expendA\right) + \beta_2 \log\left(expendB\right) + \beta_3 ,\ prtystrA + u, $$
+
+where $voteA$ is the percentage of the vote received by Candidate A, $expendA$ and $expendB$ are campaign expenditures by Candidates A and B, and $prtystrA$ is a measure of party strength for Candidate A
+(the percentage of the most recent presidential vote that went to A’s party).
+
+i. What is the interpretation of $\beta_1$?
+ii. In terms of the parameters, state the null hypothesis that a 1% increase in A's expenditures is offset by a 1% increase in B's expenditures.
+iii. Estimate the given model using the data in VOTE1 and report the results in usual form. Do A’s expenditures affect the outcome? What about B’s expenditures? Can you use these results to test the hypothesis in part (ii)?
+iv. Estimate a model that directly gives the t statistic for testing the hypothesis in part (ii). What do you conclude? (Use a two-sided alternative.)
+
+# Wooldridge Exercise 7.3[^2]
+
+Using the data in GPA2 (available in the `R` package `wooldridge`), the following equation was estimated:
+
+```{r, echo = TRUE}
+sat_model = lm(
+    formula = sat ~ hsize + I(hsize^2) + female * black,
+    data = wooldridge::gpa2
+)
+summary(sat_model)
+```
+
+The variable `sat` is the combined SAT score, `hsize` is size of the student's high school graduating class, in hundreds; `female` is a gender dummy variable; and `black` is a race dummy variable equal to one if the student is black, and zero otherwise.
+
+a. Is there strong evidence that `hsize`$^2$ should be included in the model? From this equation, what is the optimal high school size?
+b. Holding `hsize` fixed, what is the estimated difference in SAT score between nonblack females and nonblack males? How statistically significant is this estimated difference?
+c. What is the estimated difference in SAT score between nonblack males and black males? Test the null hypothesis that there is no difference between their scores, against the alternative that there is a difference.
+d. What is the estimated difference in SAT score between black females and nonblack females? What would you need to do to test whether the difference is statistically significant?
+
+[^2]: Lightly edited

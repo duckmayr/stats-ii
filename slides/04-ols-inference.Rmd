@@ -105,7 +105,7 @@ $$
 has an asymptotic standard normal distribution.
 :::
 
-## Distribution of $\hat{\boldsymbol\beta}$ under the Normality assumption
+## Distribution of $\hat{\boldsymbol\beta}$ when assuming Normality
 
 . . .
 
@@ -140,13 +140,39 @@ where $k + 1$ is the number of unknown parameters.
 
 - We usually test a **null hypothesis**, $\text{H}_0 : \beta_j = 0$
 - Then we test that hypothesis using the test statistic
-  $$ t_{\hat{\beta}_j} \equiv \hat{\beta}_j / \standarderror{\hat{\beta}_j} $$
+  $$ t_{\hat{\beta}_j} \equiv \hat{\beta}_j / \standarderror\left(\hat{\beta}_j\right) $$
 - We reject $\text{H}_0$ when $t_{\hat{\beta}_j}$ is extreme enough
 - That is, we set a *significance level*, like 0.05, that represents the probability of rejecting $\text{H}_0$ when it is true
-<!-- - Then, given the distribution of $t_{\hat{\beta}_j}$, if there is  -->
+- Then, given the distribution of $t_{\hat{\beta}_j}$, if there is a $t$-statistic extreme enough, we reject the null hypothesis
+
+## What is a $p$-value?
+
+. . .
+
+- A $p$-value is the smallest significance level at which the null hypothesis would be rejected
+- the p-value is the probability of observing a $t$ statistic as extreme as we did if the null hypothesis is true
+- the p-value is the probability of observing a $t$ statistic as extreme as we did if the null hypothesis is true
+- (I did that on purpose)
+- $p$ values are uniformly distributed under the null hypothesis
 
 ## Confidence intervals
 
-## Testing hypotheses about a linear combination of parameters
+. . .
 
-## Reporting results
+- A confidence interval is not a probability statement about your estimate
+- The true unknown parameter value will be contained in 95% of 95% confidence intervals\only<4-5>{\dots}
+- ...but you don't know whether it's in your confidence interval or not
+
+## Linear combinations of parameters
+
+. . .
+
+- We may want to know something more complicated than whether $\beta_j \neq 0$
+- For example, sometimes we want to know if $\beta_j = \beta_k$, or $\beta_j < \beta_k$, and other similar questions
+- Consider $\beta_j < \beta_k$
+  + Equivalent to $\beta_j - \beta_k < 0$
+  + $t = \displaystyle\frac{\hat{\beta_j} - \hat{\beta_k}}{\text{se}\left(\hat{\beta_j} - \hat{\beta_k}\right)}$
+  + But what is $\text{se}\left(\hat{\beta_j} - \hat{\beta_k}\right)$?
+    * Recall $\text{Var}\left(X\right) + \text{Var}\left(Y\right) = \text{Var}\left(X\right) + \text{Var}\left(Y\right) + 2 \text{Cov}\left(X, Y\right)$
+
+<!-- ## Reporting results -->
