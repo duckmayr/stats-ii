@@ -1,0 +1,52 @@
+---
+title: "Problem Set 5"
+author: "JBrandon Duck-Mayr"
+date: "(Due by midnight on February 28, 2024)"
+fontsize: 12pt
+output: quack::article
+header-includes:
+    - \newcommand{\expectation}[1]{\ensuremath{\mathbb{E}\left[#1\right]}}
+    - \newcommand{\pd}[2][]{\ensuremath{\frac{\partial{#1}}{\partial{#2}}}}
+    - \DeclareMathOperator{\Var}{Var}
+    - \DeclareMathOperator{\Cov}{Cov}
+    - \DeclareMathOperator{\standarderror}{se}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Wooldridge Exercise 9.4
+
+The following equation explains weekly hours of television viewing by a child in terms of the child's age, mother's education, father's education, and number of siblings:
+$$ tvhours^\ast = \beta_0 + \beta_1 age + \beta_2 age^2 + \beta_3 motheduc + \beta_4 fatheduc + \beta_5 sibs + u. $$
+
+We are worried that `tvhours`$^\ast$ is measured with error in our survey.
+Let `tvhours` denote the reported hours of television viewing per week.
+
+a. What do the classical errors-in-variables (CEV) assumptions require in this application?
+b. Do you think the CEV assumptions are likely to hold? Explain.
+
+# Wooldridge 9.10 (lightly adapted; 2 points)
+
+This exercise shows that in a simple regression model, adding a dummy variable for missing data on the explanatory variable produces a consistent estimator of the slope coefficient if the “missingness” is unrelated to both the unobservable and observable factors affecting $y$. Let $m$ be a variable such that $m = 1$ if we do not observe $x$ and $m = 0$ if we observe $x$. We assume that $y$ is always observed. The population model is
+
+\begin{align*}
+y & = \beta_0 + \beta_1 x + u, \\
+\expectation{u \mid x} & = 0.
+\end{align*}
+
+i. Provide an interpretation of the stronger assumption $\expectation{u \mid x, m} = 0$. In particular, what kind of missing data schemes would cause this assumption to fail?
+ii. Show that we can always write $y = \beta_0 + \beta_1 (1-m)x + \beta_2 mx + u$.
+iii. Let $(x_i, y_i, m_i): i = 1, \dots, n$ be random draws from the population, where $x_i$ is missing when $m_i = 1$. Explain the nature of the variable $z_i = (1 - m_i) x_i$. In particular, what does this variable equal when $x_i$ is missing?
+iv. If $m$ and $x$ are independent, it can be shown that $mx = \delta_0 + \delta_1 m + v$, where $v$ is uncorrelated with $m$ and $z = (1 - m) x$. Explain why this makes $m$ a suitable proxy variable for $mx$. What does this mean about the coefficient on $z_i$ in the regression $y_i$ on $z_i, m_i, i = 1, \dots, n$?
+v. Suppose for a population of children, $y$ is a standardized test score, obtained from school records, and $x$ is family income, which is reported voluntarily by families (and so some families do not report their income). Is it realistic to assume $m$ and $x$ are independent? Explain.
+
+# Wooldridge 7.C10 (lightly adapted; 2 points)
+
+Use the data in `wooldridge::nbasal` for this exercise.
+
+i. Estimate a linear regression model relating points per game to experience in the league and position (guard, forward, or center). Include experience in quadratic form and use centers as the base group. Report the results.
+ii. Holding experience fixed, does a guard score more than a center? How much more? Is the difference statistically significant?
+iii. Now, add marital status to the equation. Holding position and experience fixed, are married players more productive (based on points per game)?
+iv. Add interactions of marital status with both experience variables. In this expanded model, is there strong evidence that marital status affects points per game?
