@@ -1,0 +1,49 @@
+---
+title: "Problem Set 4"
+author: "JBrandon Duck-Mayr"
+date: "(Due by midnight on February 21, 2024)"
+fontsize: 12pt
+output: quack::article
+header-includes:
+    - \newcommand{\expectation}[1]{\ensuremath{\mathbb{E}\left[#1\right]}}
+    - \newcommand{\pd}[2][]{\ensuremath{\frac{\partial{#1}}{\partial{#2}}}}
+    - \DeclareMathOperator{\Var}{Var}
+    - \DeclareMathOperator{\Cov}{Cov}
+    - \DeclareMathOperator{\standarderror}{se}
+---
+
+# Multiple restrictions
+
+For this problem, use `R`'s built-in dataset `mtcars`; this dataset provides various design and performance variables for 32 automobiles from 1974.
+You may use general `R` functions (like `lm()`), but please do not use any add-on packages.
+Please present both the answers and the code you used to reach them.
+
+a. Regress `mpg` (miles per gallon) on `cyl` (number of cylinders), `disp` (displacement in cubic inches), and `hp` (horsepower).
+   Is any predictor significant at the 5% level?
+   Are the predictors are jointly significant at the 5% level?
+b. Now add another predictor, `wt` (weight in thousands of pounds).
+   Do any of your answers change?
+
+# Wooldridge 4.9 (lightly adapted) (two points)
+
+Consider the following model
+
+```r
+lm(sleep ~ totwrk + educ + age, data = wooldridge::sleep75)
+```
+
+i. Is either educ or age individually significant at the 5% level against a two-sided alternative? (Explain)
+ii. Are educ and age jointly significant in the original equation at the 5% level? Justify your answer.
+iii. Does including educ and age in the model greatly affect the estimated tradeoff between sleeping and working?
+iv. Suppose that the sleep equation contains heteroskedasticity. What does this mean about the tests computed in parts (i) and (ii)?
+v. Generate a regression table and a coefficient plot for the model.
+
+# Wooldridge 4.C5 (with addition) (two points)
+
+Use the data in `wooldridge::mlb1` for this exercise.
+
+i. Use the model estimated in equation (4.31) and drop the variable rbisyr. What happens to the statistical significance of hrunsyr? What about the size of the coefficient on hrunsyr?
+ii. Add the variables runsyr (runs per year), fldperc (fielding percentage), and sbasesyr (stolen bases per year) to the model from part (i). Which of these factors are individually significant?
+iii. In the model from part (ii), test the joint significance of bavg, fldperc, and sbasesyr.
+iv. Generate a regression table and a coefficient plot for the model from part (ii)
+

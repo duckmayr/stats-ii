@@ -19,7 +19,6 @@ output:
     quack::presentation:
         toc: false
         incremental: true
-        keep_tex: true
 ---
 
 ```{r setup, include=FALSE}
@@ -66,44 +65,326 @@ knit_hooks$set(
 Consider data simulated from the population equation
 $$ y = x_1 + 2 x_2 + \varepsilon $$
 
-```{r sim-data, results='asis'}
+```{r sim-data, echo = TRUE}
 set.seed(138)
 x1 = rnorm(10)
 x2 = rnorm(10)
 e  = rnorm(10)
 y  = x1 + 2 * x2 + e
 d  = data.frame(y, x1, x2)
-kable(d, booktabs = TRUE, digits = 2, row.names = TRUE, linesep = "") %>%
-    kable_styling(position = "center") %>% 
-    table_overlay(slide_number = 2, type = "only")
 ```
 
-```{r ols-results, results='asis'}
+```{r ols-results}
 ols = lm(y ~ x1 + x2, data = d)
-modelsummary(ols, fmt = fmt_significant(2), gof_omit = "IC|Adj|Log|RMSE") %>%
-    table_overlay(slide_number = 3, type = "only")
 ```
 
-\only<4-5>{
+## Example
+
+\only<1>{
+\begin{table}
+\centering
+\begin{tabular}{rrr}
+\toprule
+y & x1 & x2 \\
+\midrule
+2.00 & 2.00 & 2.00 \\
+0.01 & 0.01 & 0.01 \\
+0.57 & 0.57 & 0.57 \\
+-0.97 & -0.97 & -0.97 \\
+-1.99 & -1.99 & -1.99 \\
+-0.90 & -0.90 & -0.90 \\
+-0.25 & -0.25 & -0.25 \\
+-2.38 & -2.38 & -2.38 \\
+3.19 & 3.19 & 3.19 \\
+-2.56 & -2.56 & -2.56 \\
+\bottomrule
+\end{tabular}
+\end{table}
+}
+
+\only<2>{
+\begin{table}
+\centering
+\begin{tabular}{lrr}
+\multicolumn{3}{c}{OLS Results} \\[0.5em]
+\toprule
+Variable & Estimate & Standard Error \\
+\midrule
+Intercept & 0.07 & (0.22) \\
+x1 & 0.59 & 0.26 \\
+x2 & 1.44 & 0.18 \\
+\midrule
+\multicolumn{3}{l}{$N = 10, \quad R^2 = 0.90$} \\
+\bottomrule
+\end{tabular}
+\end{table}
+}
+
+\only<3->{
+Testing $\beta_2 > \beta_1$:
+
 \begin{align*}
 t & = \frac{\beta_2-\beta_1}{\standarderror{\left(\beta_2-\beta_1\right)}} \\
-& = \frac{1.59 - 0.44}{\sqrt{0.26^2 + 0.18^2 - \textcolor<5>{BurntOrange}{2 \Cov\left(\beta_1, \beta_2\right)}}} \\
-& = \frac{1.59 - 0.44}{\sqrt{0.26^2 + 0.18^2 - \textcolor<5>{BurntOrange}{2 \left(0.005\right)}}} \\
-& = 3.83 \\
-p & < 0.01
+& = \frac{1.44 - 0.59}{\sqrt{0.26^2 + 0.18^2 - \textcolor<4>{BurntOrange}{2 \Cov\left(\beta_1, \beta_2\right)}}} \\
+& = \frac{1.44 - 0.59}{\sqrt{0.26^2 + 0.18^2 - \textcolor<4>{BurntOrange}{2 \left(0.005\right)}}} \\
+& = 2.83 \\
+p & \approx 0.01
 \end{align*}
 }
 
-\only<6>{
-$$
-\Var\left(\boldsymbol\beta\right) = \sigma^2 \left(\mathbf{X'X}\right)^{-1}
-$$
-}
+## Example
+
+So how did I know $2 \Cov\left(\beta_1, \beta_2\right) = 0.005$? \onslide<2->{$\Var\left(\boldsymbol\beta\right) = \sigma^2 \left(\mathbf{X'X}\right)^{-1}$}
+
+. . .
+
+. . .
+
+```{r, echo = TRUE}
+ols = lm(y ~ x1 + x2, data = d)
+round(vcov(ols), 3)
+```
+
+. . .
+
+```{r, echo = TRUE}
+X = cbind("(Intercept)" = 1, as.matrix(d[ , c("x1", "x2")]))
+round(sigma(ols)^2 * solve(t(X) %*% X), 3)
+```
 
 ## Testing multiple restrictions
 
 . . .
 
-- In a model $y = \beta_0 + \beta_1 x_1 + \dots + \beta_k x_k + \varepsilon$, we may want to test whether $\beta_{k - q - 1}, \dots, \beta_k$ (for some $q$) are all zero 
-- We use an $F$ statistic, $$ F \equiv \frac{\left(SSR_r - SSR_u\right)/q}{SSR_u/(n-k-1)}, $$ which is distributed $$ F \sim F_{q,n-k-1} $$
+- In a model $y = \beta_0 + \beta_1 x_1 + \dots + \beta_k x_k + \varepsilon$, we may want to test whether $\beta_{k - q - 1}, \dots, \beta_k$ (for some $q$) are all zero
+- I like Wooldridge's example
+  + Regressing logged salary of MLB players on
+    * Years in league and games per year
+    * Performance stats like batting average and HRs and RBIs per year
+  + "Suppose we want to test the null hypothesis that, once years in
+the league and games per year have been controlled for, the statistics measuring performance... have no effect on salary"
+  + H$_0$: $\beta_3 = 0, \beta_4 = 0, \beta_5 = 0$
+  + H$_1$?
+  + Alternative holds if *at least* one of the variables is different from 0
+
+## Testing multiple restrictions
+
+We already know if at least one of these is different from 0, right??
+
+```{r example-ols-code, echo = TRUE, eval = FALSE}
+model_formula = formula(
+    lsalary ~                   ## Outcome ($$)
+        years + gamesyr +       ## Experience
+        bavg + hrunsyr + rbisyr ## Performance
+)
+mlb_ols = lm(model_formula, data = wooldridge::mlb1)
+summary(mlb_ols, digits = 2)
+```
+
+\vspace*{\fill}
+
+## Testing multiple restrictions
+
+We already know if at least one of these is different from 0, right??
+
+\scriptsize
+
+```{r example-ols-results}
+model_formula = formula(lsalary ~ years + gamesyr + bavg + hrunsyr + rbisyr)
+mlb_ols = lm(model_formula, data = wooldridge::mlb1)
+summary(mlb_ols, digits = 2)
+```
+
+## Testing multiple restrictions
+
+- Not quite! Consider flipping a coin twice
+  + Probability each flip is heads?
+  + Probability at least one of the two will be heads?
+- Define a "restricted model": The outcome regressed on all predictors *not* part of your joint hypothesis
+- Now we define the following statistic: $$F \equiv \frac{\left(SSR_r - SSR_u\right)/q}{SSR_u/(n-k-1)}$$
+  + Numerator is increase in SSR divided by # of restrictions, $q$
+  + $q$ is sometimes called "numerator degrees of freedom"
+  + Denominator is just the estimator of $\sigma^2$
+- This statistic follows an $F$ distribution, $F \sim F_{q,n-k-1}$
 - If $H_0: \beta_{k - q - 1} = 0, \dots, \beta_k = 0$ is rejected, we say $x_{k - q - 1}, \dots, x_k$ are **jointly significant**
+
+## Testing multiple restrictions
+
+So let's return to our example:
+
+. . .
+
+```{r, mlb_restriction_test, echo = TRUE}
+RSS = function(x) sum((x$fitted.values - mean(x$model$y))^2)
+mlb1  = wooldridge::mlb1
+ols_r = lm(lsalary ~ years + gamesyr, data = mlb1)
+SSR_r = sum(resid(ols_r)^2)
+SSR_u = sum(resid(mlb_ols)^2)
+q = 3; n = nrow(mlb1); k = 5
+(Fstat = ((SSR_r-SSR_u)/q) / (SSR_u/(n-k-1)))
+(pval  = 1 - pf(Fstat, q, n-k-1))
+```
+
+. . .
+
+So they **are** *jointly* significant!
+
+## Advice: You may not have to do things by hand
+
+. . .
+
+\vspace*{0.5\baselineskip}
+\scriptsize
+
+```{r linear-hypothesis-function, echo = TRUE}
+car::linearHypothesis(
+    model = mlb_ols,
+    hypothesis.matrix = c("bavg = 0", "hrunsyr = 0", "rbisyr = 0"),
+    test = "F"
+)
+cat("Manual F stat: ", Fstat, "; p-value: ", pval, sep = "")
+```
+
+## Overall significance
+
+. . .
+
+We may want to know if *all* the variables are jointly significant
+
+. . .
+
+- We can't use the previous formula; why?
+- Instead we use $$F = \frac{R^2/k}{(1 - R^2) / (n - k - 1)}$$
+
+. . .
+
+```{r example-full-f-test, echo = TRUE}
+R2 = summary(mlb_ols)$r.squared
+Fstat = (R2/5) / ((1-R2)/(nrow(mlb1)-5-1))
+pval  = 1 - pf(Fstat, 5, nrow(mlb1)-5-1)
+round(Fstat, 1)
+sprintf("%0.16f", pval)
+```
+
+\vspace*{\fill}
+
+## Overall significance
+
+We may want to know if *all* the variables are jointly significant
+
+\scriptsize
+
+```{r example-ols-results-again}
+summary(mlb_ols, digits = 2)
+```
+
+## The "problem" of multicolinearity
+
+. . .
+
+- Can write $\Var\left(\beta_j\right)$ as $\sigma^2 / \left[\text{SST}_j \left(1 - R_j^2\right)\right]$
+  + $R_j^2$ is the $R^2$ from regressing $x_j$ on the other predictors
+  + SST is total sample variation in $x_j$, or $\sum_{i=1}^n \left(x_{ij} - \bar{x}_j\right)^2$
+- Higher $R_j^2$ means other predictors explain a lot of variation in $x_j$
+- When is this a problem?
+  + When is $\Var\left(\beta_j\right)$ too large to be useful?
+- Can we drop variables to solve this problem?
+- Will more data help?
+- What about the other variables in the model?
+- Variance inflation factor (VIF)
+
+## Reporting results
+
+. . .
+
+- Writing about your method
+  + An actual written out model?
+  + Explain where all data comes from & relevant characteristics
+  + Explain all *relevant* details of the method
+    * This will take some practice
+- Writing up your results
+  + Not just statistical significance but *substantive* significance too
+  + Plots vs tables
+  + Technical language \only<10>{or}\only<11>{\textbf{and}} non-technical
+
+## Regression tables
+
+. . .
+
+- Always make the outcome clear
+- Always include $N$ and $R^2$; other goodness-of-fit stats optional
+- Always include coefficients' standard error
+- You *may* include $t$ stats, $p$ values, and/or stars
+  + **If** the journal allows it
+  + I do not personally recommend it
+- Do not use more digits than necessary
+- Consider which parameters to report
+
+## Plotting regression results
+
+. . .
+
+- Accessibility concerns
+  + Make dots, lines, etc bigger than you think
+  + Vary dot shape or linetype along with color
+  + Use a colorblind-friendly palette like [the Okabe-Ito palette](https://jfly.uni-koeln.de/color/#pallet)
+    * See `palette.colors()` or [the `ggokabeito` package](https://easystats.github.io/see/reference/scale_color_okabeito.html)
+- Publishing concerns
+  + It sucks, but greyscale is more convenient
+  + 300 dpi, TIFF, etc
+- Coefficient plots
+- Diagnostic plots
+- Marginal effects and prediction plots
+
+## Comparing a regression table & coefficient plot
+
+\begin{table}
+\centering
+\begin{tabular}{lrr}
+\multicolumn{3}{c}{Explaining (logged) MLB salary} \\[0.5em]
+\toprule
+Variable & Estimate & (Standard Error) \\
+\midrule
+Intercept & 11.19 & (0.29) \\
+Years & 0.07 & (0.01) \\
+Games / Year & 0.01 & (0.003) \\
+Batting Average & 0.00098 & (0.001) \\
+Home Runs / Year & 0.01 & (0.02) \\
+RBIs / Year & 0.01 & 0.007 \\
+\midrule
+\multicolumn{3}{l}{$N = 353, \quad R^2 = 0.63$} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+## Comparing a regression table & coefficient plot
+
+. . .
+
+```{r coef-plot-code, echo = TRUE, eval = FALSE}
+library(ggplot2)
+library(modelsummary)
+plt = modelplot(
+    mlb_ols,
+    coef_omit = "Intercept",
+    color = "#228b22",
+    size = 1,
+    fatten = 2
+)
+plt + geom_vline(xintercept = 0, linetype = "dashed")
+```
+
+## Comparing a regression table & coefficient plot
+
+```{r coef-plot, fig.height = 3, fig.width = 4}
+library(ggplot2)
+library(modelsummary)
+plt = modelplot(
+    mlb_ols,
+    coef_omit = "Intercept",
+    color = "#228b22",
+    size = 1,
+    fatten = 2
+)
+plt + geom_vline(xintercept = 0, linetype = "dashed")
+```
