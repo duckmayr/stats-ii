@@ -19,12 +19,24 @@ output:
     quack::presentation:
         toc: false
         incremental: true
-        keep_tex: true
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
+
+## Types of variables
+
+. . .
+
+- We have mostly focused on continuous predictors
+- However, there are several types of data
+  * Continuous, such as wages
+  * Binary, such as whether a candidate is an incumbent
+  * Categorical, such as party identification
+  * Ordinal, such as education
+  * And more
+- Each has their own considerations
 
 ## Binary variables
 
@@ -34,14 +46,14 @@ knitr::opts_chunk$set(echo = FALSE)
 - Encode a specific type of qualitative variable, one characteristic that can take only one of two values
 - Examples (some better than others): treatment indicator, whether it's an election year, gender
 
-. . .
-
+\onslide<5>{
 With dummy variable $D$ and other predictors $x_2, \dots, x_k$,
 in the model
 $$
 y = \beta_0 + \beta_1 D + \beta_2 x_2 + \dots + \beta_k x_k + \varepsilon,
 $$
-the coefficient $\beta_1$ on $D$ represents an **intercept shift** when $D = 1$
+the coefficient $\beta_1$ on $D$ represents an \textbf{intercept shift} when $D = 1$
+}
 
 ## Categorical variables
 
@@ -51,6 +63,48 @@ the coefficient $\beta_1$ on $D$ represents an **intercept shift** when $D = 1$
 - Omit one category and create dummy variables for each other category
 - Then we interpret the dummy coefficients as an intercept difference between that group and the omitted group
 - Does it matter if the information is ordinal, like education?
+
+## Ordinal variables
+
+. . .
+
+- We have a few choices with ordinal variables
+- First consider simply adding $\beta_j x_j$ to a model where $x_j$ is ordinal
+- What are the effect sizes for each level of the variable under dummy coding?
+- Now consider ordinal coding
+
+\onslide<6->{
+Example with three levels:
+$
+\begin{pmatrix}
+1 \\
+2 \\
+3
+\end{pmatrix}
+\rightarrow
+\begin{pmatrix}
+0 & 0 \\
+1 & 0 \\
+1 & 1
+\end{pmatrix}
+$
+}
+
+\onslide<7->{
+Model: $y = \beta_0 + \beta_1 d_1 + \beta_2 d_2 + \varepsilon$, where $d_1 = 1$ if $x_i > 1$ and $d_2 = 1$ if $x_1 > 2$
+}
+
+\onslide<8>{
+Then
+$$
+\hat{y}_i =
+\begin{cases}
+\beta_0 & \text{if } x_i = 1 \\
+\beta_0 + \beta_1 & \text{if } x_i = 2 \\
+\beta_0 + \beta_1 + \beta_2 & \text{if } x_i = 3 \\
+\end{cases}
+$$
+}
 
 ## Dummy:continuous interactions
 
@@ -82,7 +136,7 @@ $$ y = \beta_0 + \beta_{g,1} x_1 + \beta_{g, 2} x_2 + \dots + \beta_{g, k} x_k +
 - Then we estimate $y = \beta_0 + \beta_1 x_1 + \dots + \beta_k x_k + \varepsilon^\ast$, where $\varepsilon^\ast = \varepsilon + e_0$
 - This is valid when $e_0$ is unrelated to the predictors
   + Notice the effect on estimator variance: $\variance{\varepsilon^\ast} = \variance{\varepsilon + e_0} = \sigma_\varepsilon^2 + \sigma_0^2 > \sigma_\varepsilon^2$
-- This is **not** valid if $e_0$ is related to the predictors
+- This is **not** valid if $e_0$ is related to the predictors\onslide<7->{. Why?} \onslide<8>{Recall OLS Assumption 4: Zero conditional mean (The error term has the same expected value at any value of the explanatory variables)}
 
 ## Measurement error in the predictors
 
@@ -100,7 +154,19 @@ $$ y = \beta_0 + \beta_{g,1} x_1 + \beta_{g, 2} x_2 + \dots + \beta_{g, k} x_k +
   + covariance between $x_1$ and $\left(\varepsilon - \beta_1 e_1\right)$ is
     $$ \Cov\left(x_1, \varepsilon - \beta_1 e_1\right) = -\beta_1 \Cov\left(x_1, e_1\right) = \beta_1\sigma_{e_1}^2$$
 
+## Wait! A bit of background
+
+. . .
+
+- I am about to use notation $\text{plim}$. What does that mean?
+- Take a random variable sequence $\{X_1, X_2, \dots, X_n\}$
+- The sequence *weakly converges* to a constant $c$ if
+  $$ \lim_{n\to\infty} \Pr\left(\mid X_n - c \mid > \varepsilon\right) = 0 $$ for any $\varepsilon > 0$
+- We also write $\text{plim}_{n\to\infty} X_n = c$
+
 ## Measurement error in the predictors
+
+. . .
 
 Then in the two variable case,
 
@@ -132,4 +198,5 @@ $$
 - Strategies to deal with missingness:
   + listwise deletion
   + multiple imputation
+- What about MNAR data? Must jointly model response and missingness
 - Missingness in predictors vs outcomes?
