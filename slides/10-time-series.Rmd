@@ -40,6 +40,128 @@ Topics:
 - Time series cross-sectional data
 - Survival analysis
 
+## Time series assumptions
+
+\begin{itemize}
+    \tightlist
+    \item[TS1] Linearity in parameters (essentially the same as MLR1)
+    \item[TS2] No perfect collinearity (essentially the same as MLR2)
+    \item[TS3] Zero conditional mean: $\mathbb{E}\left(\varepsilon_t\mid\mathbf{X}\right) = 0, t = 1, 2, \dots n$
+    \item[TS4] Homoscedasticity: $\text{Var}\left(\varepsilon_t\mid\mathbf{X}\right) = \text{Var}\left(\varepsilon_t\right) = \sigma^2, t = 1, 2, \dots, n$
+    \item[TS5] No serial correlation: Conditional on $\mathbf{X}$, the errors in two time periods are uncorrelated: $\text{Cor}\left(\varepsilon_t,\varepsilon_s\mid\mathbf{X}\right) = 0,\,\forall\,\, t \neq s$
+    \item[TS6] Normally distributed errors
+\end{itemize}
+
+## Time series assumptions
+
+- Under assumptions TS1--TS3, OLS is unbiased
+- If we have contemporaneous exogeneity instead of TS3, OLS is still consistent, but not unbiased
+- Under assumptions TS1--TS5, we get the sampling variance of $\hat{\beta}$: $\text{Var}\left(\hat{\boldsymbol\beta}\mid\mathbf{X}\right) = \sigma^2\left(\mathbf{X'X}\right)^{-1}$ (same as in cross-sectional)
+- Under assumptions TS1--TS5, $\hat{\sigma}^2 = \text{SSR}/df$ is an unbiased estimator of $\sigma^2$
+- Under assumptions TS1--TS5, OLS is BLUE
+- Under assumptions TS1--TS6, OLS estimators are normally distributed, and $t$ and $F$ statistics and usual confidence intervals are all valid
+
+## Stationarity and weak dependence
+
+. . .
+
+- A process $\{x_t; t = 1, 2, \dots\}$ is **stationary** if the joint distribution of  $\left(x_t, x_{t+1}, \dots x_{t + m}\right)$ is the same as the joint distribution of $\left(x_{t+h}, x_{t+h+1}, \dots x_{t+h + m}\right)$ for all $t$, $m$, and $h$
+- A stationary time series is a **weakly dependent** process "if $x_t$ and $x_{t+h}$ are 'almost independent' as $h$ increases without bound" (Wooldridge, 368)
+- Weak dependence replaces random sampling for proving the LLN and CLT hold
+
+## Time series assumptions
+
+\begin{itemize}
+    \tightlist
+    \item[TS1'] Linearity, stationarity, and weak dependence
+    \item[TS2'] No perfect collinearity
+    \item[TS3'] Zero conditional mean: Explanatory variables are \textit{contemporaneously exogenous}; $\mathbb{E}\left(\varepsilon_t\mid\mathbf{x}_t\right) = 0$
+    \item[TS4'] \textit{Contemporaneous} homoscedasticity: $\text{Var}\left(\varepsilon_t\mid\mathbf{x}_t\right) = \sigma^2$
+    \item[TS5'] No serial correlation
+\end{itemize}
+
+## Time series assumptions
+
+- Under TS1'--TS3', OLS is consistent
+- Under TS1'--TS5', OLS estimator is asymptotically normally distributed and $t$ and $F$ statistics are asymptotically valid
+
+## Time series assumptions
+
+\begin{itemize}
+    \tightlist
+    \item[TS1'] Linearity, stationarity, and weak dependence
+    \item[TS2'] No perfect collinearity
+    \item[TS3'] Zero conditional mean: Explanatory variables are \textit{contemporaneously exogenous}; $\mathbb{E}\left(\varepsilon_t\mid\mathbf{x}_t\right) = 0$
+    \item[TS4'] \textcolor{BurntOrange}{\textit{Contemporaneous} homoscedasticity: $\text{Var}\left(\varepsilon_t\mid\mathbf{x}_t\right) = \sigma^2$}
+    \item[TS5'] \textcolor{BurntOrange}{No serial correlation}
+\end{itemize}
+
+## HAC standard errors
+
+. . .
+
+- Recall that with serially correlated errors, test statistics are no longer valid
+- But we can construct Heteroskedasticity and Autocorrelation Consistent (HAC) standard errors
+- For $\beta_j$:
+  + Obtain $``\text{se}\left(\hat{\beta}_j\right)"$, $\hat{\sigma}^2$, and $\hat{u}$ for OLS
+  + Regress $x_j$ on the remaining predictors with residuals $\hat{r}$
+  + Calculate $\hat{a} = \hat{u} \odot \hat{r}$
+  + For a truncation lag $g$, calculate $\hat{v} = \sum_{t=1}^n \hat{a}_t^2 + 2 \sum_{h=1}^g \left[1 - h/(g+1)\right]\left(\sum_{t=h+1}^n\hat{a}_t\hat{a}_{t-h}\right)$
+  + Then $\text{se}\left(\hat{\beta}_j\right) = \left[``\text{se}\left(\hat{\beta}_j\right)"/\hat{\sigma}^2\right]^2\sqrt{\hat{v}}$
+
+## HAC standard errors in R
+
+- `sandwich::NeweyWest()` with `prewhite = FALSE` generates the variance covariance matrix
+- You can pass that to the `vcov.` argument of `lmtest::coeftest()` or use it manually
+
+## HAC standard errors in R
+
+\footnotesize
+
+```{r, message = FALSE}
+library(sandwich)
+library(lmtest)
+form = formula(approve ~ lcpifood + lrgasprice + unemploy + X11.Sep + iraqinvade)
+ols = lm(formula = form, data = wooldridge::approval)
+coeftest(ols)
+```
+
+## HAC standard errors in R
+
+\footnotesize
+
+```{r, message = FALSE}
+library(sandwich)
+library(lmtest)
+form = formula(approve ~ lcpifood + lrgasprice + unemploy + X11.Sep + iraqinvade)
+ols = lm(formula = form, data = wooldridge::approval)
+coeftest(ols, vcov. = NeweyWest(ols, lag = 1, prewhite = FALSE))
+```
+
+## HAC standard errors in R
+
+\footnotesize
+
+```{r, message = FALSE}
+library(sandwich)
+library(lmtest)
+form = formula(approve ~ lcpifood + lrgasprice + unemploy + X11.Sep + iraqinvade)
+ols = lm(formula = form, data = wooldridge::approval)
+coeftest(ols, vcov. = NeweyWest(ols, lag = 4, prewhite = FALSE))
+```
+
+## HAC standard errors in R
+
+\footnotesize
+
+```{r, message = FALSE}
+library(sandwich)
+library(lmtest)
+form = formula(approve ~ lcpifood + lrgasprice + unemploy + X11.Sep + iraqinvade)
+ols = lm(formula = form, data = wooldridge::approval)
+coeftest(ols, vcov. = NeweyWest(ols, lag = 8, prewhite = FALSE))
+```
+
 ## Prais-Winsten estimation
 
 . . .
@@ -83,6 +205,7 @@ So, the procedure is
 - Sometimes we care most about *when* something happens
   + How long does it take to confirm a Supreme Court justice?
   + Why do military conflicts persist, or not?
+  + How long can a Senator retain the floor?
 - Some important terms:
   + Survival function: Probability of an event *not* happening before or at time $t$
   + Hazard function: Instantaneous risk of the event happening
@@ -117,14 +240,27 @@ summary(fit)$logtest
 
 . . .
 
-```{r proportional-example-plot, warning=FALSE, height = 2, width = 3, out.height = "50%", fig.align = "center"}
+```{r proportional-example-plot-cat, warning=FALSE, eval = FALSE}
+library(ggplot2)
+library(ggfortify)
+dat = eha::oldmort %>% mutate(sex = ifelse(sex == "female", 1,))
+fit = survfit(
+    Surv(enter, exit, event) ~ sex,
+    data = eha::oldmort
+)
+autoplot(fit, xlim = c(60, NA)) + theme_bw()
+```
+
+## Visually assessing proportional hazards
+
+```{r proportional-example-plot, warning=FALSE, height = 2, width = 3, out.width = "95%", fig.align = "center", echo = FALSE}
 library(ggplot2)
 library(ggfortify)
 fit = survfit(
     Surv(enter, exit, event) ~ sex,
     data = eha::oldmort
 )
-autoplot(fit, xlim = c(60, NA))
+autoplot(fit, xlim = c(60, NA)) + theme_bw()
 ```
 
 ## Building the Cox proportional hazards model
@@ -147,6 +283,24 @@ autoplot(fit, xlim = c(60, NA))
 ```{r coxph-summary-example}
 fit = coxph(Surv(enter, exit, event) ~ sex, data = eha::oldmort)
 summary(fit)
+```
+
+## Visualizing estimated survival time
+
+```{r survival-time-plot-code, message = FALSE, eval = FALSE, warning=FALSE, height = 2, width = 3, out.width = "95%", fig.align = "center"}
+library(survminer)
+plot_dat = data.frame(sex = c("female", "male"))
+plot_fit = survfit(fit, newdata = plot_dat)
+ggsurvplot(plot_fit, data = plot_dat)
+```
+
+## Visualizing estimated survival time
+
+```{r survival-time-plot, message = FALSE, echo = FALSE, warning=FALSE, height = 2, width = 3, out.width = "95%", fig.align = "center"}
+library(survminer)
+plot_dat = data.frame(sex = c("female", "male"))
+plot_fit = survfit(fit, newdata = plot_dat)
+ggsurvplot(plot_fit, data = plot_dat, xlim = c(60, NA))
 ```
 
 ## Time series cross-sectional data

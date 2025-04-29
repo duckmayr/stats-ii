@@ -1,0 +1,72 @@
+---
+title: "Statistical Analysis in Political Science II:\\newline Inference Supplemental Lecture"
+author: "JBrandon Duck-Mayr"
+date: "February 6, 2025"
+urlcolor: Blue
+header-includes:
+    - \newcommand{\setsep}{\setlength{\itemsep}{2pt}}
+    - \newcommand{\setskip}{\setlength{\parskip}{2pt}}
+    - \renewcommand{\tightlist}{\setsep\setskip}
+    - \newcommand{\expectation}[1]{\ensuremath{\mathbb{E}\left[#1\right]}}
+    - \newcommand{\pd}[2][]{\ensuremath{\frac{\partial{#1}}{\partial{#2}}}}
+    - \DeclareMathOperator{\Var}{Var}
+    - \newcommand{\variance}[1]{\ensuremath{\Var\left[#1\right]}}
+    - \DeclareMathOperator{\standarddeviation}{sd}
+    - \DeclareMathOperator{\standarderror}{se}
+output:
+    quack::presentation:
+        toc: false
+        incremental: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(ggplot2)
+```
+
+## Recap
+
+. . .
+
+- With the normality assumption, we can now test hypotheses
+  + Gives *distribution* of our estimates, not just mean & variance
+- But this is a strong assumption
+  + Imperfect appeal to Central Limit Theorem is often used to justify
+- We use Null Hypothesis Significance Testing (NHST)
+  + Start with *null hypothesis*, what we *don't* theorize, e.g. H$_0$: $\beta_j = 0$
+  + Use estimate distribution to generate test statistic & test if
+    * we would have obtained a test statistic as extreme as we did if
+    * the null hypothesis were true.
+    * The test statistic is the estimate scaled by uncertainty (i.e. divided by its standard error)
+- There are two-sided tests (e.g. is the effect different from 0?) and one-sided tests (e.g. is the effect positive?)
+- You can also test linear combinations of parameters (e.g. is one effect larger than another?)
+
+## Central Limit Theorem redux
+
+. . .
+
+- 
+
+## Hypothesis testing redux
+
+. . .
+
+- 
+
+## Confidence interval redux
+
+. . .
+
+- 
+
+## Two-tailed vs one-tailed tests
+
+. . .
+
+- 
+
+## Linear hypotheses redux
+
+. . .
+
+- 

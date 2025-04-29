@@ -27,20 +27,61 @@ output:
 . . .
 
 - The key characteristic of a linear model is $\mathbb{E}\left(y\mid X\right) = X\beta$
-- But sometimes this won't quite work; think about discrete outcomes, for instance
-- But, we can transform the outcome such that the expected value of its transformation is a linear function of the predictors
+- More specifically, for OLS we assume normal errors for statistical tests
+  + $y \sim \text{Normal}\left(X\beta, \sigma^2\right)$
+- But sometimes this won't work
+  + For example, dichotomous data or counts
+- So we
+  + move beyond normal error & generalize the linear model
+  + use likelihood functions instead of squared error
+
+## Generalized linear models
+
+. . .
+
+- Rather than assume $y | X \sim \text{Normal}$,
+- we say $y \sim F\left(g\left(X\beta\right)\right)$
+  + for some distribution $F$ \onslide<5->{and}
+  + link function $g$
+  + such that $g\left(\mathbb{E}\left(y\mid X\right)\right) = g\left(\mu\right) = \eta = X\beta$
 - This is called a "generalized linear model"
   + Random component: (conditional) probability distribution of the outcome
   + Systematic component: The linear combination of the explanatory variables
   + Link function: A function linking the systematic and random components
 
-## Link functions
+## Link functions and random components
 
 . . .
 
-- So we are saying something like $y \sim F\left(g\left(X\beta\right)\right)$ for some distribution $F$ and link function $g$ such that $\mathbb{E}\left(y\mid X\right) = g\left(X\beta\right)$
-- In OLS, $F$ is the normal distribution and $g$ is the "identity link"; $y \sim \mathcal{N}\left(X\beta\right)$,  $\mathbb{E}\left(y\mid X\right) = X\beta$
-- But for other types of outcomes, we will need different link functions
+- In OLS, $F$ is the normal distribution and $g$ is the "identity link"
+  + $y \sim \mathcal{N}\left(X\beta\right)$, 
+  + $\mathbb{E}\left(y\mid X\right) = X\beta$
+- For other types of outcomes, we need different link functions
+- A link function must be
+  + Smooth \onslide<8->{and}
+  + Invertible
+- For any distribution in the exponential family, there exists such a link function\onslide<10->{; some examples:}
+  + Normal
+  + Bernoulli
+  + Categorical
+  + Poisson
+  + Exponential
+
+## Exponential family form
+
+. . .
+
+- Consider a pdf or pmf $f\left(x \mid \zeta\right)$
+- Let $y = t\left(x\right)$ and $\theta = u\left(\zeta\right)$
+- It is in the exponential family if we can express it as
+  $$ f\left(y \mid \theta\right) = \exp\left( y\theta - b\left(\theta\right) + c\left(y\right) \right) $$
+  + $y$ is the canonical form of the data (typically a sufficient statistic)
+  + $\theta$ is the natural parameter
+  + $b\left(\theta\right)$ is the normalizing constant
+    * Important for determining the mean, variance, and link functions
+  + $c\left(y\right)$ is called the base or carrier density or underlying measure
+    * Typically unimportant for us
+- With a scale parameter added: $$ f\left(y \mid \theta\right) = \exp\left( \frac{y\theta - b\left(\theta\right)}{a\left(\psi\right)} + c\left(y\right) \right) $$
 
 ## What is maximum likelihood estimation?
 
@@ -65,8 +106,12 @@ output:
 \end{equation}
 }
 
-\onslide<4>{
+\onslide<4->{
 MLE maximizes the \textcolor{BurntOrange}{\textbf{Likelihood}}, not $\Pr\left(\beta\mid y, X\right)$
+}
+
+\onslide<5->{
+$$\mathcal{L}\left(\boldsymbol\beta \mid \mathbf{y, X}\right) = \prod_{i=1}^n f\left(y_i \mid \mathbf{x}_i, \beta\right)$$
 }
 
 ## Maximizing the (log?) likelihood
@@ -89,10 +134,10 @@ So,
 \onslide<2->{
 \begin{equation}
 \begin{split}
-\ell\left(y\mid X, \beta\right)
-& = \log\left[\mathcal{L}\left(y \mid X, \beta\right)\right] \\
-& = \log\left[\prod_i\Pr\left(y_i \mid x_i, \beta\right)\right] \\
-& = \sum_i \log\left[\Pr\left(y_i \mid x_i, \beta\right)\right]
+\ell\left(\beta \mid y, X\right)
+& = \log\left[\mathcal{L}\left(\beta \mid y, X\right)\right] \\
+& = \log\left[\prod_i f\left(y_i \mid x_i, \beta\right)\right] \\
+& = \sum_i \log\left[f\left(y_i \mid x_i, \beta\right)\right]
 \end{split}
 \end{equation}
 }
@@ -132,9 +177,200 @@ And
 \begin{align}
 \ell\left(\beta, \sigma^2 \mid y, X\right)
 & = \log\left[\frac{1}{(2\pi\sigma^2)^{n/2}}\exp\left(-\frac{1}{2\sigma^2}\left(y - X\beta\right)'\left(y - X\beta\right)\right)\right] \\
-& = -\frac{n}{2}\log\left[\right]
+& = -\frac{n}{2}\left(\log\left[2\pi\right] + \log\left[\sigma^2\right]\right) - \frac{1}{2\sigma^2} \sum_{i=1}^n \left(y_i - x_i\beta\right)^2
 \end{align}
+
+. . .
+
+As it turns out, *this one* has a closed form solution
+
+\begin{equation}
+\hat{\beta} = \text{argmax}_\beta \left\{\ell\left(y\mid X, \beta\right)\right\} = \left(X'X\right)^{-1}X'y
+\end{equation}
+
+## Normal example
+
+```{r}
+set.seed(42)
+n = 100
+x = rnorm(n)
+b = 2
+e = rnorm(n)
+y = x * b + e
+ols = lm(y ~ x)
+normal_glm = glm(y ~ x, family = "gaussian")
+```
+
+## Normal example
+
+\footnotesize
+
+```{r}
+summary(ols)
+```
+
+## Normal example
+
+\footnotesize
+
+```{r}
+summary(normal_glm)
+```
+
+## Goodness of fit
+
+. . .
+
+- pseudo-$R^2$: don't do it
+- AIC: $2k - 2\log\left(\hat{L}\right)$, where $\hat{L}$ is the max of the likelihood function
 
 ## Logistic regression
 
+. . .
+
+- Let $p$ be the probability of an event happening, i.e. $y_i = 1$
+- Then the likelihood is $$ \mathcal{L}\left(p \mid y\right) = \prod_{i=1}^n p^{y_i} \left(1 - p\right)^{1 - y_i}$$
+- For logistic regression we need a function relating $X\beta$ to $p$
+- Sigmoid or logistic function: $\sigma\left(x\right) = 1 / \left(1 + \exp\left(-x\right)\right)$
+- Odds or relative likelihood of two events: $p / \left(1 - p\right)$
+- $p = 1 / \left(1 + \exp\left(-X\beta\right)\right), 1 - p = \exp\left(-X\beta\right) / \left(1 + \exp\left(-X\beta\right)\right)$
+- $p / \left(1 - p\right) = \exp\left(X\beta\right)$
+- Log odds: $\log\left(p / \left(1 - p\right)\right) = \log\left(\exp\left(X\beta\right)\right) = X\beta$
+
+## Interpreting and reporting results
+
+. . .
+
+- So how do we interpret $\beta$ then?
+- Change in log odds
+- No one can think in log odds
+- You can exponentiate for odds, but that's tough too
+- So we typically discuss predicted probabilities
+
+## Example: Titanic survival
+
+. . .
+
+```{r}
+dat = as.data.frame(Titanic)
+dat = dat[rep(seq_len(nrow(dat)), dat$Freq), 1:4]
+dat$Survived = ifelse(dat$Survived == "Yes", 1, 0)
+logit = glm(
+    formula = Survived ~ Class + Sex + Age,
+    family = "binomial", data = dat
+)
+```
+
+## Example: Titanic survival
+
+\scriptsize
+
+```{r}
+summary(logit)
+```
+
+## Example: Titanic survival
+
+So being in Second class as opposed to First Class changes the odds of survival by a factor of
+
+$$
+\exp\left(\beta_{\text{Class2nd}}\right)
+= \exp\left(-1.02\right) = 0.36
+$$
+
+. . .
+
+In other words, the odds of a Second Class passenger surviving is roughly 1/3 of the odds of a First Class passenger surviving
+
+## Example: Titanic survival
+
+\footnotesize
+
+```{r}
+newdata = data.frame(
+    Class = c("1st", "2nd"),
+    Sex = "Male",
+    Age = "Adult"
+)
+predicted_probabilities = predict(
+    object = logit,
+    newdata = newdata,
+    type = "response"
+)
+data.frame(
+    Class = c("1st", "2nd"), 
+    Probability = predicted_probabilities
+)
+```
+
+## Plotting predicted probabilities
+
+. . .
+
+```{r}
+set.seed(138)
+n = 100
+x1 = rnorm(n)
+x2 = rnorm(n)
+b = c(2, -1)
+P = plogis(c(cbind(x1, x2) %*% b))
+y = sapply(P, function(p) {
+    sample(c(1, 0), size = 1, prob = c(p, 1-p))
+})
+```
+
+## Plotting predicted probabilities
+
+\scriptsize
+
+```{r}
+logit = glm(y ~ x1 + x2, family = "binomial")
+summary(logit)
+```
+
+## Plotting predicted probabilities
+
+```{r, out.width = "0.8\\textwidth"}
+margins::cplot(
+    object = logit, x = "x1",
+    what = "prediction", type = "response"
+)
+```
+
 ## Poisson regression
+
+. . .
+
+- Let $\lambda$ be the expected value of a count variable
+- Further suppose the variable $y$ is distributed Poisson
+  * Warning: overdispersion
+  * Warning: zero inflation
+- Then the likelihood is $$ \mathcal{L}\left(\lambda \mid y\right) = \prod_{i=1}^n \frac{\lambda^{y_i}}{y!} \exp\left(-\lambda\right) $$
+- Link function: Log
+
+## Example: Seatbelts
+
+. . .
+
+```{r}
+pois = glm(
+    formula = drivers ~ law,
+    family = "poisson", data = Seatbelts
+)
+```
+
+## Example: Seatbelts
+
+\scriptsize
+
+```{r}
+summary(pois)
+```
+
+## Example: Seatbelts
+
+So the expected number of deaths changed by a factor of
+
+$$ \exp\left(-0.26\right) = 0.77 $$
+
+after implementing the seatbelt law

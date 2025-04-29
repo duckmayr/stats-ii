@@ -1,0 +1,64 @@
+---
+title: "Problem Set 6"
+author: "JBrandon Duck-Mayr"
+date: "(Due by midnight on April 4, 2025)"
+fontsize: 12pt
+output: quack::article
+header-includes:
+    - \newcommand{\expectation}[1]{\ensuremath{\mathbb{E}\left[#1\right]}}
+    - \newcommand{\pd}[2][]{\ensuremath{\frac{\partial{#1}}{\partial{#2}}}}
+    - \DeclareMathOperator{\Var}{Var}
+    - \DeclareMathOperator{\Cov}{Cov}
+    - \DeclareMathOperator{\standarderror}{se}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# The Exponential Family Form (1 point)
+
+The probability density function of the Weibull distribution is given by
+
+$$
+w\left(x \mid \gamma, \beta\right) = \frac{\gamma}{\beta} x^{\gamma - 1} \exp\left(-\left(\frac{x}{\beta}\right)^\gamma\right).
+$$
+
+Show that the Weibull distribution is an exponential family form when $\gamma = 2$, labeling each part of the final answer.
+
+# Logistic Regression (2 points)
+
+Use the dataset `dataset-anes-2012-subset1.csv` available on Canvas for this problem. It is a subset of the 2012 American National Election Survey, prepared by Reid and Allum (2020) (<https://doi.org/10.4135/9781529710182>). It contains the following variables:
+
+- `ft_dem` and `ft_rep`: the respondent's feeling thermometer rating toward the Democratic and Republican party respectively
+- `race`: information about the respondent's race, though this information is expanded out into dummies described below and will thus be unnecessary
+- `income`: the respondent's income level; for the purposes of this problem do not worry about the precise mapping from income "level" to income dollar amount
+- `sex`: the respondent is male if `sex` is 0 and female if it is 1
+- `white`: 1 if the respondent is white and 0 otherwise
+- `black`: 1 if the respondent is Black and 0 otherwise
+- `hispanic`: 1 if the respondent is Hispanic and 0 otherwise
+- `other`: 1 for respondents of other non-white races or ethnicities and 0 otherwise
+- `vote_obama`: 1 if the respondent is voted for Obama and 0 otherwise
+
+Please answer the following questions:
+
+a. Fit a logistic regression model with `vote_obama` as the outcome and report the results in a regression table.
+b. Describe how you would interpret the reported coefficients.
+c. Holding `income`, `ft_dem`, and `ft_rep` at their sample means, compute predicted probabilities for all eight combinations of race and sex categories.
+d. Generate a plot showing the predicted probability of voting for Obama across the range of `ft_dem` for a white male with income level 15 and `ft_rep` value of 45 (i.e. holding all the other variables at their median).
+
+# Poisson Regression (2 points)
+
+Use R's built-in dataset `Seatbelts` for this problem.
+It records road casualties in the UK for each month from January 1969 to December 1984; beginning in February 1983, the UK required seatbelt use.
+The relevant variables for this problem are:
+
+- `drivers`: The number of drivers killed that month
+- `kms`: Distance driven
+- `PetrolPrice`: Gasoline price
+- `law`: 1 if the seatbelt law was in effect, 0 otherwise
+
+a. Fit a poisson regression model with `drivers` as the outcome and report the results in a regression table.
+b. Describe how you would interpret the reported coefficients.
+c. Holding `kms` and `PetrolPrice` at their sample means, compute predicted counts for `law` $= 1$ and for `law` $= 0$.
+d. Generate a plot showing the predicted count of driver deaths across the range of `kms` when `law` $= 1$ with `PetrolPrice` held at its mean, and a plot showing the predicted count of driver deaths across the range of `kms` when `law` $= 0$ with `PetrolPrice` held at its mean.

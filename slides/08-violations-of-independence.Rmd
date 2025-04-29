@@ -191,3 +191,26 @@ What happens when we don't have random sampling?
   + Newey-West (1987) standard errors
   + Also called "HAC" standard errors
   
+## Other violations of independence
+
+. . .
+
+- Very closely related is *spatial* autocorrelation
+  + This is more complicated than temporal autocorrelation
+  + Time is one dimensional and only runs in one direction, not so for space
+  + Tests: Moran's *I*, Geary's *C*
+- Clusters
+
+## Clustered data
+
+. . .
+
+\begin{figure}
+\centering
+\includegraphics[width = 0.8\textwidth]{simpsons-paradox}
+\end{figure}
+
+. . .
+
+- controlling for *confounders*
+- multi-level models

@@ -23,6 +23,15 @@ output:
         keep_tex: true
 ---
 
+## Background: Marginal effects
+
+. . .
+
+- The marginal effect of a predictor is how the outcome changes as the predictor changes
+- So far this has just been the regression coefficient
+- Recall: derivatives tell you rate of change; the partial derivative with respect to the predictor of interest tells you the marginal effect
+- Simple example: In the equation $y = \beta_0 + \beta_1 x_1 + \varepsilon$, the marginal effect of $x_1$ is $\pd[y]{x_1} = \beta_1$
+
 ## Motivating interaction terms: Conditional effects
 
 . . .
@@ -43,7 +52,7 @@ output:
   + If $x_2$ is continuous, we are saying the effect of $x_1$ can be different (magnitude and/or sign) as $x_2$ increases or decreases
 - Then $\pd[y]{x_1} = \beta_1 + \beta_3 x_2$---success! $x_2$ is in the formula for the marginal effect of $x_1$
   + So how much does an increase in $x_1$ affect $y$? It depends! (on $x_2$)
-- **Careful**: Not only is $\pd[y]{x_1}$ not equal to $\beta_1$, or even $\beta_1 + \beta_3$, but:
+- **Careful**: Not only is $\pd[y]{x_1}$ not equal to $\beta_1$, or even $\beta_1 + \beta_3$\onslide<8->{, but:}
   + $\standarddeviation \left( \pd[y]{x_1} \right) \neq \standarddeviation \left( \beta_1 \right)$
   + $\standarddeviation \left( \pd[y]{x_1} \right) \neq \standarddeviation \left( \beta_3 \right)$
   + $\standarddeviation \left( \pd[y]{x_1} \right) \neq \standarddeviation \left( \beta_1 \right) + \standarddeviation \left( \beta_3 \right)$
@@ -220,7 +229,19 @@ print(summary(MEs), digits = 3)
 3. Constitutive terms are **not** unconditional marginal effects!
 4. Calculate substantively meaningful marginal effects and standard errors
 
-## Continuous example: lower n & effect size
+## Marginal effect quantities of interest
+
+. . .
+
+- (Sample) Average Marginal Effect ((S)AME): Marginal effect for every observation, averaged
+- Marginal effect at the mean: Marginal effect at the mean value of the predictor
+  * Sometimes done instead at the median
+- Marginal effect at representative values
+  * Calculated at values of interest for your study
+  * Researchers often use mean $\pm$ one standard deviation
+  * But different values could be important for your study, substantive context and theory matters
+
+## Continuous example (still with lower n & effect)
 
 Consider the effect at one standard deviation above and below the mean of `x2`
 (i.e. when `x2` is `r sprintf("%0.2f", mean(x2) - sd(x2))` & `r sprintf("%0.2f", mean(x2) + sd(x2))`)
@@ -237,7 +258,7 @@ print(summary(MEs), digits = 3)
 
 (True effect at those `x2` values is `r sprintf("%0.2f", b[2] + b[4] * (mx - sdx))` and `r sprintf("%0.2f", b[2] + b[4] * (mx + sdx))`)
 
-## Continuous example: lower n & effect size        
+## Continuous example (still with lower n & effect)      
 
 ```{r, fig.height = 4, fig.width = 6, out.width = "90%"}
 pts = coef(m)[2] + coef(m)[4] * x2
@@ -438,3 +459,52 @@ qqnorm(residuals(m))
 3. Look for "influential" observations
    a. DFBETAS, Cook's D
    b. *Should* we delete outliers??
+
+## Influential observations
+
+. . .
+
+```{r}
+set.seed(123)
+x = rnorm(30); y = x + rnorm(30)
+m = lm(y ~ x)
+x1 = c(x, 7); y1 = c(y, -2)
+m1 = lm(y1 ~ x1)
+```
+
+## Influential observations
+
+```{r, fig.height = 4, fig.width = 6, out.width = "80%", fig.align='center'}
+point_color = "#80808080"
+plot(
+    x, y, pch = 19, col = point_color,
+    xlim = c(-3, 8), ylim = c(-3, 5)
+)
+abline(m)
+```
+
+## Influential observations
+
+```{r, fig.height = 4, fig.width = 6, out.width = "80%", fig.align='center'}
+point_color = c(rep("#80808080", 30), "#bf5700")
+plot(
+    x1, y1, pch = 19, col = point_color,
+    xlim = c(-3, 8), ylim = c(-3, 5)
+)
+abline(m1)
+```
+
+## Methods to detect influential observations
+
+- DFBETA: Coefficient change when you omit an observation
+  + DFBETA$_{ij} = \hat{\beta}_j - \hat{\beta}_{(i)j}$
+  + $\hat{\beta}_j$ is the coefficient estimate using all observations
+  + $\hat{\beta}_{(i)j}$ is the estimate omitting the $i$th observation
+  + Often you really only care about the absolute value
+- DFBETA**S**: standardized DFBETA
+  + DFBETAS$_{ij} = \frac{\hat{\beta}_j - \hat{\beta}_{(i)j}}{\standarderror\left(\hat{\beta}_j\right)}$; look at $|$DFBETAS$| > 2/\sqrt{n}$
+- Cook's $D$: All parameters' change when you omit an observation
+  + Hat matrix $H = X (X'X)^{-1} X'$
+  + $D_i = \frac{e_i^2}{ps^2} \left(\frac{h_{ii}}{(1 - h_{ii})^2}\right)$; look at $D_i > 1$
+  + $e_i$ is residual $i$, $p$ is model parameters, $s^2$ is mean squared error
+- R functions: `dfbeta()`, `dfbetas()`, `cooks.distance()`, `influence.measures()`

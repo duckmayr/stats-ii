@@ -44,16 +44,29 @@ Topics:
 
 - Description: Summary statistics, correlations, associations, etc
 - Prediction
-- Causal inference: Associations that are "causal"\pause\dots\ what does that mean??
+- Causal inference: Associations that are "causal"\onslide<5->{\dots\ what does that mean??}
 
-## The fundamental problem of causal inference
+## Correlation vs causation
 
 . . .
 
-- We want to be able to estimate the effect an treatment $X$ has on an outcome $Y$
+- Correlation does not imply causation
+  + Example: Roosters and sunrise
+  + Example: High school grads and pizza consumption
+  + Example: Measles cases and marriage rates
+- Causation does not even imply correlation
+  + Example: Thermostat
+  + Example: Driving on a hilly road
+
+## Potential outcomes
+
+. . .
+
+- We want to be able to estimate the effect a treatment $X$ has on an outcome $Y$
 - Say $X$ takes two values; $X = 1$ or $X = 0$
-- Let $Y(1)$ be the outcome we would observe if $X = 1$ and similarly for $Y(0)$
-- We'd want to directly observe and calculate $Y(1) - Y(0)$... but we can't
+- Let $Y_i(1)$ be the outcome we would observe if $X_i = 1$ and similarly for $Y_i(0)$
+- One is the observed outcome, the other is the counterfactual outcome
+- The fundamental problem of causal inference
 
 ## Assumptions, assumptions
 
@@ -73,8 +86,34 @@ Topics:
 
 . . .
 
+- Consists of nodes and paths
+- Paths are *directed*
+- The graph must be *acyclic*
+
+## Directed acyclic graphs
+
+```{r, out.width = "90%", message = FALSE}
+library(ggdag)
+library(ggplot2)
+theme_set(theme_dag())
+```
+
+## Directed acyclic graphs
+
+```{r, out.width = "90%"}
+dagify(y ~ x + a, x ~ a) %>% ggdag()
+```
+
+## Directed acyclic graphs
+
+```{r, out.width = "90%"}
+dagify(y ~ x, x ~ a, a ~ y) %>% ggdag()
+```
+
+## Directed acyclic graphs
+
 - Types of paths
-  + Fork (two common causes of one variable)
+  + Fork (one variable affecting two variables)
   + Chain (mediator)
   + Collider (two variables causing one)
 - Open paths like forks and chains transmit association
@@ -82,6 +121,26 @@ Topics:
 - Adjusting for confounding with forks closes biasing pathways
 - The effect of controlling in chains is dependent
 - Adjusting for colliders opens biasing pathways
+
+## Confounding
+
+```{r, out.width = "90%"}
+dagify(y ~ x + a, x ~ a) %>% ggdag()
+```
+
+## Colliding
+
+```{r, out.width = "90%"}
+dagify(y ~ x, a ~ x + y) %>% ggdag()
+```
+
+
+## M-bias
+
+```{r, out.width = "90%"}
+dagify(c ~ u1 + u2, e ~ u1, o ~ u2 + e) %>% ggdag()
+```
+
 
 ## Types of biases
 
@@ -154,6 +213,33 @@ Then
 . . .
 
 The effect of randomly-assigned treatment on the treated is the same as the effect of treatment on a randomly-assigned unit
+
+## Instrumental variables
+
+. . .
+
+- Endogeneity problems: Explanatory variable correlated with the error term
+  + Reverse causality
+  + Omitted variables
+- Instrumental variable approach can be used to overcome this problem
+- Assumptions:
+  + Relevance
+  + Exclusion restriction
+- Method: Two stage least squares (2SLS or TSLS)
+  + Regress the explanatory variable on the instrument
+  + Use the predicted values in place of the explanatory variable
+
+## Regression discontinuity
+
+. . .
+
+- Suppose there is a variable that determines treatment with some threshold
+  + Example: Law school admissions and LSAT scores
+- If there is noise in assignment at the cutoff, we can use RDD
+- Most common method is local linear regression
+  + Choose some bandwidth $h$ and use data within $h$ of the cutoff $c$
+  + Then estimate $$ y = \alpha + \tau D + \beta_1 (x - c) + \beta_2 D (x - c) + \varepsilon $$
+  + The treatment effect is $\tau$
 
 ## Some further resources
 

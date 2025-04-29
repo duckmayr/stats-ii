@@ -88,8 +88,8 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{5}
-\usepackage{/home/jb/R/x86_64-pc-linux-gnu-library/4.3/quack/rmarkdown/templates/presentation/resources/beamerthemeAustin}
-\usepackage{/home/jb/R/x86_64-pc-linux-gnu-library/4.3/quack/rmarkdown/templates/presentation/resources/beamercolorthemelonghorn}
+\usepackage{/home/jb/R/x86_64-pc-linux-gnu-library/4.4/quack/rmarkdown/templates/presentation/resources/beamerthemeAustin}
+\usepackage{/home/jb/R/x86_64-pc-linux-gnu-library/4.4/quack/rmarkdown/templates/presentation/resources/beamercolorthemelonghorn}
 \newcommand{\setsep}{\setlength{\itemsep}{3pt}}
 \newcommand{\setskip}{\setlength{\parskip}{3pt}}
 \renewcommand{\tightlist}{\setsep\setskip}
@@ -105,7 +105,7 @@
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
 \hypersetup{
@@ -120,13 +120,13 @@
 
 \title{Statistical Analysis in Political Science II:\newline Violations of independence}
 \author{JBrandon Duck-Mayr}
-\date{March 27, 2024}
+\date{March 12, 2025}
 
 \begin{document}
 \frame{\titlepage}
 
 \begin{frame}{Assumptions, assumptions}
-\protect\hypertarget{assumptions-assumptions}{}
+\phantomsection\label{assumptions-assumptions}
 Recall the assumptions of the classical linear model:
 
 \pause
@@ -153,7 +153,7 @@ What happens when we don't have random sampling?
 \end{frame}
 
 \begin{frame}{Time series data}
-\protect\hypertarget{time-series-data}{}
+\phantomsection\label{time-series-data}
 \pause
 
 \begin{itemize}[<+->]
@@ -166,7 +166,7 @@ What happens when we don't have random sampling?
 \end{frame}
 
 \begin{frame}{Finite distributed lag models}
-\protect\hypertarget{finite-distributed-lag-models}{}
+\phantomsection\label{finite-distributed-lag-models}
 \pause
 
 \begin{itemize}[<+->]
@@ -208,7 +208,7 @@ What happens when we don't have random sampling?
 \end{frame}
 
 \begin{frame}{More assumptions}
-\protect\hypertarget{more-assumptions}{}
+\phantomsection\label{more-assumptions}
 \begin{itemize}
     \setlength{\itemsep}{3pt}\setlength{\parskip}{3pt}
     \item[TS1]<2-> Linearity in parameters (essentially the same as MLR1)
@@ -229,7 +229,7 @@ What happens when we don't have random sampling?
 \end{frame}
 
 \begin{frame}{What do they buy us?}
-\protect\hypertarget{what-do-they-buy-us}{}
+\phantomsection\label{what-do-they-buy-us}
 \pause
 
 \begin{itemize}[<+->]
@@ -258,7 +258,7 @@ What happens when we don't have random sampling?
 \end{frame}
 
 \begin{frame}{Time trends}
-\protect\hypertarget{time-trends}{}
+\phantomsection\label{time-trends}
 \pause
 
 \begin{itemize}[<+->]
@@ -275,7 +275,7 @@ What happens when we don't have random sampling?
 \end{frame}
 
 \begin{frame}{Stationarity and weak dependence}
-\protect\hypertarget{stationarity-and-weak-dependence}{}
+\phantomsection\label{stationarity-and-weak-dependence}
 \pause
 
 \begin{itemize}[<+->]
@@ -290,7 +290,7 @@ What happens when we don't have random sampling?
 \end{frame}
 
 \begin{frame}{\textbf{MORE} assumptions???}
-\protect\hypertarget{more-assumptions-1}{}
+\phantomsection\label{more-assumptions-1}
 \begin{itemize}
     \setlength{\itemsep}{3pt}\setlength{\parskip}{3pt}
     \item[TS1']<2-> Linearity, stationarity, and weak dependence
@@ -302,7 +302,7 @@ What happens when we don't have random sampling?
 \end{frame}
 
 \begin{frame}{What do \textbf{THOSE} buy us?? (asymptotics)}
-\protect\hypertarget{what-do-those-buy-us-asymptotics}{}
+\phantomsection\label{what-do-those-buy-us-asymptotics}
 \pause
 
 \begin{itemize}[<+->]
@@ -315,7 +315,7 @@ What happens when we don't have random sampling?
 \end{frame}
 
 \begin{frame}{Autoregressive processes}
-\protect\hypertarget{autoregressive-processes}{}
+\phantomsection\label{autoregressive-processes}
 \pause
 
 \begin{itemize}[<+->]
@@ -330,7 +330,7 @@ What happens when we don't have random sampling?
 \end{frame}
 
 \begin{frame}{Persistence}
-\protect\hypertarget{persistence}{}
+\phantomsection\label{persistence}
 \begin{itemize}[<+->]
 \tightlist
 \item
@@ -363,7 +363,7 @@ What happens when we don't have random sampling?
 \end{frame}
 
 \begin{frame}{Dynamically complete models}
-\protect\hypertarget{dynamically-complete-models}{}
+\phantomsection\label{dynamically-complete-models}
 \begin{itemize}[<+->]
 \tightlist
 \item
@@ -388,7 +388,7 @@ What happens when we don't have random sampling?
 \end{frame}
 
 \begin{frame}{Serially correlated errors}
-\protect\hypertarget{serially-correlated-errors}{}
+\phantomsection\label{serially-correlated-errors}
 \begin{itemize}[<+->]
 \tightlist
 \item
@@ -401,7 +401,7 @@ What happens when we don't have random sampling?
 \end{frame}
 
 \begin{frame}{Testing for serial correlation}
-\protect\hypertarget{testing-for-serial-correlation}{}
+\phantomsection\label{testing-for-serial-correlation}
 \begin{itemize}[<+->]
 \tightlist
 \item
@@ -444,6 +444,49 @@ What happens when we don't have random sampling?
   \item
     Also called ``HAC'' standard errors
   \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Other violations of independence}
+\phantomsection\label{other-violations-of-independence}
+\pause
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Very closely related is \emph{spatial} autocorrelation
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    This is more complicated than temporal autocorrelation
+  \item
+    Time is one dimensional and only runs in one direction, not so for space
+  \item
+    Tests: Moran's \emph{I}, Geary's \emph{C}
+  \end{itemize}
+\item
+  Clusters
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Clustered data}
+\phantomsection\label{clustered-data}
+\pause
+
+\begin{figure}
+\centering
+\includegraphics[width = 0.8\textwidth]{simpsons-paradox}
+\end{figure}
+
+\pause
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  controlling for \emph{confounders}
+\item
+  multi-level models
 \end{itemize}
 \end{frame}
 

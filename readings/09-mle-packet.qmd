@@ -1,0 +1,74 @@
+---
+title: "General Linear Models and Maximum LIkelihood Estimation"
+author: "JBrandon Duck-Mayr"
+fontsize: 12pt
+mainfont: "TeX Gyre Termes"
+sansfont: "TeX Gyre Heros"
+linestretch: 1.15
+linkcolor: Teal
+format:
+    pdf:
+        include-in-header: 
+            text: \usepackage[bottom,flushmargin]{footmisc}
+editor: visual
+---
+
+# Introduction
+
+When constructing the OLS estimator, we started with the idea of minimizing squared error given a model linear in the parameters[^1], and we assumed that errors were normally distributed to enable statistical tests. In this module, we're going to do two things: (1) move beyond normal errors and generalize the idea of a linear model, and (2) consider estimators designed to maximize the likelihood of the data rather than minimizing squared error.
+
+[^1]: Recall the linear model is $\mathbf{y} = \mathbf{X}\boldsymbol\beta + \boldsymbol\varepsilon$, so that the residuals are $\mathbf{e} = \mathbf{y} - \mathbf{Xb}$ (where $\mathbf{b}$ is our estimate of $\boldsymbol\beta$) and therefore the function giving squared error is $\mathbf{e'e} = \left(\mathbf{y} - \mathbf{Xb}\right)'\left(\mathbf{y} - \mathbf{Xb}\right)$. We found the $\mathbf{b}$ that minimizes $\mathbf{e'e}$ by taking the derivative of $\mathbf{e'e}$ with respect to $\mathbf{b}$, setting it equal to zero, and solving for $\mathbf{b}$, giving our familiar OLS estimator $\left(\mathbf{X'X}\right)^{-1}\mathbf{X'y}$.
+
+# General Linear Models
+
+So far, we've been discussing data that can be modeled as conditionally normal, i.e. normally distributed *conditional* on the predictors. However, there are many contexts common in political science where that assumption is necessarily violated, in particular with dichotomous or categorical outcomes and with counts. So we will need to be able to handle errors with different distributions. Unlike our treatment of OLS, where the distribution of the outcome was considered well into our construction of the model, here it will take center stage. Recall the linear model we've considered so far:
+
+\begin{equation*}
+y \sim \text{Normal}\left(X\beta, \sigma^2\right).
+\end{equation*}
+
+Here the mean of $y$ is simply a linear combination of the predictors, $X\beta$, which makes sense because the mean of a normal distribution can be any real number. If we have to assume a different distribution for our outcome, we'll instead have to relate our predictors to our outcome's mean using a *link function*:
+
+\begin{equation}
+g\left(\mu\right) = \eta = X\beta,
+\end{equation}
+
+where of $\mu$ denotes the mean of the outcome's distribution and $\eta$ is typically used as shorthand for the linear combination of your predictors. For reasons that will become obvious, the link function $g$ must be both invertible and smooth.[^2] As it turns out (Nelder and Wedderburn 1972; McCullagh and Nelder 1989), for any outcome distribution that can be characterized into the exponential family form—a form we will discuss momentarily that can describe a broad class of probability distributions—there is a link function that relates the distribution's mean to the linear combination of predictors.
+
+[^2]: A function $g$ is invertible if there exists a function $g^{-1}$ such that $g^{-1}\left(g\left(x\right)\right) = x$. A function is smooth if its derivatives are continuous; it typically refers to being infinitely differentiable, but for the purposes of this module you can simply assume that the first and second derivatives are continuous.
+
+The three components of any generalized linear model, then, are
+
+-   Systematic component: Linear combination of your predictors
+-   Random component: Outcome distribution expressible in exponential family form
+-   Link function: Smooth & invertible function relating systematic & random components
+
+## The Exponential Family Form
+
+Consider a conditional probability density or mass function for a variable $x$ with parameter (or parameter vector) $\zeta$, $f\left(x \mid \zeta\right)$. Let $y = t\left(x\right)$ and $\theta = u\left(\zeta\right)$; i.e. you may need to transform the variable and/or parameter. It is in the exponential family if it can be expressed as
+
+\begin{align}
+f\left(y \mid \theta\right)
+& = \exp\left( y\theta - b\left(\theta\right) + c\left(y\right) \right).
+\end{align}
+
+The sub-functions of the exponential family form can be identified or described as follows:
+
+-   $y$ is the canonical form of the data (typically a sufficient statistic)
+-   $\theta$ is the natural parameter
+-   $b\left(\theta\right)$ is the normalizing constant, also sometimes called the cumulant function or log-partition function, and is important for determining the mean, variance, and link functions
+-   $c\left(y\right)$ is called the base density, carrier density, or underlying measure, but will not typically be important for our purposes or in the estimation process.
+
+Here are some probability distributions expressible in exponential family form that will likely be of particular interest to you, though there are many more:
+
+-   Normal
+-   Bernoulli
+-   Categorical
+-   Poisson
+-   Exponential
+
+# Maximum Likelihood Estimation
+
+# Example: Linear Regression
+
+# Example: Logistic Regression

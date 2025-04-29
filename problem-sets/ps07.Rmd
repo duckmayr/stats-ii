@@ -1,0 +1,23 @@
+---
+title: "Problem Set 7"
+author: "JBrandon Duck-Mayr"
+date: "(Due by midnight on April 11, 2025)"
+fontsize: 12pt
+output: quack::article
+header-includes:
+    - \newcommand{\expectation}[1]{\ensuremath{\mathbb{E}\left[#1\right]}}
+    - \newcommand{\pd}[2][]{\ensuremath{\frac{\partial{#1}}{\partial{#2}}}}
+    - \DeclareMathOperator{\Var}{Var}
+    - \DeclareMathOperator{\Cov}{Cov}
+    - \DeclareMathOperator{\standarderror}{se}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# HAC Standard Errors (1 point)
+
+# Linear regression for time series (3 points)
+
+# Survival analysis (1 point)

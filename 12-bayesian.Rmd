@@ -34,7 +34,7 @@ Topics:
 - Example: BaP-VAR? GP-IRT? MC3-GGUM??
 -->
 
-```{r setup, echo = FALSE}
+```{r setup, echo = FALSE, message = FALSE}
 library(dplyr)
 library(tidyr)
 library(ggplot2)
@@ -76,8 +76,12 @@ Some advantages of the Bayesian approach:
 Some disadvantages:
 
 - How do you set the prior?
-- Influence of the prior
+- Influence of the prior*
 - Computational cost
+
+. . .
+
+(*Also an advantage though!)
 
 ## How to go about Bayesian analysis
 
@@ -89,6 +93,23 @@ Some disadvantages:
 3. Specify priors
 4. Derive and interpret the posterior
 5. Conduct (e.g.) posterior predictive checks
+
+## Credible intervals
+
+. . .
+
+- You could say this is an analog to frequentist confidence intervals
+- Interval containing X% of the posterior probability
+- How do we choose X?
+- Contrasted with confidence intervals
+
+## Model selection
+
+. . .
+
+- Bayes factors
+- LOO-CV
+- Model averaging
 
 ## Example: Beta prior, binomial likelihood
 
@@ -131,25 +152,23 @@ f\left(\pi \mid \text{polls}\right)
 
 \footnotesize
 
-```{r, message = FALSE, warning = FALSE, cache = TRUE}
-url_base = "https://projects.fivethirtyeight.com/polls-page/data/"
-polls = read.csv(paste0(url_base, "president_polls.csv")) %>% 
+```{r, message = FALSE, warning = FALSE}
+polls = read.csv("president-polls-2020.csv") %>% 
     group_by(question_id) %>%
-        filter(state == "Texas") %>% 
-        filter(all(c("Trump", "Biden") %in% answer) & !is.na(sample_size)) %>%
-        ungroup() %>%
-        filter(answer %in% c("Trump", "Biden")) %>%
-        mutate(answer = ifelse(answer == "Biden", "Dem", "GOP")) %>%
-        pivot_wider(
-            id_cols = c("race_id", "poll_id", "question_id"),
-            names_from = answer,
-            values_from = pct,
-            unused_fn = list(state = first, sample_size = first)
-        ) %>%
-        mutate(
-            Dem = round(0.01 * Dem * sample_size),
-            GOP = round(0.01 * GOP * sample_size)
-        )
+    filter(all(c("Trump", "Biden") %in% answer) & !is.na(sample_size)) %>%
+    ungroup() %>%
+    filter(answer %in% c("Trump", "Biden")) %>%
+    mutate(answer = ifelse(answer == "Biden", "Dem", "GOP")) %>%
+    pivot_wider(
+        id_cols = c("race_id", "poll_id", "question_id"),
+        names_from = answer,
+        values_from = pct,
+        unused_fn = list(state = first, sample_size = first)
+    ) %>%
+    mutate(
+        Dem = round(0.01 * Dem * sample_size),
+        GOP = round(0.01 * GOP * sample_size)
+    )
 ```
 
 ## Beta/binomal example: Posterior
@@ -165,40 +184,44 @@ beta_post  = beta0  + sum(polls$GOP)
 post_mean  = alpha_post / (alpha_post + beta_post)
 lower  = qbeta(0.025, alpha_post, beta_post)
 upper  = qbeta(0.975, alpha_post, beta_post)
-yfloor = floor(10 * lower) / 10
-yceil  = ceiling(10 * upper) / 10
+yfloor = floor(lower / 0.02) * 0.02
+yceil  = ceiling(upper / 0.02) * 0.02
+actual = 81283501 / (81283501 + 74223975)
 pi = seq(from = yfloor, to = yceil, length.out = 1000)
 post = data.frame(pi = pi, pr = dbeta(pi, alpha_post, beta_post))
 ggplot(data = post, mapping = aes(x = pi, y = pr)) +
     geom_line(linewidth = 1) +
     geom_vline(xintercept = post_mean, linetype = "dashed") +
+    geom_vline(xintercept = actual, linetype = "dashed", color = "#005f86") +
     geom_vline(xintercept = lower, linetype = "dotted") +
     geom_vline(xintercept = upper, linetype = "dotted") +
     xlab(expression(pi)) +
-    ylab(expression("Pr("~pi~")")) +
+    ylab(expression("f("~pi~"| polls)")) +
     theme_bw()
 ```
 
 ## Beta/binomal example: Posterior
 
-```{r, echo = FALSE, cache = TRUE}
+```{r, echo = FALSE}
 alpha0 = 1; beta0 = 1
-alpha_post = alpha0 + sum(polls$Dem)
-beta_post  = beta0  + sum(polls$GOP)
+alpha_post = alpha0 + sum(polls$Dem) * (1/1000)
+beta_post  = beta0  + sum(polls$GOP) * (1/1000)
 post_mean  = alpha_post / (alpha_post + beta_post)
 lower  = qbeta(0.025, alpha_post, beta_post)
 upper  = qbeta(0.975, alpha_post, beta_post)
-yfloor = floor(10 * lower) / 10
-yceil  = ceiling(10 * upper) / 10
+yfloor = floor(lower / 0.02) * 0.02
+yceil  = ceiling(upper / 0.02) * 0.02
+actual = 81283501 / (81283501 + 74223975)
 pi = seq(from = yfloor, to = yceil, length.out = 1000)
 post = data.frame(pi = pi, pr = dbeta(pi, alpha_post, beta_post))
 ggplot(data = post, mapping = aes(x = pi, y = pr)) +
     geom_line(linewidth = 1) +
     geom_vline(xintercept = post_mean, linetype = "dashed") +
+    geom_vline(xintercept = actual, linetype = "dashed", color = "#005f86") +
     geom_vline(xintercept = lower, linetype = "dotted") +
     geom_vline(xintercept = upper, linetype = "dotted") +
     xlab(expression(pi)) +
-    ylab(expression("Pr("~pi~")")) +
+    ylab(expression("f("~pi~"| polls)")) +
     theme_bw()
 ```
 
@@ -212,6 +235,8 @@ ggplot(data = post, mapping = aes(x = pi, y = pr)) +
   + Metropolis-Hastings if not
   + Newer or more complex algorithms like Hamiltonian MCMC
     * Stan via `{rstan}`
+  + Guaranteed to converge to target distribution "eventually"
+    * Convergence diagnostics like $\hat{R}$
 
 ## Example: Linear regression
 
@@ -234,55 +259,90 @@ ggplot(data = post, mapping = aes(x = pi, y = pr)) +
 
 ## Example: Linear regression
 
-```{r, echo = FALSE, cache = TRUE}
+\scriptsize
+
+```{r, warning = FALSE, message = FALSE}
 ## Create sampler function
 sampler <- function(y, X, N = 1000, b = NULL, s = NULL) {
-    k <- ncol(X)
-    n <- nrow(X)
-    b <- "if"(is.null(b), rnorm(k), b)
-    s <- rgamma(1, shape = 1)
-    B <- matrix(nrow = k, ncol = N)
-    S <- numeric(N)
+    k = ncol(X); n = nrow(X)
+    b = "if"(is.null(b), rnorm(k), b); s = rgamma(1, shape = 1)
+    B = matrix(nrow = k, ncol = N); S = numeric(N)
     for ( i in 1:N ) {
         ## Draw beta
-        z <- rnorm(k, mean = b)
-        r <- sum(dnorm(z, log = TRUE)) - sum(dnorm(b, log = TRUE))
-        r <- r + sum(dnorm(y, mean = c(X %*% z), sd = 1 / s, log = TRUE))
-        r <- r - sum(dnorm(y, mean = c(X %*% b), sd = 1 / s, log = TRUE))
-        if ( log(runif(1)) < r ) {
-            b <- z
-        }
-        B[ , i] <- b
+        z = rnorm(k, mean = b)
+        r = sum(dnorm(z, log = TRUE)) - sum(dnorm(b, log = TRUE))
+        r = r + sum(dnorm(y, mean = c(X %*% z), sd = 1 / s, log = TRUE))
+        r = r - sum(dnorm(y, mean = c(X %*% b), sd = 1 / s, log = TRUE))
+        if ( log(runif(1)) < r ) b = z
+        B[ , i] = b
         ## Draw sigma
-        z <- rnorm(1, mean = s, sd = 0.1)
+        z = rnorm(1, mean = s, sd = 0.1)
         if ( z > 0 ) {
-            r <- dgamma(z, shape = 1, log = TRUE)
-            r <- r - dgamma(s, shape = 1, log = TRUE)
-            r <- r + sum(dnorm(y, mean = c(X %*% b),  sd = 1 / z, log = TRUE))
-            r <- r - sum(dnorm(y, mean = c(X %*% b),  sd = 1 / s, log = TRUE))
-            if ( log(runif(1)) < r ) {
-                s <- z
-            }
-            S[i] <- s
+            r = dgamma(z, shape = 1, log = TRUE)
+            r = r - dgamma(s, shape = 1, log = TRUE)
+            r = r + sum(dnorm(y, mean = c(X %*% b),  sd = 1 / z, log = TRUE))
+            r = r - sum(dnorm(y, mean = c(X %*% b),  sd = 1 / s, log = TRUE))
+            if ( log(runif(1)) < r ) s = z
+            S[i] = s
         }
     }
     return(list(b_draws = B, s_draws = S))
 }
+```
 
+## Example: Linear regression
+
+\footnotesize
+
+```{r}
 ## Simulate data
 set.seed(123)
-n <- 30
-x <- rnorm(n)
-X <- cbind(1, x)
-b <- c(-2, 2)
-e <- rnorm(n)
-y <- X %*% b + e
+n = 30
+x = rnorm(n)
+X = cbind(1, x)
+b = c(-2, 2)
+e = rnorm(n)
+y = X %*% b + e
 
 ## Sample posterior
 set.seed(456)
-N <- 100000
-p <- sampler(y, X, N, b = -b)
+N = 100000
+p = sampler(y, X, N, b = -b)
+```
 
+## Example: Linear regression
+
+\footnotesize
+
+```{r, eval = FALSE, message = FALSE, warning = FALSE}
+## Look at the posterior surface (contour plot)
+d = expand.grid(
+    b1 = seq(-2.5, 2.5, length.out = 51),
+    b2 = seq(-2.5, 2.5, length.out = 51)
+)
+d$p = apply(d[ , c("b1", "b2")], 1, function(r) {
+    sum(dnorm(y, mean = X %*% r, log = TRUE)) + sum(dnorm(r, log = TRUE))
+})
+ind = c(1:50, floor(seq(from = 51, to = N, length.out = 950)))
+trc = data.frame(
+    b1 = p$b_draws[1, ind],
+    b2 = p$b_draws[2, ind]
+)
+ggplot(data = d, mapping = aes(x = b1, y = b2)) +
+    geom_contour_filled(aes(z = p), alpha = 0.5) +
+    geom_point(data = trc, col = "#ff000080") +
+    geom_path(data = trc, col = "#ff000080") +
+    geom_point(aes(x = -2, y = 2), size = 2) +
+    xlab(expression(beta[0])) +
+    ylab(expression(beta[1])) +
+    theme_bw()
+```
+
+## Example: Linear regression
+
+\footnotesize
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
 ## Look at the posterior surface (contour plot)
 d <- expand.grid(
     b1 = seq(-2.5, 2.5, length.out = 51),
@@ -342,6 +402,34 @@ ggplot(data = lng_trc, mapping = aes(x = Posterior, fill = stat(quantile))) +
     theme_bw()
 ```
 
+## Example: Linear regression
+
+```{r, cache = TRUE}
+set.seed(789)
+N = 10000
+chain1 = sampler(y, X, N, b = -b)
+chain2 = sampler(y, X, N, b = 2*b)
+chainlist = coda::mcmc.list(
+    coda::mcmc(t(chain1$b_draws)),
+    coda::mcmc(t(chain2$b_draws))
+)
+coda::gelman.diag(chainlist)$psrf
+```
+
+## Example: Linear regression
+
+\footnotesize
+
+```{r}
+ols = lm(y ~ x)
+cbind(
+    Mean  = apply(chain1$b_draws, 1, mean),
+    Lower = apply(chain1$b_draws, 1, quantile, probs = 0.025),
+    Upper = apply(chain1$b_draws, 1, quantile, probs = 0.975)
+)
+cbind(coef(ols), confint(ols))
+```
+
 ## Example: Non-parametric measurement model
 
 . . .
@@ -351,10 +439,10 @@ ggplot(data = lng_trc, mapping = aes(x = Posterior, fill = stat(quantile))) +
 
 . . .
 
-```{r, echo = FALSE, out.height = "67%"}
+```{r, echo = FALSE, out.height = "60%", width = 3.5, height = 2}
 a = 0; b = 1; th = seq(from = -3, to = 3, length.out = 1000)
 plot(
-    x = th, y = a + b * th, lwd = 2,
+    x = th, y = a + b * th, type = "l",
     xlab = expression(theta), ylab = expression(alpha + beta * theta)
 )
 ```
@@ -366,18 +454,43 @@ plot(
 - But what if we weren't so sure about that functional form?
 :::
 
-```{r, echo = FALSE, out.height = "67%"}
+```{r, echo = FALSE, out.height = "60%", width = 3.5, height = 2}
 a = 0; b = 1; th = seq(from = -3, to = 3, length.out = 1000)
 plot(
-    x = th, y = plogis(a + b * th), lwd = 2,
+    x = th, y = plogis(a + b * th), type = "l",
     xlab = expression(theta), ylab = "Pr(yea)"
 )
 ```
 
 ## Example: Non-parametric measurement model
 
+::: nonincremental
 - Common ideology measurement model has $\Pr\left(y = 1\right) = \sigma\left(\alpha + \beta\theta\right)$, where sigma is a squashing function mapping the reals to $[0, 1]$
 - But what if we weren't so sure about that functional form?
+- We could use the Bayesian non-parametric measurement model GPIRT [(Duck-Mayr, Montgomery, and Garnett 2020)](https://proceedings.mlr.press/v124/duck-mayr20a.html)
+:::
+
+## Example: Non-parametric measurement model
+
+\begin{figure}
+\centering
+\includegraphics[height = 0.9\textheight]{IRF-comparison-1}
+\end{figure}
+
+## Example: Non-parametric measurement model
+
+\begin{figure}
+\centering
+\includegraphics[width = 0.9\textwidth]{IRF-comparison-2}
+\end{figure}
+
+## Example: Non-parametric measurement model
+
+::: nonincremental
+- Common ideology measurement model has $\Pr\left(y = 1\right) = \sigma\left(\alpha + \beta\theta\right)$, where sigma is a squashing function mapping the reals to $[0, 1]$
+- But what if we weren't so sure about that functional form?
+:::
+
 - We could use the Bayesian non-parametric measurement model GPIRT [(Duck-Mayr, Montgomery, and Garnett 2020)](https://proceedings.mlr.press/v124/duck-mayr20a.html)
   + $\Pr\left(y = 1\right) = \sigma\left(f\left(\theta\right)\right)$
   + Put GP prior distribution on $f$:

@@ -128,8 +128,8 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{5}
-\usepackage{/home/jb/R/x86_64-pc-linux-gnu-library/4.3/quack/rmarkdown/templates/presentation/resources/beamerthemeAustin}
-\usepackage{/home/jb/R/x86_64-pc-linux-gnu-library/4.3/quack/rmarkdown/templates/presentation/resources/beamercolorthemelonghorn}
+\usepackage{/home/jb/R/x86_64-pc-linux-gnu-library/4.4/quack/rmarkdown/templates/presentation/resources/beamerthemeAustin}
+\usepackage{/home/jb/R/x86_64-pc-linux-gnu-library/4.4/quack/rmarkdown/templates/presentation/resources/beamercolorthemelonghorn}
 \newcommand{\setsep}{\setlength{\itemsep}{3pt}}
 \newcommand{\setskip}{\setlength{\parskip}{3pt}}
 \renewcommand{\tightlist}{\setsep\setskip}
@@ -145,7 +145,7 @@
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
 \hypersetup{
@@ -160,13 +160,30 @@
 
 \title{Statistical Analysis in Political Science II:\newline Interaction Terms and Diagnostics}
 \author{JBrandon Duck-Mayr}
-\date{March 6, 2024}
+\date{February 26, 2025}
 
 \begin{document}
 \frame{\titlepage}
 
+\begin{frame}{Background: Marginal effects}
+\phantomsection\label{background-marginal-effects}
+\pause
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  The marginal effect of a predictor is how the outcome changes as the predictor changes
+\item
+  So far this has just been the regression coefficient
+\item
+  Recall: derivatives tell you rate of change; the partial derivative with respect to the predictor of interest tells you the marginal effect
+\item
+  Simple example: In the equation \(y = \beta_0 + \beta_1 x_1 + \varepsilon\), the marginal effect of \(x_1\) is \(\ensuremath{\frac{\partial{y}}{\partial{x_1}}} = \beta_1\)
+\end{itemize}
+\end{frame}
+
 \begin{frame}{Motivating interaction terms: Conditional effects}
-\protect\hypertarget{motivating-interaction-terms-conditional-effects}{}
+\phantomsection\label{motivating-interaction-terms-conditional-effects}
 \pause
 
 \begin{itemize}[<+->]
@@ -191,7 +208,7 @@
 \end{frame}
 
 \begin{frame}{What do they \emph{mean}?}
-\protect\hypertarget{what-do-they-mean}{}
+\phantomsection\label{what-do-they-mean}
 \pause
 
 \begin{itemize}[<+->]
@@ -215,7 +232,7 @@
     So how much does an increase in \(x_1\) affect \(y\)? It depends! (on \(x_2\))
   \end{itemize}
 \item
-  \textbf{Careful}: Not only is \(\ensuremath{\frac{\partial{y}}{\partial{x_1}}}\) not equal to \(\beta_1\), or even \(\beta_1 + \beta_3\), but:
+  \textbf{Careful}: Not only is \(\ensuremath{\frac{\partial{y}}{\partial{x_1}}}\) not equal to \(\beta_1\), or even \(\beta_1 + \beta_3\)\onslide<8->{, but:}
 
   \begin{itemize}[<+->]
   \tightlist
@@ -230,7 +247,7 @@
 \end{frame}
 
 \begin{frame}{Interaction terms and hypothesis tests}
-\protect\hypertarget{interaction-terms-and-hypothesis-tests}{}
+\phantomsection\label{interaction-terms-and-hypothesis-tests}
 \pause
 
 \begin{itemize}[<+->]
@@ -257,7 +274,7 @@
 \end{frame}
 
 \begin{frame}[fragile]{Dichotomous example: Simulation}
-\protect\hypertarget{dichotomous-example-simulation}{}
+\phantomsection\label{dichotomous-example-simulation}
 \pause
 
 First simulate some data
@@ -277,7 +294,7 @@ First simulate some data
 \end{frame}
 
 \begin{frame}[fragile]{Dichotomous example: Calculation}
-\protect\hypertarget{dichotomous-example-calculation}{}
+\phantomsection\label{dichotomous-example-calculation}
 Now fit the model
 
 \begin{Shaded}
@@ -317,7 +334,7 @@ And calculate the marginal effect of \texttt{x1} when \texttt{x2} is 0 or 1
 \end{frame}
 
 \begin{frame}[fragile]{Dichotomous example: comparison to \texttt{\{margins\}}}
-\protect\hypertarget{dichotomous-example-comparison-to-margins}{}
+\phantomsection\label{dichotomous-example-comparison-to-margins}
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{library}\NormalTok{(margins)}
@@ -351,12 +368,12 @@ And calculate the marginal effect of \texttt{x1} when \texttt{x2} is 0 or 1
 \end{frame}
 
 \begin{frame}{Dichotomous example}
-\protect\hypertarget{dichotomous-example}{}
+\phantomsection\label{dichotomous-example}
 \includegraphics[width=0.9\linewidth]{07-interactions-diagnostics_files/figure-beamer/unnamed-chunk-5-1}
 \end{frame}
 
 \begin{frame}[fragile]{Continuous example: Simulation}
-\protect\hypertarget{continuous-example-simulation}{}
+\phantomsection\label{continuous-example-simulation}
 \pause
 
 First simulate some data
@@ -376,7 +393,7 @@ First simulate some data
 \end{frame}
 
 \begin{frame}[fragile]{Continuous example: Calculation}
-\protect\hypertarget{continuous-example-calculation}{}
+\phantomsection\label{continuous-example-calculation}
 Now fit the model
 
 \begin{Shaded}
@@ -417,7 +434,7 @@ And calculate the marginal effect of \texttt{x1}
 \end{frame}
 
 \begin{frame}[fragile]{Continuous example}
-\protect\hypertarget{continuous-example}{}
+\phantomsection\label{continuous-example}
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{margins}\SpecialCharTok{::}\FunctionTok{cplot}\NormalTok{(m, }\AttributeTok{x =} \StringTok{"x2"}\NormalTok{, }\AttributeTok{dx =} \StringTok{"x1"}\NormalTok{, }\AttributeTok{what =} \StringTok{"effect"}\NormalTok{)}
@@ -429,7 +446,7 @@ And calculate the marginal effect of \texttt{x1}
 \end{frame}
 
 \begin{frame}[fragile]{Continuous example: lower n \& effect size}
-\protect\hypertarget{continuous-example-lower-n-effect-size}{}
+\phantomsection\label{continuous-example-lower-n-effect-size}
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{set.seed}\NormalTok{(}\DecValTok{42}\NormalTok{)}
@@ -446,7 +463,7 @@ And calculate the marginal effect of \texttt{x1}
 \end{frame}
 
 \begin{frame}[fragile]{Continuous example: lower n \& effect size}
-\protect\hypertarget{continuous-example-lower-n-effect-size-1}{}
+\phantomsection\label{continuous-example-lower-n-effect-size-1}
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{beta\_hat }\OtherTok{=} \FunctionTok{coef}\NormalTok{(m); CIs }\OtherTok{=} \FunctionTok{confint}\NormalTok{(m)}
@@ -478,7 +495,7 @@ And calculate the marginal effect of \texttt{x1}
 \end{frame}
 
 \begin{frame}{``The Checklist''}
-\protect\hypertarget{the-checklist}{}
+\phantomsection\label{the-checklist}
 \pause
 
 \href{https://www.jstor.org/stable/25791835}{(Brambor, Clark, and Golder 2006)}:
@@ -498,8 +515,39 @@ And calculate the marginal effect of \texttt{x1}
 \end{enumerate}
 \end{frame}
 
-\begin{frame}[fragile]{Continuous example: lower n \& effect size}
-\protect\hypertarget{continuous-example-lower-n-effect-size-2}{}
+\begin{frame}{Marginal effect quantities of interest}
+\phantomsection\label{marginal-effect-quantities-of-interest}
+\pause
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  (Sample) Average Marginal Effect ((S)AME): Marginal effect for every observation, averaged
+\item
+  Marginal effect at the mean: Marginal effect at the mean value of the predictor
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Sometimes done instead at the median
+  \end{itemize}
+\item
+  Marginal effect at representative values
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Calculated at values of interest for your study
+  \item
+    Researchers often use mean \(\pm\) one standard deviation
+  \item
+    But different values could be important for your study, substantive context and theory matters
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Continuous example (still with lower n \& effect)}
+\phantomsection\label{continuous-example-still-with-lower-n-effect}
 Consider the effect at one standard deviation above and below the mean of \texttt{x2}
 (i.e.~when \texttt{x2} is -1.17 \& 0.93)
 
@@ -524,8 +572,8 @@ Consider the effect at one standard deviation above and below the mean of \textt
 (True effect at those \texttt{x2} values is 0.33 and -0.09)
 \end{frame}
 
-\begin{frame}[fragile]{Continuous example: lower n \& effect size}
-\protect\hypertarget{continuous-example-lower-n-effect-size-3}{}
+\begin{frame}[fragile]{Continuous example (still with lower n \& effect)}
+\phantomsection\label{continuous-example-still-with-lower-n-effect-1}
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{pts }\OtherTok{=} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{2}\NormalTok{] }\SpecialCharTok{+} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{4}\NormalTok{] }\SpecialCharTok{*}\NormalTok{ x2}
@@ -539,7 +587,7 @@ Consider the effect at one standard deviation above and below the mean of \textt
 \end{frame}
 
 \begin{frame}{Diagnostics}
-\protect\hypertarget{diagnostics}{}
+\phantomsection\label{diagnostics}
 \pause
 
 Recall the assumptions we've made to enable inference for OLS:
@@ -562,7 +610,7 @@ Recall the assumptions we've made to enable inference for OLS:
 \end{frame}
 
 \begin{frame}[fragile]{Diagnostics: The Simulated Data}
-\protect\hypertarget{diagnostics-the-simulated-data}{}
+\phantomsection\label{diagnostics-the-simulated-data}
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{set.seed}\NormalTok{(}\DecValTok{42}\NormalTok{)}
@@ -579,7 +627,7 @@ Recall the assumptions we've made to enable inference for OLS:
 \end{frame}
 
 \begin{frame}[fragile]{Diagnostics: Linearity}
-\protect\hypertarget{diagnostics-linearity}{}
+\phantomsection\label{diagnostics-linearity}
 \pause
 
 \begin{Shaded}
@@ -603,12 +651,12 @@ Recall the assumptions we've made to enable inference for OLS:
 \end{frame}
 
 \begin{frame}{Diagnostics: Linearity}
-\protect\hypertarget{diagnostics-linearity-1}{}
+\phantomsection\label{diagnostics-linearity-1}
 \includegraphics[width=0.9\linewidth]{07-interactions-diagnostics_files/figure-beamer/unnamed-chunk-16-1}
 \end{frame}
 
 \begin{frame}[fragile]{Diagnostics: Linearity}
-\protect\hypertarget{diagnostics-linearity-2}{}
+\phantomsection\label{diagnostics-linearity-2}
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{plot}\NormalTok{(}\AttributeTok{x =} \FunctionTok{fitted}\NormalTok{(m), }\AttributeTok{y =} \FunctionTok{residuals}\NormalTok{(m))}
@@ -620,7 +668,7 @@ Recall the assumptions we've made to enable inference for OLS:
 \end{frame}
 
 \begin{frame}[fragile]{Diagnostics: Multicollinearity}
-\protect\hypertarget{diagnostics-multicollinearity}{}
+\phantomsection\label{diagnostics-multicollinearity}
 \pause
 
 \begin{itemize}[<+->]
@@ -658,7 +706,7 @@ Recall the assumptions we've made to enable inference for OLS:
 \end{frame}
 
 \begin{frame}[fragile]{Diagnostics: Independence of errors}
-\protect\hypertarget{diagnostics-independence-of-errors}{}
+\phantomsection\label{diagnostics-independence-of-errors}
 \pause
 
 \begin{itemize}[<+->]
@@ -694,7 +742,7 @@ Recall the assumptions we've made to enable inference for OLS:
 \end{frame}
 
 \begin{frame}[fragile]{Diagnostics: Homoscedasticity}
-\protect\hypertarget{diagnostics-homoscedasticity}{}
+\phantomsection\label{diagnostics-homoscedasticity}
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{r }\OtherTok{=} \FunctionTok{residuals}\NormalTok{(m); f }\OtherTok{=} \FunctionTok{fitted}\NormalTok{(m); l }\OtherTok{=} \FunctionTok{loess}\NormalTok{(r }\SpecialCharTok{\textasciitilde{}}\NormalTok{ f)}
@@ -707,7 +755,7 @@ Recall the assumptions we've made to enable inference for OLS:
 \end{frame}
 
 \begin{frame}[fragile]{Diagnostics: Homoscedasticity}
-\protect\hypertarget{diagnostics-homoscedasticity-1}{}
+\phantomsection\label{diagnostics-homoscedasticity-1}
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{plot}\NormalTok{(}\FunctionTok{residuals}\NormalTok{(m))}
@@ -719,7 +767,7 @@ Recall the assumptions we've made to enable inference for OLS:
 \end{frame}
 
 \begin{frame}[fragile]{Diagnostics: Homoscedasticity}
-\protect\hypertarget{diagnostics-homoscedasticity-2}{}
+\phantomsection\label{diagnostics-homoscedasticity-2}
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{m2 }\OtherTok{=} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2)}
@@ -733,7 +781,7 @@ Recall the assumptions we've made to enable inference for OLS:
 \end{frame}
 
 \begin{frame}[fragile]{Diagnostics: Homoscedasticity}
-\protect\hypertarget{diagnostics-homoscedasticity-3}{}
+\phantomsection\label{diagnostics-homoscedasticity-3}
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{plot}\NormalTok{(}\FunctionTok{residuals}\NormalTok{(m2))}
@@ -745,7 +793,7 @@ Recall the assumptions we've made to enable inference for OLS:
 \end{frame}
 
 \begin{frame}{Diagnostics: Homoscedasticity}
-\protect\hypertarget{diagnostics-homoscedasticity-4}{}
+\phantomsection\label{diagnostics-homoscedasticity-4}
 \begin{itemize}[<+->]
 \tightlist
 \item
@@ -778,7 +826,7 @@ Recall the assumptions we've made to enable inference for OLS:
 \end{frame}
 
 \begin{frame}[fragile]{Diagnostics: Homoscedasticity}
-\protect\hypertarget{diagnostics-homoscedasticity-5}{}
+\phantomsection\label{diagnostics-homoscedasticity-5}
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{lmtest}\SpecialCharTok{::}\FunctionTok{bptest}\NormalTok{(m)}
@@ -808,7 +856,7 @@ Recall the assumptions we've made to enable inference for OLS:
 \end{frame}
 
 \begin{frame}[fragile]{Diagnostics: Normality of errors}
-\protect\hypertarget{diagnostics-normality-of-errors}{}
+\phantomsection\label{diagnostics-normality-of-errors}
 \pause
 
 \begin{itemize}[<+->]
@@ -839,7 +887,7 @@ Recall the assumptions we've made to enable inference for OLS:
 \end{frame}
 
 \begin{frame}[fragile]{Diagnostics: Normality of errors}
-\protect\hypertarget{diagnostics-normality-of-errors-1}{}
+\phantomsection\label{diagnostics-normality-of-errors-1}
 \begin{itemize}[<+->]
 \tightlist
 \item
@@ -856,7 +904,7 @@ Recall the assumptions we've made to enable inference for OLS:
 \end{frame}
 
 \begin{frame}{Solutions}
-\protect\hypertarget{solutions}{}
+\phantomsection\label{solutions}
 \pause
 
 \begin{enumerate}[<+->]
@@ -888,6 +936,96 @@ Recall the assumptions we've made to enable inference for OLS:
     \emph{Should} we delete outliers??
   \end{enumerate}
 \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Influential observations}
+\phantomsection\label{influential-observations}
+\pause
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{x }\OtherTok{=} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{30}\NormalTok{); y }\OtherTok{=}\NormalTok{ x }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{30}\NormalTok{)}
+\NormalTok{m }\OtherTok{=} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x)}
+\NormalTok{x1 }\OtherTok{=} \FunctionTok{c}\NormalTok{(x, }\DecValTok{7}\NormalTok{); y1 }\OtherTok{=} \FunctionTok{c}\NormalTok{(y, }\SpecialCharTok{{-}}\DecValTok{2}\NormalTok{)}
+\NormalTok{m1 }\OtherTok{=} \FunctionTok{lm}\NormalTok{(y1 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1)}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}[fragile]{Influential observations}
+\phantomsection\label{influential-observations-1}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{point\_color }\OtherTok{=} \StringTok{"\#80808080"}
+\FunctionTok{plot}\NormalTok{(}
+\NormalTok{    x, y, }\AttributeTok{pch =} \DecValTok{19}\NormalTok{, }\AttributeTok{col =}\NormalTok{ point\_color,}
+    \AttributeTok{xlim =} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{3}\NormalTok{, }\DecValTok{8}\NormalTok{), }\AttributeTok{ylim =} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{3}\NormalTok{, }\DecValTok{5}\NormalTok{)}
+\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics[width=0.8\linewidth]{07-interactions-diagnostics_files/figure-beamer/unnamed-chunk-28-1} \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Influential observations}
+\phantomsection\label{influential-observations-2}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{point\_color }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\FunctionTok{rep}\NormalTok{(}\StringTok{"\#80808080"}\NormalTok{, }\DecValTok{30}\NormalTok{), }\StringTok{"\#bf5700"}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(}
+\NormalTok{    x1, y1, }\AttributeTok{pch =} \DecValTok{19}\NormalTok{, }\AttributeTok{col =}\NormalTok{ point\_color,}
+    \AttributeTok{xlim =} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{3}\NormalTok{, }\DecValTok{8}\NormalTok{), }\AttributeTok{ylim =} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{3}\NormalTok{, }\DecValTok{5}\NormalTok{)}
+\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(m1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics[width=0.8\linewidth]{07-interactions-diagnostics_files/figure-beamer/unnamed-chunk-29-1} \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Methods to detect influential observations}
+\phantomsection\label{methods-to-detect-influential-observations}
+\begin{itemize}[<+->]
+\tightlist
+\item
+  DFBETA: Coefficient change when you omit an observation
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    DFBETA\(_{ij} = \hat{\beta}_j - \hat{\beta}_{(i)j}\)
+  \item
+    \(\hat{\beta}_j\) is the coefficient estimate using all observations
+  \item
+    \(\hat{\beta}_{(i)j}\) is the estimate omitting the \(i\)th observation
+  \item
+    Often you really only care about the absolute value
+  \end{itemize}
+\item
+  DFBETA\textbf{S}: standardized DFBETA
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    DFBETAS\(_{ij} = \frac{\hat{\beta}_j - \hat{\beta}_{(i)j}}{\mathop{\mathrm{se}}\left(\hat{\beta}_j\right)}\); look at \(|\)DFBETAS\(| > 2/\sqrt{n}\)
+  \end{itemize}
+\item
+  Cook's \(D\): All parameters' change when you omit an observation
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Hat matrix \(H = X (X'X)^{-1} X'\)
+  \item
+    \(D_i = \frac{e_i^2}{ps^2} \left(\frac{h_{ii}}{(1 - h_{ii})^2}\right)\); look at \(D_i > 1\)
+  \item
+    \(e_i\) is residual \(i\), \(p\) is model parameters, \(s^2\) is mean squared error
+  \end{itemize}
+\item
+  R functions: \texttt{dfbeta()}, \texttt{dfbetas()}, \texttt{cooks.distance()}, \texttt{influence.measures()}
+\end{itemize}
 \end{frame}
 
 \end{document}
